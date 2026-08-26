@@ -215,6 +215,30 @@ button, input, textarea, select {
   font-weight: 700;
 }
 
+.perfilSeleccionadoResumen {
+  color: #4253bd;
+  background: #eef1ff;
+  border-radius: 12px;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  padding: 8px 12px;
+  display: flex;
+}
+
+.perfilSeleccionadoResumen strong {
+  font-size: 13px;
+  line-height: 1.2;
+  display: block;
+}
+
+.perfilSeleccionadoResumen span {
+  color: #6874b8;
+  font-size: 12px;
+  line-height: 1.2;
+  display: block;
+}
+
 .formulario {
   gap: 20px;
   margin-top: 26px;
@@ -594,6 +618,69 @@ button, input, textarea, select {
 
   .perfilCabecera {
     flex-direction: column;
+  }
+}
+
+.barraNavegacion {
+  z-index: 100;
+  background: #fff;
+  border-bottom: 1px solid #e3e7ef;
+  position: sticky;
+  top: 0;
+}
+
+.navegacionContenido {
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  width: min(100% - 32px, 1000px);
+  min-height: 66px;
+  margin: 0 auto;
+  display: flex;
+}
+
+.marcaApp {
+  color: #172033;
+  font-size: 16px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.menuPrincipal {
+  align-items: center;
+  gap: 8px;
+  display: flex;
+}
+
+.menuPrincipal a {
+  color: #657086;
+  border-radius: 9px;
+  padding: 9px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.menuPrincipal a:hover {
+  color: #172033;
+  background: #f3f5fa;
+}
+
+.menuPrincipal a.navActivo {
+  color: #4253bd;
+  background: #eef1ff;
+}
+
+@media (max-width: 650px) {
+  .navegacionContenido {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 14px 0;
+  }
+
+  .menuPrincipal {
+    width: 100%;
+    overflow-x: auto;
   }
 }
 

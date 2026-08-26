@@ -7,6 +7,19 @@ Las versiones comprendidas entre v0.1 y v0.9 se han reconstruido retrospectivame
 El control formal de versiones mediante Git comienza a partir de la versión v0.10.
 
 ---
+## v0.11 - Gestión de alumnado
+
+### Cambios
+- Creación del workflow `TFM - Gestión perfiles`.
+- Listado de perfiles almacenados en Supabase.
+- Alta de nuevos perfiles desde Next.js.
+- Cálculo automático de `perfil_completo`.
+- Diferenciación visual entre perfiles completos e incompletos.
+- Selección de un perfil para la generación de actividades.
+- Persistencia temporal del perfil seleccionado mediante localStorage.
+
+### Resultado
+La aplicación permite gestionar perfiles de alumnado desde la interfaz web y seleccionar qué perfil se utilizará posteriormente para personalizar las actividades.
 
 ## v0.10 - 26/08/2026
 

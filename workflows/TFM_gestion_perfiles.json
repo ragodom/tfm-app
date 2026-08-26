@@ -1,0 +1,230 @@
+{
+  "name": "TFM - Gestión Perfiles",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "gestionar-perfiles",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "899267aa-1e28-4aee-b70f-b532cb736725",
+      "name": "Gestionar perfiles",
+      "webhookId": "0efa3aba-471b-486e-8c75-051e967e39e0"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.accion }}",
+                    "rightValue": "listar",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "01da7619-8655-4ec9-89c4-a878a9528eb8"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "listar"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "0c1bda4b-8247-43b3-b70a-ccb103507a01",
+                    "leftValue": "={{ $json.body.accion }}",
+                    "rightValue": "crear",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "crear"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        0
+      ],
+      "id": "051dcbaa-c14c-4f1b-b1ca-9358f90cc0c4",
+      "name": "¿que operación?"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select\n  coalesce(\n    json_agg(\n      json_build_object(\n        'id', id,\n        'nombre', nombre,\n        'intereses', intereses,\n        'aficiones', aficiones,\n        'preferencias', preferencias,\n        'perfil_completo', perfil_completo,\n        'creado_en', creado_en\n      )\n      order by nombre\n    ),\n    '[]'::json\n  ) as perfiles\nfrom public.perfiles;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        448,
+        -96
+      ],
+      "id": "f7af80a5-e950-47a1-8e88-bebe7a823a4a",
+      "name": "Listar perfiles",
+      "credentials": {
+        "postgres": {
+          "id": "LF46SQyz7oBTLI2P",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\n  ok: true,\n  perfiles: $json.perfiles\n} }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        672,
+        -96
+      ],
+      "id": "1b12e143-e74f-4e97-9305-5e4cf5825ee1",
+      "name": "Respuesta - Listar perfiles"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\n  \"ok\": true,\n  \"mensaje\": \"El perfil se ha creado correctamente.\",\n  \"perfil\": {\n    \"id\": Number($json.id),\n    \"nombre\": $json.nombre,\n    \"intereses\": $json.intereses,\n    \"aficiones\": $json.aficiones,\n    \"preferencias\": $json.preferencias,\n    \"perfil_completo\": $json.perfil_completo,\n    \"creado_en\": $json.creado_en\n  }\n} }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        672,
+        96
+      ],
+      "id": "0e0dd0f6-3935-4204-8cda-88f8a0744759",
+      "name": "Respuesta - Perfil creado"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "insert into public.perfiles (\n  nombre,\n  intereses,\n  aficiones,\n  preferencias,\n  perfil_completo\n)\nvalues (\n  $1,\n  $2,\n  $3,\n  $4,\n  case\n    when trim(coalesce($2::text, '')) <> ''\n     and trim(coalesce($3::text, '')) <> ''\n     and trim(coalesce($4::text, '')) <> ''\n    then true\n    else false\n  end\n)\nreturning *;",
+        "options": {
+          "queryReplacement": "={{ [   $json.body.nombre,   $json.body.intereses ?? '',   $json.body.aficiones ?? '',   $json.body.preferencias ?? '' ] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        448,
+        96
+      ],
+      "id": "1ed6ec35-daf2-41bf-b205-361587090353",
+      "name": "Crear perfil",
+      "credentials": {
+        "postgres": {
+          "id": "LF46SQyz7oBTLI2P",
+          "name": "Postgres account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gestionar perfiles": {
+      "main": [
+        [
+          {
+            "node": "¿que operación?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿que operación?": {
+      "main": [
+        [
+          {
+            "node": "Listar perfiles",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Crear perfil",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Listar perfiles": {
+      "main": [
+        [
+          {
+            "node": "Respuesta - Listar perfiles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear perfil": {
+      "main": [
+        [
+          {
+            "node": "Respuesta - Perfil creado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "0e260ab8-c76d-4c1d-8288-e3788c0f9a54",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1aafd9336c0d1bfb1b6ea10346f42afca01929ac97db96ed6af1586120385704"
+  },
+  "nodeGroups": [],
+  "id": "kwWNYflBCwouxdPS",
+  "tags": []
+}

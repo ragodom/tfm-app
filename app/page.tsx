@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
 type Actividad = {
   titulo?: string;
@@ -21,6 +21,8 @@ type RespuestaN8n = {
   actividad?: Actividad;
 };
 
+
+
 type RespuestaIntento = {
   ok?: boolean;
   mensaje?: string;
@@ -32,7 +34,8 @@ type RespuestaIntento = {
 };
 
 export default function Home() {
-  const perfilId = 1;
+  const [perfilId, setPerfilId] = useState<number | null>(null);
+  const [perfilNombre, setPerfilNombre] = useState("");
 
   const [objetivo, setObjetivo] = useState(
     "Utilizar estructuras repetitivas en Python"
@@ -50,9 +53,31 @@ export default function Home() {
   useState<RespuestaIntento | null>(null);
   const [errorIntento, setErrorIntento] = useState("");
   const [fechaInicio, setFechaInicio] = useState<Date | null>(null);
+  
+  useEffect(() => {
+    const idGuardado = localStorage.getItem("perfilSeleccionado");
+    const nombreGuardado = localStorage.getItem(
+      "perfilSeleccionadoNombre"
+    );
+
+    if (idGuardado) {
+     setPerfilId(Number(idGuardado));
+    }
+
+    if (nombreGuardado) {
+      setPerfilNombre(nombreGuardado);
+    }
+}, []);
 
   async function generarActividad(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (!perfilId) {
+  setError(
+    "Debes seleccionar un perfil de alumnado antes de generar una actividad."
+  );
+  return;
+}
 
     setCargando(true);
     setError("");
@@ -192,7 +217,17 @@ async function registrarIntento(event: FormEvent<HTMLFormElement>) {
       <section className="panel">
         <div className="panelTitulo">
           <h2>Nueva actividad</h2>
-          <span className="perfil">Perfil #{perfilId}</span>
+      {perfilId ? (
+       <div
+      className="perfilSeleccionadoResumen"
+     
+>
+          {perfilNombre && <strong>{perfilNombre}</strong>}
+         <span>Perfil #{perfilId}</span>
+        </div>
+      ) : (
+  <span className="perfil">Sin perfil seleccionado</span>
+)}
         </div>
 
         <form onSubmit={generarActividad} className="formulario">
@@ -227,7 +262,7 @@ async function registrarIntento(event: FormEvent<HTMLFormElement>) {
             </select>
           </label>
 
-          <button type="submit" disabled={cargando}>
+          <button type="submit" disabled={cargando || !perfilId}>
             {cargando ? "Generando actividad..." : "Generar actividad"}
           </button>
         </form>

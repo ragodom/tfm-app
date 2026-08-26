@@ -125,10 +125,12 @@ export default function AlumnadoPage() {
     }
 
     localStorage.setItem("perfilSeleccionado", String(perfil.id));
+    localStorage.setItem("perfilSeleccionadoNombre", perfil.nombre);
     setPerfilSeleccionado(perfil.id);
     setError("");
     setMensaje(`${perfil.nombre} ha sido seleccionado.`);
   }
+    
 
   return (
     <main className="pagina">
