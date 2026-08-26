@@ -1,0 +1,1128 @@
+{
+  "name": "TFM",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "generar-actividad",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1296,
+        320
+      ],
+      "id": "20f4f87b-0039-4c74-9977-74cbd50e5625",
+      "name": "Webhook",
+      "webhookId": "d647af01-10fc-4197-aa47-067220cf86cc"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "6544952f-4381-4074-bd3b-419552526c35",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -848,
+        320
+      ],
+      "id": "85050f3e-1514-42cf-a70b-f2e7c5d86f68",
+      "name": "¿Perfil existe?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "e33ba7e7-2f51-4a48-945e-0599ecb86b25",
+              "leftValue": "={{ $('Recuperar perfil').item.json.perfil_completo }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -624,
+        224
+      ],
+      "id": "6f7027c6-2245-4da7-b80b-010f71652bb3",
+      "name": "¿Perfil completo?"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"ok\": false,\n  \"error\": \"PERFIL_NO_ENCONTRADO\",\n  \"mensaje\": \"No existe ningún perfil asociado al identificador recibido.\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -624,
+        416
+      ],
+      "id": "aeadcc33-f55b-42c9-8176-0034284b7140",
+      "name": "Perfil inexistente"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"ok\": false,\n  \"error\": \"PERFIL_INCOMPLETO\",\n  \"mensaje\": \"El perfil debe estar correctamente cumplimentado antes de generar una actividad personalizada.\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -336,
+        368
+      ],
+      "id": "9305a2d6-0b33-40c2-bee1-a9b448dd5767",
+      "name": "Error - perfil incompleto"
+    },
+    {
+      "parameters": {
+        "mode": "load",
+        "tableName": "documentos_rag",
+        "prompt": "={{ $('Webhook').item.json.body.tema + ' - ' + $('Webhook').item.json.body.objetivo }}",
+        "topK": 3,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.3,
+      "position": [
+        -400,
+        -32
+      ],
+      "id": "e724ebc2-ac5a-4433-b354-d189b185d235",
+      "name": "Postgres PGVector Store",
+      "credentials": {
+        "postgres": {
+          "id": "LF46SQyz7oBTLI2P",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -336,
+        208
+      ],
+      "id": "35eb593f-b910-4bed-9e5a-cdf7f0363fe1",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "GcydM2GfSP0X4aIZ",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini",
+          "cachedResultName": "gpt-5-mini",
+          "cachedResultUrl": ""
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        48,
+        320
+      ],
+      "id": "f76ca27a-b6a1-4ad0-a319-ba58fba51446",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "GcydM2GfSP0X4aIZ",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"objetivo\": \"Utilizar estructuras repetitivas en Python\",\n  \"conceptos_permitidos\": [\n    \"bucle for en Python\",\n    \"función range()\"\n  ],\n  \"dificultad\": \"básica\",\n  \"intereses_utilizables\": [\n    \"automovilismo\"\n  ],\n  \"errores_a_reforzar\": [],\n  \"tipo_actividad\": \"ejercicio práctico\",\n  \"rag_suficiente\": true,\n  \"motivo_rag\": \"\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        192,
+        320
+      ],
+      "id": "83a5528d-5842-464a-b1cf-25f463889142",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select *\nfrom public.perfiles\nwhere id = $1;",
+        "options": {
+          "queryReplacement": "={{ $json.body.perfil_id }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        -1072,
+        320
+      ],
+      "id": "f1947562-c1d1-4286-8767-31ff433230c8",
+      "name": "Recuperar perfil",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "LF46SQyz7oBTLI2P",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini",
+          "cachedResultName": "gpt-5-mini",
+          "cachedResultUrl": ""
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        544,
+        48
+      ],
+      "id": "ec133efc-3281-434d-8e64-2e196594325a",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "GcydM2GfSP0X4aIZ",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=PLANIFICACIÓN GENERADA POR IA1:\n\n{{ JSON.stringify($('IA1 - Planificación').item.json) }}\n\n\nCONTENIDO ACADÉMICO RECUPERADO MEDIANTE RAG:\n\n{{ $('Unificar contexto RAG').first().json.contexto_rag }}\n\n\nPERFIL UTILIZADO PARA LA PERSONALIZACIÓN:\n\nIntereses:\n{{ $('Recuperar perfil').item.json.intereses }}\n\nAficiones:\n{{ $('Recuperar perfil').item.json.aficiones }}\n\nPreferencias:\n{{ $('Recuperar perfil').item.json.preferencias }}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=Actúa como un sistema de generación de actividades educativas personalizadas.\n\nDebes generar una única actividad educativa utilizando la planificación proporcionada y el contenido académico recuperado mediante RAG.\n\nREGLAS OBLIGATORIAS:\n\n- Utiliza exclusivamente conceptos académicos presentes explícitamente en el contenido recuperado mediante RAG.\n- Respeta los conceptos permitidos establecidos en la planificación.\n- No introduzcas conceptos académicos adicionales.\n- Mantén el objetivo de aprendizaje indicado.\n- Ajusta la actividad al nivel de dificultad solicitado.\n- Utiliza los intereses, aficiones o preferencias del perfil únicamente para contextualizar la actividad.\n- La personalización no debe modificar ni ampliar el contenido académico.\n- Si se proporcionan errores reales de intentos anteriores, puedes utilizarlos para orientar la actividad. No inventes errores adicionales.\n\nRESTRICCIÓN DEL CONTENIDO ACADÉMICO:\n\n- No generalices ejemplos concretos del RAG a reglas generales que no aparezcan explícitamente en el material.\n- No introduzcas definiciones, propiedades, explicaciones causales o excepciones que no estén presentes en el RAG.\n- No crees ejemplos que requieran deducir conocimiento académico ausente del material.\n- Si el RAG contiene únicamente un ejemplo concreto, puedes reproducirlo, identificarlo o utilizarlo directamente, pero no extrapolarlo a otros casos.\n- No plantees situaciones contrarias al contenido proporcionado si para responder es necesario realizar una inferencia que no aparece explícitamente en el RAG.\n- No plantees el caso contrario de una afirmación presente en el RAG.\n- Por ejemplo, si el material indica que un concepto se utiliza \"cuando se conoce previamente el número de repeticiones\", no preguntes ni afirmes qué ocurre \"cuando no se conoce\" dicho número, salvo que esa información aparezca explícitamente en el RAG.\n\nREGLAS PARA LAS PREGUNTAS:\n\n- Cada pregunta debe poder responderse utilizando exclusivamente el contenido RAG proporcionado.\n- No solicites explicar \"por qué\" ocurre algo salvo que esa explicación aparezca explícitamente en el RAG.\n- No introduzcas errores comunes, errores hipotéticos o conceptos erróneos que no procedan del historial real proporcionado.\n- Prioriza tareas de identificación, reproducción y aplicación directa de la información disponible.\n\nANTES DE DEVOLVER LA ACTIVIDAD:\n\nRevisa individualmente cada pregunta, afirmación y ejemplo.\n\nSi alguno requiere conocimiento académico que no aparece explícitamente en el RAG, elimínalo o reformúlalo utilizando únicamente la información disponible.\n\nDevuelve únicamente la actividad siguiendo la estructura definida."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        528,
+        -176
+      ],
+      "id": "969f20df-3585-4796-aa65-c88f788a5a7b",
+      "name": "IA2 - Generación"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=OBJETIVO DE APRENDIZAJE:\n{{ $('Webhook').item.json.body.objetivo }}\n\nTEMA:\n{{ $('Webhook').item.json.body.tema }}\n\nDIFICULTAD:\n{{ $('Webhook').item.json.body.dificultad }}\n\nPERFIL:\n\nIntereses:\n{{ $('Recuperar perfil').item.json.intereses }}\n\nAficiones:\n{{ $('Recuperar perfil').item.json.aficiones }}\n\nPreferencias:\n{{ $('Recuperar perfil').item.json.preferencias }}\n\nCONTENIDO ACADÉMICO RECUPERADO MEDIANTE RAG:\n\n{{ $('Unificar contexto RAG').first().json.contexto_rag }}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=Actúa como un sistema de análisis y planificación de actividades educativas.\n\nTu función NO es generar la actividad final. Debes analizar la solicitud, el perfil y el contenido académico recuperado mediante RAG para elaborar una planificación estructurada que utilizará posteriormente el modelo generador.\n\nREGLAS:\n\n- Utiliza exclusivamente conceptos académicos presentes explícitamente en el contenido recuperado mediante RAG.\n- No introduzcas conceptos académicos nuevos ni utilices conocimiento externo para completar información ausente.\n- Los intereses, aficiones y preferencias del perfil solo pueden utilizarse para contextualizar la futura actividad.\n- Identifica qué elementos del perfil pueden utilizarse de forma coherente para la personalización.\n- Los conceptos incluidos en \"conceptos_permitidos\" deben proceder del contenido RAG.\n- \"errores_a_reforzar\" solo puede contener errores reales proporcionados mediante el historial de intentos.\n- Si no se proporciona historial de errores, devuelve \"errores_a_reforzar\": [].\n\nSUFICIENCIA DEL RAG:\n\n- Comprueba si el contenido recuperado permite cumplir realmente el objetivo de aprendizaje solicitado.\n- \"rag_suficiente\" será true únicamente cuando el RAG contenga la información académica necesaria para trabajar el objetivo.\n- No consideres suficiente el contenido únicamente porque pertenezca al mismo tema general.\n- Si el objetivo requiere conceptos, reglas o explicaciones que no están respaldados por el contenido RAG, \"rag_suficiente\" será false.\n- Cuando \"rag_suficiente\" sea false, explica brevemente la causa en \"motivo_rag\".\n\nNo generes todavía ninguna actividad.\nDevuelve únicamente la estructura definida por el formato de salida."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        48,
+        80
+      ],
+      "id": "6967ea11-2ec4-4a53-aa9e-f361b82cd752",
+      "name": "IA1 - Planificación"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"titulo\": \"Las vueltas de la carrera\",\n  \"enunciado\": \"Desarrollar un programa utilizando un bucle for y la función range() para representar las vueltas de una carrera.\",\n  \"objetivo\": \"Utilizar estructuras repetitivas en Python\",\n  \"conceptos_utilizados\": [\n    \"for\",\n    \"range()\"\n  ],\n  \"contexto_personalizacion\": \"automovilismo\",\n  \"dificultad\": \"básica\",\n  \"puntuacion_maxima\": 10\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        672,
+        48
+      ],
+      "id": "5be3c09e-aea2-4284-ba17-d139ee07c415",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=ACTIVIDAD GENERADA:\n\n{{ JSON.stringify($('IA2 - Generación').item.json) }}\n\n\nOBJETIVO DE APRENDIZAJE:\n\n{{ $('Webhook').item.json.body.objetivo }}\n\n\nCONTENIDO ACADÉMICO RECUPERADO MEDIANTE RAG:\n\n{{ $('Unificar contexto RAG').first().json.contexto_rag }}\n\n\nPERFIL:\n\nIntereses:\n{{ $('Recuperar perfil').item.json.intereses }}\n\nAficiones:\n{{ $('Recuperar perfil').item.json.aficiones }}\n\nPreferencias:\n{{ $('Recuperar perfil').item.json.preferencias }}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Actúa como un sistema evaluador de actividades educativas generadas mediante inteligencia artificial.\n\nTu función es validar la actividad recibida.\n\nNO debes generar una nueva actividad.\nNO debes modificar ni corregir la actividad.\nDebes evaluarla únicamente con la información proporcionada.\n\nCOMPROBACIONES OBLIGATORIAS:\n\n1. CONTENIDO RAG\n\n- Todos los conceptos, afirmaciones, explicaciones, reglas, ejemplos e instrucciones académicas presentes en la actividad deben estar respaldados explícitamente por el contenido recuperado mediante RAG.\n- No utilices conocimiento general del modelo para completar información ausente.\n- No deduzcas reglas generales a partir de ejemplos concretos.\n- No consideres que una explicación está respaldada únicamente porque pueda inferirse del material.\n- Si la actividad solicita explicar por qué ocurre algo, la explicación necesaria debe aparecer explícitamente en el RAG.\n- Si detectas contenido académico no respaldado, añádelo a \"violaciones_rag\".\n\n2. OBJETIVO DE APRENDIZAJE\n\n- La actividad debe trabajar directamente el objetivo solicitado.\n- No debe desviarse hacia objetivos académicos diferentes.\n\n3. PERSONALIZACIÓN\n\n- La contextualización debe guardar relación con los intereses, aficiones o preferencias incluidos en el perfil.\n- La personalización solo puede utilizarse como contexto y no como fuente de nuevos conceptos académicos.\n\nREGLAS DE DECISIÓN:\n\n- \"contenido_rag\" será true únicamente cuando todo el contenido académico esté respaldado por el RAG.\n- \"objetivo_correcto\" será true únicamente cuando la actividad trabaje el objetivo solicitado.\n- \"personalizacion_correcta\" será true únicamente cuando la contextualización corresponda con el perfil.\n- Si \"violaciones_rag\" contiene al menos un elemento, \"contenido_rag\" debe ser false.\n- \"valida\" solo podrá ser true cuando:\n  - contenido_rag = true\n  - objetivo_correcto = true\n  - personalizacion_correcta = true\n  - violaciones_rag esté vacío.\n- Cuando \"valida\" sea false, explica de forma concreta el motivo.\n\nNo corrijas los errores detectados. Limítate a identificarlos y evaluar la actividad."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        880,
+        -80
+      ],
+      "id": "37bbd419-4a71-4848-a548-c04e4897b4d0",
+      "name": "IA3 - Evaluación"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini",
+          "cachedResultName": "gpt-5-mini",
+          "cachedResultUrl": ""
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        896,
+        160
+      ],
+      "id": "3966a3ce-1f62-4fe3-a739-575e041ea984",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "GcydM2GfSP0X4aIZ",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"valida\": true,\n  \"contenido_rag\": true,\n  \"objetivo_correcto\": true,\n  \"personalizacion_correcta\": true,\n  \"violaciones_rag\": [],\n  \"motivo\": \"\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1024,
+        160
+      ],
+      "id": "6003f64a-55b0-44d5-b2a3-e8535f720ee1",
+      "name": "Structured Output Parser2"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "insert into public.actividades (\n    perfil_id,\n    objetivo_aprendizaje,\n    tema,\n    dificultad,\n    contenido,\n    tipo_actividad,\n    interes_personalizacion,\n    referencias_rag,\n    resultado_guardrails,\n    regeneraciones,\n    estado\n)\nvalues (\n    $1,\n    $2,\n    $3,\n    $4,\n    $5,\n    'normal',\n    $6,\n    $7::jsonb,\n    $8::jsonb,\n    0,\n    'pendiente_revision'\n)\nreturning *;",
+        "options": {
+          "queryReplacement": "={{ [\n  $('Webhook').item.json.body.perfil_id,\n  $('Webhook').item.json.body.objetivo,\n  $('Webhook').item.json.body.tema,\n  $('Webhook').item.json.body.dificultad,\n  JSON.stringify($('IA2 - Generación').item.json),\n  $('IA2 - Generación').item.json.output.contexto_personalizacion,\n  JSON.stringify(\n  $('Unificar contexto RAG').first().json.referencias_rag\n),\n  JSON.stringify($('IA3 - Evaluación').item.json)\n] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        1744,
+        -224
+      ],
+      "id": "dfa436f0-d7a9-406b-8604-c14273fb9086",
+      "name": "Guardar actividad",
+      "credentials": {
+        "postgres": {
+          "id": "LF46SQyz7oBTLI2P",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=PLANIFICACIÓN DE IA1:\n\n{{ JSON.stringify($('IA1 - Planificación').item.json) }}\n\n\nACTIVIDAD RECHAZADA:\n\n{{ JSON.stringify($('IA2 - Generación').item.json) }}\n\n\nRESULTADO DE LA EVALUACIÓN:\n\n{{ JSON.stringify($('IA3 - Evaluación').item.json) }}\n\n\nCONTENIDO ACADÉMICO RAG:\n\n{{ $('Unificar contexto RAG').first().json.contexto_rag }}\n\n\nPERFIL:\n\nIntereses:\n{{ $('Recuperar perfil').item.json.intereses }}\n\nAficiones:\n{{ $('Recuperar perfil').item.json.aficiones }}\n\nPreferencias:\n{{ $('Recuperar perfil').item.json.preferencias }}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Actúa como un sistema de regeneración de actividades educativas.\n\nLa actividad generada previamente ha sido rechazada por el sistema evaluador.\n\nDebes generar una nueva versión corrigiendo específicamente los problemas detectados.\n\nREGLAS OBLIGATORIAS:\n\n- Utiliza exclusivamente conceptos académicos presentes en el contenido recuperado mediante RAG.\n- Respeta los conceptos permitidos establecidos por IA1.\n- No introduzcas conceptos académicos nuevos.\n- Mantén el objetivo de aprendizaje solicitado.\n- Ajusta la actividad al nivel de dificultad indicado.\n- Utiliza los intereses, aficiones o preferencias del perfil únicamente para contextualizar la actividad.\n- Corrige específicamente los problemas indicados por el evaluador.\n- No reproduzcas un error ya detectado en la actividad anterior.\n- No inventes errores adicionales que no procedan de los datos proporcionados.\n\nRESTRICCIÓN ESTRICTA DE EJEMPLOS Y DEDUCCIONES:\n\n- No crees ejemplos, reglas, propiedades o explicaciones académicas que no aparezcan explícitamente en el contenido RAG.\n- Si el RAG contiene únicamente un ejemplo concreto, utiliza únicamente dicho ejemplo y no lo generalices a otros casos.\n- No solicites explicar por qué ocurre un resultado si la explicación causal no aparece explícitamente en el RAG.\n- No deduzcas reglas generales a partir de un ejemplo concreto.\n- No plantees situaciones contrarias a las descritas en el material para que el estudiante tenga que inferir información ausente.\n- No introduzcas errores comunes, excepciones o casos hipotéticos que no aparezcan en el RAG o en el historial real proporcionado.\n- Prioriza preguntas de identificación, reproducción y aplicación directa de la información explícitamente disponible en el RAG.\n- No plantees el caso contrario de una afirmación presente en el RAG.\n- Por ejemplo, si el material indica que un concepto se utiliza \"cuando se conoce previamente el número de repeticiones\", no preguntes ni afirmes qué ocurre \"cuando no se conoce\" dicho número, salvo que esa información aparezca explícitamente en el RAG.\n- Si la evaluación anterior ha detectado una inferencia o un caso contrario no respaldado por el RAG, elimina completamente ese planteamiento en la nueva versión. No intentes reformularlo.\n\nAntes de devolver la nueva actividad, revisa cada pregunta y cada afirmación académica. Si alguna requiere conocimiento que no aparece explícitamente en el RAG, elimínala o reformúlala utilizando únicamente la información disponible.\n\nDevuelve únicamente la nueva actividad siguiendo la estructura definida."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        1680,
+        80
+      ],
+      "id": "dd103a8d-7dfb-48ad-937f-88c58dcf886c",
+      "name": "IA2 - Regeneración"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini",
+          "cachedResultName": "gpt-5-mini",
+          "cachedResultUrl": ""
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1696,
+        304
+      ],
+      "id": "8f202c46-2101-43bb-84c4-5139d13639e3",
+      "name": "OpenAI Chat Model3",
+      "credentials": {
+        "openAiApi": {
+          "id": "GcydM2GfSP0X4aIZ",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"titulo\": \"Las vueltas de la carrera\",\n  \"enunciado\": \"Desarrollar un programa utilizando un bucle for y la función range().\",\n  \"objetivo\": \"Utilizar estructuras repetitivas en Python\",\n  \"conceptos_utilizados\": [\n    \"for\",\n    \"range()\"\n  ],\n  \"contexto_personalizacion\": \"automovilismo\",\n  \"dificultad\": \"básica\",\n  \"puntuacion_maxima\": 10\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1824,
+        304
+      ],
+      "id": "896cefca-ea18-4bb0-8270-267579d2950a",
+      "name": "Structured Output Parser3"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=ACTIVIDAD GENERADA:\n\n{{ JSON.stringify($('IA2 - Regeneración').item.json) }}\n\n\nOBJETIVO DE APRENDIZAJE:\n\n{{ $('Webhook').item.json.body.objetivo }}\n\n\nCONTENIDO ACADÉMICO RECUPERADO MEDIANTE RAG:\n\n{{ $('Unificar contexto RAG').first().json.contexto_rag }}\n\n\nPERFIL:\n\nIntereses:\n{{ $('Recuperar perfil').item.json.intereses }}\n\nAficiones:\n{{ $('Recuperar perfil').item.json.aficiones }}\n\nPreferencias:\n{{ $('Recuperar perfil').item.json.preferencias }}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Actúa como un sistema evaluador de actividades educativas regeneradas.\n\nTu función es comprobar si la nueva actividad corrige los problemas detectados anteriormente y cumple los criterios definidos.\n\nNO debes generar una nueva actividad.\nNO debes corregir la actividad.\nÚnicamente debes evaluarla.\n\nCOMPROBACIONES OBLIGATORIAS:\n\n1. CONTENIDO RAG\n- Todos los conceptos, afirmaciones, explicaciones, ejemplos e instrucciones académicas deben estar respaldados explícitamente por el contenido recuperado mediante RAG.\n- No utilices conocimiento general del modelo para completar información ausente.\n- No generalices ejemplos concretos a reglas que no aparezcan en el RAG.\n- Si se pide explicar por qué ocurre algo, esa explicación debe aparecer explícitamente en el contenido RAG.\n\n2. OBJETIVO\n- La actividad debe trabajar directamente el objetivo de aprendizaje solicitado.\n\n3. PERSONALIZACIÓN\n- La contextualización debe utilizar únicamente intereses, aficiones o preferencias existentes en el perfil.\n- La personalización no puede introducir contenido académico nuevo.\n\n4. CORRECCIÓN DE LA REGENERACIÓN\n- Comprueba que la nueva actividad haya corregido los problemas indicados en la evaluación anterior.\n- No debe reproducir los errores que provocaron el rechazo de la primera versión.\n\nREGLAS DE DECISIÓN:\n\n- \"contenido_rag\" será true únicamente si todo el contenido académico está respaldado por el RAG.\n- \"objetivo_correcto\" será true únicamente si la actividad mantiene el objetivo solicitado.\n- \"personalizacion_correcta\" será true únicamente si la personalización corresponde con el perfil.\n- \"valida\" solo podrá ser true cuando todas las comprobaciones sean true.\n- Si alguna comprobación falla, explica de forma concreta el motivo."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        2032,
+        80
+      ],
+      "id": "bb94b132-c43e-48b6-9e93-fd626d4a8e2a",
+      "name": "IA3 - Reevaluación"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini",
+          "cachedResultName": "gpt-5-mini",
+          "cachedResultUrl": ""
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        2048,
+        304
+      ],
+      "id": "5c639131-bb70-4a1f-838a-6a80e90edbda",
+      "name": "OpenAI Chat Model4",
+      "credentials": {
+        "openAiApi": {
+          "id": "GcydM2GfSP0X4aIZ",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"valida\": true,\n  \"contenido_rag\": true,\n  \"objetivo_correcto\": true,\n  \"personalizacion_correcta\": true,\n  \"motivo\": \"\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        2176,
+        304
+      ],
+      "id": "fce24cee-c177-4d97-96ad-0baeeec3d237",
+      "name": "Structured Output Parser4"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "c4dbdd35-0a4a-4a62-9878-56428f9a3961",
+              "leftValue": "={{ $json.valida_final }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2464,
+        80
+      ],
+      "id": "1fe2afb3-c569-462e-b03a-7eb01627d006",
+      "name": "¿Regeneración válida?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "4918915c-bcf2-4c87-b6c9-8a94676d1c27",
+              "leftValue": "={{ $('IA1 - Planificación').item.json.output.rag_suficiente }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        304,
+        80
+      ],
+      "id": "e05bb4a1-2dbd-489c-b839-42116099a6bc",
+      "name": "¿RAG suficiente?"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"ok\": false,\n  \"error\": \"RAG_INSUFICIENTE\",\n  \"mensaje\": \"Los materiales docentes disponibles no contienen información suficiente para generar la actividad solicitada.\"\n}",
+        "options": {
+          "responseCode": 422
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        592,
+        224
+      ],
+      "id": "e5a75c60-ec55-461f-9f89-2f357da2f1e9",
+      "name": "Error - RAG insuficiente"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "insert into public.actividades (\n    perfil_id,\n    objetivo_aprendizaje,\n    tema,\n    dificultad,\n    contenido,\n    tipo_actividad,\n    interes_personalizacion,\n    referencias_rag,\n    resultado_guardrails,\n    regeneraciones,\n    estado\n)\nvalues (\n    $1,\n    $2,\n    $3,\n    $4,\n    $5,\n    'normal',\n    $6,\n    $7::jsonb,\n    $8::jsonb,\n    1,\n    'pendiente_revision'\n)\nreturning *;",
+        "options": {
+          "queryReplacement": "={{ [\n  $('Webhook').item.json.body.perfil_id,\n  $('Webhook').item.json.body.objetivo,\n  $('Webhook').item.json.body.tema,\n  $('Webhook').item.json.body.dificultad,\n  JSON.stringify($('IA2 - Regeneración').item.json),\n  $('IA2 - Regeneración').item.json.output.contexto_personalizacion,\n  JSON.stringify(\n  $('Unificar contexto RAG').first().json.referencias_rag\n),\n  JSON.stringify($('IA3 - Reevaluación').item.json)\n] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        2704,
+        0
+      ],
+      "id": "531ba564-1d51-4e9c-a879-3b31922501a5",
+      "name": "Guardar actividad regenerada",
+      "credentials": {
+        "postgres": {
+          "id": "LF46SQyz7oBTLI2P",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"ok\": false,\n  \"error\": \"REVISION_DOCENTE_REQUERIDA\",\n  \"mensaje\": \"La actividad no ha superado la validación después del intento de regeneración y requiere revisión del profesorado.\"\n}",
+        "options": {
+          "responseCode": 422
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2704,
+        192
+      ],
+      "id": "d85f4756-00b3-4a82-b81a-b65fc3a8ddc8",
+      "name": "Revisión del profesorado"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ (() => {\n  const raw = typeof $json.contenido === 'string'\n    ? JSON.parse($json.contenido)\n    : $json.contenido;\n\n  const actividad = raw?.output?.output ?? raw?.output ?? raw;\n\n  return {\n    ok: true,\n    actividad_id: Number($json.id),\n    mensaje: \"La actividad se ha generado y almacenado correctamente.\",\n    regenerada: false,\n    actividad\n  };\n})() }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2096,
+        -224
+      ],
+      "id": "af11d2d7-fdee-4ba3-8485-b57fa7b9b141",
+      "name": "Respuesta - Actividad generada"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1f73b594-dc51-498a-8cc5-383332f78e2a",
+              "leftValue": "={{ $json.output.valida_final }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1456,
+        -80
+      ],
+      "id": "5d94e9f0-68a1-4492-91ba-97625ec5af22",
+      "name": "¿Actividad válida?"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ (() => {\n  const raw = typeof $json.contenido === 'string'\n    ? JSON.parse($json.contenido)\n    : $json.contenido;\n\n  const actividad = raw?.output?.output ?? raw?.output ?? raw;\n\n  return {\n    ok: true,\n    actividad_id: Number($json.id),\n    mensaje: \"La actividad se ha regenerado, validado y almacenado correctamente.\",\n    regenerada: true,\n    actividad\n  };\n})() }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2928,
+        0
+      ],
+      "id": "9a7350fe-ae26-4bff-8e01-028b8c715ee4",
+      "name": "Guardar - Actividad regenerada"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const actividad = $('IA2 - Generación').first().json.output;\nconst evaluacionIA = $('IA3 - Evaluación').first().json.output;\n\nconst rag =\n  $('Unificar contexto RAG').first().json.contexto_rag ?? '';\n\n// Texto completo de la actividad\nconst texto = [\n  actividad.titulo ?? '',\n  actividad.enunciado ?? '',\n  actividad.objetivo ?? '',\n  ...(actividad.conceptos_utilizados ?? [])\n]\n  .join(' ')\n  .toLowerCase();\n\nconst textoRag = String(rag).toLowerCase();\n\nconst violaciones = [];\n\n// ---------------------------------------------------------\n// 1. Explicaciones causales no respaldadas\n// ---------------------------------------------------------\n\nif (\n  texto.includes('por qué range') ||\n  texto.includes('por qué la función range')\n) {\n  violaciones.push(\n    'Se solicita una explicación causal sobre range() que puede no estar respaldada explícitamente por el RAG.'\n  );\n}\n\n// ---------------------------------------------------------\n// 2. Conceptos no presentes en el material\n// ---------------------------------------------------------\n\nconst expresionesControladas = [\n  'límite de range',\n  'límite superior',\n  'valor superior',\n  'off-by-one',\n  'errores comunes'\n];\n\nfor (const expresion of expresionesControladas) {\n  if (\n    texto.includes(expresion) &&\n    !textoRag.includes(expresion)\n  ) {\n    violaciones.push(\n      `Se introduce \"${expresion}\", que no aparece explícitamente en el RAG.`\n    );\n  }\n}\n\n// ---------------------------------------------------------\n// 3. Detectar ejemplos numéricos de range()\n// ---------------------------------------------------------\n\nfunction extraerRangeNumericos(contenido) {\n  return [\n    ...String(contenido).matchAll(/range\\s*\\(\\s*(\\d+)\\s*\\)/gi)\n  ].map(match => Number(match[1]));\n}\n\nconst ejemplosPermitidos = new Set(\n  extraerRangeNumericos(textoRag)\n);\n\nconst ejemplosActividad = [\n  ...new Set(extraerRangeNumericos(texto))\n];\n\nconst ejemplosNoPermitidos = ejemplosActividad.filter(\n  numero => !ejemplosPermitidos.has(numero)\n);\n\nif (ejemplosNoPermitidos.length > 0) {\n  violaciones.push(\n    `La actividad introduce ejemplos de range() no presentes explícitamente en el RAG: ${ejemplosNoPermitidos\n      .map(numero => `range(${numero})`)\n      .join(', ')}.`\n  );\n}\n\n// ---------------------------------------------------------\n// 4. Generalización range(n)\n// ---------------------------------------------------------\n\nif (\n  texto.includes('range(n)') &&\n  !textoRag.includes('range(n)')\n) {\n  violaciones.push(\n    'Se generaliza el ejemplo disponible a range(n), aunque esa regla no aparece explícitamente en el RAG.'\n  );\n}\n\n// ---------------------------------------------------------\n// 5. Casos inversos o inferencias no respaldadas\n// ---------------------------------------------------------\n\nif (\n  texto.includes('cuando no se conoce') ||\n  texto.includes('si no se conoce')\n) {\n  if (\n    !textoRag.includes('cuando no se conoce') &&\n    !textoRag.includes('si no se conoce')\n  ) {\n    violaciones.push(\n      'Se plantea un caso contrario que requiere una inferencia no explícita en el RAG.'\n    );\n  }\n}\n\n// ---------------------------------------------------------\n// Resultado determinista\n// ---------------------------------------------------------\n\nconst guardrailValido = violaciones.length === 0;\n\nreturn {\n  json: {\n    evaluacion_ia: evaluacionIA,\n\n    guardrail_determinista: {\n      valido: guardrailValido,\n      violaciones\n    },\n\n    valida_final:\n      evaluacionIA.valida === true &&\n      guardrailValido === true\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1232,
+        -80
+      ],
+      "id": "a7dfb863-09c2-4d63-b009-9ce4d0fcee95",
+      "name": "Guardrail determinista"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const actividad = $('IA2 - Regeneración').first().json.output;\nconst evaluacionIA = $('IA3 - Reevaluación').first().json.output;\n\nconst rag =\n  $('Unificar contexto RAG').first().json.contexto_rag ?? '';\n\n// Texto completo de la actividad\nconst texto = [\n  actividad.titulo ?? '',\n  actividad.enunciado ?? '',\n  actividad.objetivo ?? '',\n  ...(actividad.conceptos_utilizados ?? [])\n]\n  .join(' ')\n  .toLowerCase();\n\nconst textoRag = String(rag).toLowerCase();\n\nconst violaciones = [];\n\n// ---------------------------------------------------------\n// 1. Explicaciones causales no respaldadas\n// ---------------------------------------------------------\n\nif (\n  texto.includes('por qué range') ||\n  texto.includes('por qué la función range')\n) {\n  violaciones.push(\n    'Se solicita una explicación causal sobre range() que puede no estar respaldada explícitamente por el RAG.'\n  );\n}\n\n// ---------------------------------------------------------\n// 2. Conceptos no presentes en el material\n// ---------------------------------------------------------\n\nconst expresionesControladas = [\n  'límite de range',\n  'límite superior',\n  'valor superior',\n  'off-by-one',\n  'errores comunes'\n];\n\nfor (const expresion of expresionesControladas) {\n  if (\n    texto.includes(expresion) &&\n    !textoRag.includes(expresion)\n  ) {\n    violaciones.push(\n      `Se introduce \"${expresion}\", que no aparece explícitamente en el RAG.`\n    );\n  }\n}\n\n// ---------------------------------------------------------\n// 3. Detectar ejemplos numéricos de range()\n// ---------------------------------------------------------\n\nfunction extraerRangeNumericos(contenido) {\n  return [\n    ...String(contenido).matchAll(/range\\s*\\(\\s*(\\d+)\\s*\\)/gi)\n  ].map(match => Number(match[1]));\n}\n\nconst ejemplosPermitidos = new Set(\n  extraerRangeNumericos(textoRag)\n);\n\nconst ejemplosActividad = [\n  ...new Set(extraerRangeNumericos(texto))\n];\n\nconst ejemplosNoPermitidos = ejemplosActividad.filter(\n  numero => !ejemplosPermitidos.has(numero)\n);\n\nif (ejemplosNoPermitidos.length > 0) {\n  violaciones.push(\n    `La actividad introduce ejemplos de range() no presentes explícitamente en el RAG: ${ejemplosNoPermitidos\n      .map(numero => `range(${numero})`)\n      .join(', ')}.`\n  );\n}\n\n// ---------------------------------------------------------\n// 4. Generalización range(n)\n// ---------------------------------------------------------\n\nif (\n  texto.includes('range(n)') &&\n  !textoRag.includes('range(n)')\n) {\n  violaciones.push(\n    'Se generaliza el ejemplo disponible a range(n), aunque esa regla no aparece explícitamente en el RAG.'\n  );\n}\n\n// ---------------------------------------------------------\n// 5. Casos inversos o inferencias no respaldadas\n// ---------------------------------------------------------\n\nif (\n  texto.includes('cuando no se conoce') ||\n  texto.includes('si no se conoce')\n) {\n  if (\n    !textoRag.includes('cuando no se conoce') &&\n    !textoRag.includes('si no se conoce')\n  ) {\n    violaciones.push(\n      'Se plantea un caso contrario que requiere una inferencia no explícita en el RAG.'\n    );\n  }\n}\n\n// ---------------------------------------------------------\n// Resultado determinista\n// ---------------------------------------------------------\n\nconst guardrailValido = violaciones.length === 0;\n\nreturn {\n  json: {\n    evaluacion_ia: evaluacionIA,\n\n    guardrail_determinista: {\n      valido: guardrailValido,\n      violaciones\n    },\n\n    valida_final:\n      evaluacionIA.valida === true &&\n      guardrailValido === true\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2304,
+        80
+      ],
+      "id": "51a7dc0a-554e-4d69-85d2-d19668ca190f",
+      "name": "Guardrail determinista 2"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nconst documentos = items\n  .map((item) => ({\n    contenido: item.json.document?.pageContent ?? '',\n    metadata: item.json.document?.metadata ?? {},\n    score: item.json.score ?? null,\n  }))\n  .filter((doc) => doc.contenido);\n\nconst contextoRag = documentos\n  .map(\n    (doc, index) =>\n      `FRAGMENTO ${index + 1}:\\n${doc.contenido}`\n  )\n  .join('\\n\\n');\n\nreturn [\n  {\n    json: {\n      contexto_rag: contextoRag,\n      referencias_rag: documentos.map((doc) => ({\n        metadata: doc.metadata,\n        score: doc.score,\n      })),\n    },\n  },\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -128,
+        -32
+      ],
+      "id": "6cb1b8d7-5454-45d0-87bf-566f424c0b7f",
+      "name": "Unificar contexto RAG"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Recuperar perfil",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Perfil existe?": {
+      "main": [
+        [
+          {
+            "node": "¿Perfil completo?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Perfil inexistente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Perfil completo?": {
+      "main": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error - perfil incompleto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres PGVector Store": {
+      "main": [
+        [
+          {
+            "node": "Unificar contexto RAG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "IA1 - Planificación",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "IA1 - Planificación",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recuperar perfil": {
+      "main": [
+        [
+          {
+            "node": "¿Perfil existe?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "IA2 - Generación",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IA1 - Planificación": {
+      "main": [
+        [
+          {
+            "node": "¿RAG suficiente?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "IA2 - Generación",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IA2 - Generación": {
+      "main": [
+        [
+          {
+            "node": "IA3 - Evaluación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "IA3 - Evaluación",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser2": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "IA3 - Evaluación",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IA3 - Evaluación": {
+      "main": [
+        [
+          {
+            "node": "Guardrail determinista",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "IA2 - Regeneración",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser3": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "IA2 - Regeneración",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IA2 - Regeneración": {
+      "main": [
+        [
+          {
+            "node": "IA3 - Reevaluación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "IA3 - Reevaluación",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser4": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "IA3 - Reevaluación",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IA3 - Reevaluación": {
+      "main": [
+        [
+          {
+            "node": "Guardrail determinista 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿RAG suficiente?": {
+      "main": [
+        [
+          {
+            "node": "IA2 - Generación",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error - RAG insuficiente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Regeneración válida?": {
+      "main": [
+        [
+          {
+            "node": "Guardar actividad regenerada",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Revisión del profesorado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar actividad": {
+      "main": [
+        [
+          {
+            "node": "Respuesta - Actividad generada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar actividad regenerada": {
+      "main": [
+        [
+          {
+            "node": "Guardar - Actividad regenerada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Actividad válida?": {
+      "main": [
+        [
+          {
+            "node": "Guardar actividad",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IA2 - Regeneración",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardrail determinista": {
+      "main": [
+        [
+          {
+            "node": "¿Actividad válida?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardrail determinista 2": {
+      "main": [
+        [
+          {
+            "node": "¿Regeneración válida?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Unificar contexto RAG": {
+      "main": [
+        [
+          {
+            "node": "IA1 - Planificación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "d183e0c5-983b-4f3e-bfe4-6b109acdc718",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1aafd9336c0d1bfb1b6ea10346f42afca01929ac97db96ed6af1586120385704"
+  },
+  "nodeGroups": [],
+  "id": "rNj6DNXfYIwG4QwL",
+  "tags": []
+}

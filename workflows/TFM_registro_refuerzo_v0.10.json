@@ -1,0 +1,811 @@
+{
+  "name": "TFM - Registro intento y refuerzo",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "registrar-intento",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        192
+      ],
+      "id": "45d202f4-802b-4d45-a86a-5380e1d6d2eb",
+      "name": "Registrar intento",
+      "webhookId": "20faa7e5-fcbf-40c3-a9dc-be952b560acb"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select\n    a.id as actividad_id,\n    a.perfil_id,\n    a.objetivo_aprendizaje,\n    a.tema,\n    a.dificultad,\n    a.contenido,\n    a.tipo_actividad,\n    p.intereses,\n    p.aficiones,\n    p.preferencias\nfrom public.actividades a\njoin public.perfiles p\n    on p.id = a.perfil_id\nwhere a.id = $1;",
+        "options": {
+          "queryReplacement": "={{ [\n  $('Registrar intento').item.json.body.actividad_id\n] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        224,
+        192
+      ],
+      "id": "ca9b8feb-1ced-4b5c-be34-6f8e0d76ff86",
+      "name": "Recuperar actividad y perfil",
+      "credentials": {
+        "postgres": {
+          "id": "LF46SQyz7oBTLI2P",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select\n    coalesce(max(numero_intento), 0) + 1 as numero_intento\nfrom public.intentos\nwhere actividad_id = $1;",
+        "options": {
+          "queryReplacement": "={{ [\n  $('Registrar intento').item.json.body.actividad_id\n] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        448,
+        192
+      ],
+      "id": "4582c5a1-7fd4-4348-b791-d70e9573752d",
+      "name": "Calcular número de intento",
+      "credentials": {
+        "postgres": {
+          "id": "LF46SQyz7oBTLI2P",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "insert into public.intentos (\n    actividad_id,\n    numero_intento,\n    fecha_inicio,\n    fecha_fin,\n    tiempo_segundos,\n    puntuacion_obtenida,\n    puntuacion_maxima,\n    finalizada,\n    errores\n)\nvalues (\n    $1,\n    $2,\n    $3,\n    $4,\n    $5,\n    $6,\n    $7,\n    $8,\n    $9\n)\nreturning *;",
+        "options": {
+          "queryReplacement": "={{ [\n  $('Registrar intento').item.json.body.actividad_id,\n  $('Calcular número de intento').item.json.numero_intento,\n  $('Registrar intento').item.json.body.fecha_inicio,\n  $('Registrar intento').item.json.body.fecha_fin,\n  $('Registrar intento').item.json.body.tiempo_segundos,\n  $('Registrar intento').item.json.body.puntuacion_obtenida,\n  $('Registrar intento').item.json.body.puntuacion_maxima,\n  $('Registrar intento').item.json.body.finalizada,\n  $('Registrar intento').item.json.body.errores\n] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        672,
+        192
+      ],
+      "id": "9b6201df-98c0-4f3e-826e-dea9a1f83eea",
+      "name": "Guardar intento",
+      "credentials": {
+        "postgres": {
+          "id": "LF46SQyz7oBTLI2P",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"ok\": true,\n  \"mensaje\": \"El intento se ha registrado correctamente.\"\n}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1184,
+        336
+      ],
+      "id": "1af76573-7c7f-40b4-afaa-280a657b34af",
+      "name": "Respuesta  - Intento registrado"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "0f5f1744-e16d-4e16-bba1-6016e8dd3af3",
+              "leftValue": "={{ Number($('Registrar intento').item.json.body.puntuacion_obtenida) / Number($('Registrar intento').item.json.body.puntuacion_maxima) }}\n\n",
+              "rightValue": 0.5,
+              "operator": {
+                "type": "number",
+                "operation": "lt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        848,
+        192
+      ],
+      "id": "1eb9ddc1-64a9-44b9-a3f9-93f316d52535",
+      "name": "¿Necesita refuerzo?"
+    },
+    {
+      "parameters": {
+        "mode": "load",
+        "tableName": "documentos_rag",
+        "prompt": "={{    $('Recuperar actividad y perfil').item.json.tema   + ' - '   + $('Recuperar actividad y perfil').item.json.objetivo_aprendizaje   + ' - Errores detectados: '   + $('Registrar intento').item.json.body.errores }}",
+        "topK": 3,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.3,
+      "position": [
+        1040,
+        -64
+      ],
+      "id": "80956b16-bec7-4381-8228-e8cccd317ad1",
+      "name": "Recuperar RAG para refuerzo",
+      "credentials": {
+        "postgres": {
+          "id": "LF46SQyz7oBTLI2P",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1056,
+        112
+      ],
+      "id": "3bd4e4d3-f93d-471a-ae3c-4cdb9f048a01",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "GcydM2GfSP0X4aIZ",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=ACTIVIDAD ORIGINAL:\n\nObjetivo:\n{{ $('Recuperar actividad y perfil').item.json.objetivo_aprendizaje }}\n\nTema:\n{{ $('Recuperar actividad y perfil').item.json.tema }}\n\nDificultad:\n{{ $('Recuperar actividad y perfil').item.json.dificultad }}\n\n\nRESULTADO DEL INTENTO:\n\nPuntuación obtenida:\n{{ $('Registrar intento').item.json.body.puntuacion_obtenida }}\n\nPuntuación máxima:\n{{ $('Registrar intento').item.json.body.puntuacion_maxima }}\n\nErrores registrados:\n{{ $('Registrar intento').item.json.body.errores }}\n\n\nPERFIL:\n\nIntereses:\n{{ $('Recuperar actividad y perfil').item.json.intereses }}\n\nAficiones:\n{{ $('Recuperar actividad y perfil').item.json.aficiones }}\n\nPreferencias:\n{{ $('Recuperar actividad y perfil').item.json.preferencias }}\n\n\nCONTENIDO ACADÉMICO RECUPERADO MEDIANTE RAG:\n\n{{ $('Unificar contexto RAG refuerzo').first().json.contexto_rag }}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Actúa como un sistema de planificación de actividades educativas de refuerzo.\n\nTu función NO es generar todavía la actividad final. Debes analizar la actividad original, el resultado del intento, los errores registrados, el perfil y el contenido académico recuperado mediante RAG para elaborar una planificación de refuerzo.\n\nREGLAS:\n\n- Utiliza exclusivamente conceptos académicos presentes explícitamente en el contenido recuperado mediante RAG.\n- No introduzcas conceptos, reglas, explicaciones o ejemplos académicos que no estén respaldados por el RAG.\n- Los errores incluidos en \"errores_a_reforzar\" deben proceder únicamente del intento registrado.\n- No inventes errores frecuentes, hipotéticos o deducidos a partir de la puntuación obtenida.\n- Si no se proporciona ningún error concreto, devuelve \"errores_a_reforzar\": [].\n- El objetivo de refuerzo debe mantener relación con la actividad original y centrarse especialmente en los errores reales registrados.\n- Los intereses, aficiones y preferencias del perfil solo pueden utilizarse para contextualizar la futura actividad y nunca como fuente de contenido académico.\n- Los conceptos incluidos en \"conceptos_permitidos\" deben proceder exclusivamente del contenido RAG.\n- No generes todavía la actividad de refuerzo.\n\nSUFICIENCIA DEL RAG:\n\n- Comprueba si el contenido recuperado mediante RAG contiene información suficiente para trabajar los errores registrados y el objetivo de refuerzo.\n- \"rag_suficiente\" será true únicamente cuando el material recuperado permita desarrollar el refuerzo sin utilizar conocimiento académico externo.\n- No consideres suficiente el contenido solo porque pertenezca al mismo tema general.\n- Si el RAG no permite trabajar alguno de los errores registrados o el objetivo de refuerzo, devuelve \"rag_suficiente\": false.\n- Cuando \"rag_suficiente\" sea false, explica brevemente la causa en \"motivo_rag\".\n\nDevuelve únicamente la planificación siguiendo la estructura definida por el formato de salida."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        1472,
+        48
+      ],
+      "id": "de4257a0-593e-40c8-a82d-163b63ac6f2a",
+      "name": "IA1 - Planificación refuerzo"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"objetivo_refuerzo\": \"Reforzar el uso de range() junto con el bucle for\",\n  \"errores_a_reforzar\": [\n    \"Dificultades al utilizar range() correctamente.\"\n  ],\n  \"conceptos_permitidos\": [\n    \"bucle for\",\n    \"función range()\"\n  ],\n  \"estrategia_refuerzo\": \"Actividad práctica centrada en el error registrado\",\n  \"intereses_utilizables\": [\n    \"automovilismo\"\n  ],\n  \"dificultad\": \"básica\",\n  \"rag_suficiente\": true,\n  \"motivo_rag\": \"\"\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1616,
+        272
+      ],
+      "id": "2d235761-44e5-4e29-969a-31654aacb188",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini",
+          "cachedResultName": "gpt-5-mini",
+          "cachedResultUrl": ""
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1472,
+        272
+      ],
+      "id": "358fc14a-604e-458f-a48d-92d47f2e1225",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "GcydM2GfSP0X4aIZ",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "913332dd-0951-4e39-91a1-96a5f9cd143b",
+              "leftValue": "={{ $json.output.rag_suficiente }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1824,
+        48
+      ],
+      "id": "1e313e5a-576f-4341-8cd8-f6434b45734a",
+      "name": "¿RAG suficiente refuerzo?"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini",
+          "cachedResultName": "gpt-5-mini",
+          "cachedResultUrl": ""
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        2048,
+        32
+      ],
+      "id": "e64c182a-9843-4286-9d3e-60c492c1ca20",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "GcydM2GfSP0X4aIZ",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"titulo\": \"Refuerzo del uso de range()\",\n  \"enunciado\": \"Realiza una actividad práctica utilizando un bucle for y la función range().\",\n  \"objetivo\": \"Reforzar el uso correcto de range() en bucles for\",\n  \"errores_trabajados\": [\n    \"Dificultades al utilizar range() correctamente.\"\n  ],\n  \"conceptos_utilizados\": [\n    \"bucle for\",\n    \"función range()\"\n  ],\n  \"contexto_personalizacion\": \"ciclismo\",\n  \"dificultad\": \"básica\",\n  \"puntuacion_maxima\": 10\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        2192,
+        32
+      ],
+      "id": "8166aea7-c9dd-4ec3-a8f9-7507e64eef2b",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=PLANIFICACIÓN DEL REFUERZO:\n\n{{ JSON.stringify($('IA1 - Planificación refuerzo').item.json) }}\n\n\nCONTENIDO ACADÉMICO RAG:\n\n{{ $('Recuperar RAG para refuerzo').item.json.document.pageContent }}\n\n\nACTIVIDAD ORIGINAL:\n\n{{ $('Recuperar actividad y perfil').item.json.contenido }}\n\n\nRESULTADO DEL INTENTO:\n\nPuntuación:\n{{ $('Registrar intento').item.json.body.puntuacion_obtenida }}\nde\n{{ $('Registrar intento').item.json.body.puntuacion_maxima }}\n\nErrores:\n{{ $('Registrar intento').item.json.body.errores }}\n\n\nPERFIL:\n\nIntereses:\n{{ $('Recuperar actividad y perfil').item.json.intereses }}\n\nAficiones:\n{{ $('Recuperar actividad y perfil').item.json.aficiones }}\n\nPreferencias:\n{{ $('Recuperar actividad y perfil').item.json.preferencias }}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Actúa como un sistema de generación de actividades educativas de refuerzo.\n\nDebes generar una única actividad de refuerzo a partir de la planificación recibida, los errores reales registrados y el contenido académico recuperado mediante RAG.\n\nREGLAS OBLIGATORIAS:\n\n- Utiliza exclusivamente conceptos académicos presentes explícitamente en el contenido recuperado mediante RAG.\n- Respeta los conceptos permitidos definidos en la planificación.\n- La actividad debe centrarse específicamente en los errores reales detectados en el intento.\n- No inventes errores adicionales, errores frecuentes o dificultades hipotéticas.\n- Mantén el objetivo de refuerzo establecido en la planificación.\n- Mantén el nivel de dificultad indicado.\n- La actividad debe ser diferente de la actividad original y estar orientada específicamente al refuerzo.\n- Los intereses, aficiones y preferencias del perfil solo pueden utilizarse para contextualizar la actividad y nunca como fuente de contenido académico.\n\nRESTRICCIÓN DEL CONTENIDO ACADÉMICO:\n\n- No introduzcas conceptos, definiciones, reglas, propiedades, explicaciones o ejemplos académicos que no estén explícitamente respaldados por el RAG.\n- No generalices ejemplos concretos del material a reglas generales que no aparezcan expresamente en él.\n- Si el RAG proporciona únicamente un ejemplo o resultado concreto, puedes pedir identificarlo, reproducirlo o aplicarlo directamente, pero no explicar por qué ocurre salvo que esa explicación también aparezca en el material.\n- No plantees situaciones que obliguen a deducir conocimiento académico ausente del RAG.\n- Cada pregunta o tarea debe poder resolverse utilizando exclusivamente la información contenida en el RAG y los datos reales del intento.\n\nANTES DE DEVOLVER LA ACTIVIDAD:\n\n- Revisa individualmente cada pregunta, afirmación y ejemplo.\n- Si alguno requiere información académica que no aparece explícitamente en el RAG, elimínalo o reformúlalo.\n- Comprueba que los errores trabajados coincidan con los errores reales registrados en el intento.\n\nCOMPROBACIÓN FINAL OBLIGATORIA:\n\n- Antes de devolver la actividad, compara todos los ejemplos utilizados con los ejemplos presentes en el contenido RAG.\n- No cambies valores, números o parámetros de un ejemplo para crear casos nuevos.\n- Si el RAG contiene únicamente un ejemplo concreto, reutiliza únicamente ese ejemplo.\n- Si necesitas variar la actividad, modifica únicamente el contexto o la forma de preguntar, pero no el contenido académico ni los ejemplos disponibles.\n\nDevuelve únicamente la actividad de refuerzo siguiendo la estructura definida por el formato de salida."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        2048,
+        -208
+      ],
+      "id": "6e1a104b-db6d-449e-b5a6-bc3d12b446a4",
+      "name": "IA2 - Generación refuerzo"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=ACTIVIDAD DE REFUERZO GENERADA:\n\n{{ JSON.stringify($('IA2 - Generación refuerzo').item.json) }}\n\n\nPLANIFICACIÓN DEL REFUERZO:\n\n{{ JSON.stringify($('IA1 - Planificación refuerzo').item.json) }}\n\n\nERRORES REALES DEL INTENTO:\n\n{{ $('Registrar intento').item.json.body.errores }}\n\n\nCONTENIDO ACADÉMICO RAG:\n\n{{ $('Recuperar RAG para refuerzo').item.json.document.pageContent }}\n\n\nPERFIL:\n\nIntereses:\n{{ $('Recuperar actividad y perfil').item.json.intereses }}\n\nAficiones:\n{{ $('Recuperar actividad y perfil').item.json.aficiones }}\n\nPreferencias:\n{{ $('Recuperar actividad y perfil').item.json.preferencias }}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Actúa como un sistema evaluador de actividades educativas de refuerzo.\n\nTu función es comprobar la actividad generada.\n\nNO debes corregirla.\nNO debes generar una nueva actividad.\nDebes limitarte a evaluarla con la información proporcionada.\n\nCOMPROBACIONES OBLIGATORIAS:\n\n1. CONTENIDO RAG\n\n- Todos los conceptos, explicaciones, reglas, ejemplos e instrucciones académicas presentes en la actividad deben estar respaldados explícitamente por el contenido recuperado mediante RAG.\n- No utilices conocimiento general del modelo para completar información ausente.\n- No deduzcas reglas generales a partir de ejemplos concretos.\n- Si la actividad solicita explicar por qué ocurre algo, la explicación necesaria debe aparecer explícitamente en el RAG.\n- Si detectas contenido académico no respaldado, añádelo a \"violaciones_rag\".\n\n2. ERRORES A REFORZAR\n\n- La actividad debe trabajar específicamente los errores reales registrados en el intento.\n- No debe introducir errores adicionales, hipotéticos o frecuentes que no estén presentes en los datos proporcionados.\n- \"error_reforzado\" será true únicamente cuando la actividad trabaje realmente los errores registrados.\n\n3. OBJETIVO DE REFUERZO\n\n- La actividad debe mantener el objetivo de refuerzo definido en la planificación.\n- No debe desviarse hacia otros objetivos académicos.\n\n4. PERSONALIZACIÓN\n\n- La contextualización debe utilizar únicamente intereses, aficiones o preferencias procedentes del perfil.\n- La personalización no puede introducir nuevos contenidos académicos.\n\nREGLAS DE DECISIÓN:\n\n- \"contenido_rag\" será true únicamente cuando todo el contenido académico esté respaldado por el RAG.\n- \"error_reforzado\" será true únicamente cuando la actividad trabaje los errores reales registrados.\n- \"objetivo_correcto\" será true únicamente cuando se mantenga el objetivo de refuerzo.\n- \"personalizacion_correcta\" será true únicamente cuando la contextualización corresponda con el perfil.\n- Si \"violaciones_rag\" contiene al menos un elemento, \"contenido_rag\" debe ser false.\n- \"valida\" solo podrá ser true cuando todas las comprobaciones anteriores sean true y \"violaciones_rag\" esté vacío.\n- Cuando \"valida\" sea false, explica de forma concreta el motivo.\n- Distingue entre contenido académico y simples instrucciones de realización de la actividad.\n- Instrucciones como \"utiliza únicamente los conceptos indicados\", \"responde por escrito\", \"selecciona una opción\" o indicaciones de formato no necesitan aparecer literalmente en el RAG.\n- Solo deben incluirse en \"violaciones_rag\" conceptos, afirmaciones, reglas, propiedades, explicaciones o ejemplos académicos que no estén respaldados por el material.\n\nNo corrijas los errores detectados. Limítate a identificarlos y evaluar la actividad.\n\n"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        2352,
+        -208
+      ],
+      "id": "f37294d4-2cc9-4dab-9347-bed29236ba54",
+      "name": "IA3 - Evaluación refuerzo"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini",
+          "cachedResultName": "gpt-5-mini",
+          "cachedResultUrl": ""
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        2352,
+        32
+      ],
+      "id": "03e13350-f4ac-4cbd-af45-94cb5ddc9507",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "GcydM2GfSP0X4aIZ",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"valida\": true,\n  \"contenido_rag\": true,\n  \"error_reforzado\": true,\n  \"objetivo_correcto\": true,\n  \"personalizacion_correcta\": true,\n  \"violaciones_rag\": [],\n  \"motivo\": \"\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        2496,
+        32
+      ],
+      "id": "20cc34d9-9c76-420f-9fc1-547b508d717e",
+      "name": "Structured Output Parser2"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "insert into public.actividades (\n    perfil_id,\n    objetivo_aprendizaje,\n    tema,\n    dificultad,\n    contenido,\n    tipo_actividad,\n    actividad_origen_id,\n    interes_personalizacion,\n    referencias_rag,\n    resultado_guardrails,\n    regeneraciones,\n    estado\n)\nvalues (\n    $1,\n    $2,\n    $3,\n    $4,\n    $5,\n    'refuerzo',\n    $6,\n    $7,\n    $8::jsonb,\n    $9::jsonb,\n    0,\n    'pendiente_revision'\n)\nreturning *;",
+        "options": {
+          "queryReplacement": "={{ [\n  $('Recuperar actividad y perfil').item.json.perfil_id,\n  $('IA1 - Planificación refuerzo').item.json.output.objetivo_refuerzo,\n  $('Recuperar actividad y perfil').item.json.tema,\n  $('IA2 - Generación refuerzo').item.json.output.dificultad,\n  JSON.stringify($('IA2 - Generación refuerzo').item.json.output),\n  $('Recuperar actividad y perfil').item.json.actividad_id,\n  $('IA2 - Generación refuerzo').item.json.output.contexto_personalizacion,\n  JSON.stringify(\n    $('Unificar contexto RAG refuerzo').first().json.referencias_rag\n  ),\n  JSON.stringify($('IA3 - Evaluación refuerzo').item.json.output)\n] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        2976,
+        0
+      ],
+      "id": "36e217a7-6339-4e1c-9275-e102ce69e7c1",
+      "name": "Guardar actividad de refuerzo",
+      "credentials": {
+        "postgres": {
+          "id": "LF46SQyz7oBTLI2P",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ (() => {\n  const raw = typeof $json.contenido === 'string'\n    ? JSON.parse($json.contenido)\n    : $json.contenido;\n\n  const refuerzo = raw?.output?.output ?? raw?.output ?? raw;\n\n  return {\n    ok: true,\n    mensaje: \"El intento se ha registrado y se ha generado una actividad de refuerzo.\",\n    necesita_refuerzo: true,\n    refuerzo_generado: true,\n    actividad_refuerzo_id: Number($json.id),\n    actividad_refuerzo: refuerzo\n  };\n})() }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        3184,
+        0
+      ],
+      "id": "a035516f-fc03-4570-8d7c-5b9d3b367b75",
+      "name": "Respuesta - Refuerzo generado"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"ok\": false,\n  \"error\": \"REFUERZO_NO_VALIDO\",\n  \"mensaje\": \"El intento se ha registrado, pero la actividad de refuerzo generada no ha superado la validación y requiere revisión del profesorado.\"\n}",
+        "options": {
+          "responseCode": 422
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2976,
+        224
+      ],
+      "id": "b4804e1c-81e1-4012-9df0-b0a5066bd1a4",
+      "name": "Revisión - Refuerzo no válido"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "f3a37f09-a6e1-493a-be7a-0d80fe45b28f",
+              "leftValue": "={{ $json.valida_final }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2800,
+        160
+      ],
+      "id": "5992dd2d-ba9e-4b6e-a053-010b47eafa2f",
+      "name": "¿Refuerzo válido?"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"ok\": false,\n  \"error\": \"RAG_INSUFICIENTE_REFUERZO\",\n  \"mensaje\": \"El intento se ha registrado, pero los materiales docentes disponibles no contienen información suficiente para generar una actividad de refuerzo.\"\n}",
+        "options": {
+          "responseCode": 422
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2112,
+        192
+      ],
+      "id": "97f3282b-4865-45ca-a0fc-95fcd3da210b",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const actividad = $('IA2 - Generación refuerzo').first().json.output;\nconst evaluacion = $('IA3 - Evaluación refuerzo').first().json.output;\n\nconst rag =\n  $('Unificar contexto RAG refuerzo').first().json.contexto_rag ?? '';\n\nconst erroresIntento =\n  $('Registrar intento').first().json.body?.errores ?? '';\n\nconst textoActividad = [\n  actividad.titulo ?? '',\n  actividad.enunciado ?? '',\n  ...(actividad.conceptos_utilizados ?? [])\n].join(' ').toLowerCase();\n\nconst textoRag = String(rag).toLowerCase();\nconst textoErrores = String(erroresIntento).toLowerCase();\n\nconst motivos = [];\n\n// 1. Resultado de la evaluación mediante IA\nif (evaluacion.valida !== true) {\n  motivos.push('IA3 ha marcado la actividad de refuerzo como no válida.');\n}\n\nif (evaluacion.contenido_rag !== true) {\n  motivos.push('IA3 indica que existe contenido no respaldado por el RAG.');\n}\n\nif (evaluacion.error_reforzado !== true) {\n  motivos.push('La actividad no trabaja correctamente el error registrado.');\n}\n\nif (evaluacion.objetivo_correcto !== true) {\n  motivos.push('La actividad no mantiene correctamente el objetivo de refuerzo.');\n}\n\nif (evaluacion.personalizacion_correcta !== true) {\n  motivos.push('La personalización no corresponde correctamente con el perfil.');\n}\n\n// 2. Violaciones detectadas por IA3\nconst violacionesRag = Array.isArray(evaluacion.violaciones_rag)\n  ? evaluacion.violaciones_rag\n  : [];\n\nif (violacionesRag.length > 0) {\n  motivos.push(\n    `IA3 ha detectado violaciones RAG: ${violacionesRag.join(' | ')}`\n  );\n}\n\n// 3. Debe existir al menos un error trabajado\nconst erroresTrabajados = Array.isArray(actividad.errores_trabajados)\n  ? actividad.errores_trabajados\n  : [];\n\nif (erroresTrabajados.length === 0) {\n  motivos.push('La actividad de refuerzo no identifica ningún error trabajado.');\n}\n\n// 4. Detectar ejemplos numéricos de range() que no existan en el RAG\nfunction extraerRangeNumericos(texto) {\n  return [\n    ...String(texto).matchAll(/range\\s*\\(\\s*(\\d+)\\s*\\)/gi)\n  ].map(match => Number(match[1]));\n}\n\nconst ejemplosPermitidos = new Set(extraerRangeNumericos(textoRag));\nconst ejemplosActividad = [...new Set(extraerRangeNumericos(textoActividad))];\n\nconst ejemplosNoPermitidos = ejemplosActividad.filter(\n  numero => !ejemplosPermitidos.has(numero)\n);\n\nif (ejemplosNoPermitidos.length > 0) {\n  motivos.push(\n    `La actividad introduce ejemplos de range() no presentes explícitamente en el RAG: ${ejemplosNoPermitidos\n      .map(numero => `range(${numero})`)\n      .join(', ')}.`\n  );\n}\n\n// 5. Evitar generalizaciones de range(n) si no aparecen en el material\nif (\n  textoActividad.includes('range(n)') &&\n  !textoRag.includes('range(n)')\n) {\n  motivos.push(\n    'La actividad generaliza el contenido a range(n), aunque esa regla no aparece en el RAG.'\n  );\n}\n\n// 6. Conceptos problemáticos no respaldados\nconst expresionesControladas = [\n  'off-by-one',\n  'límite superior',\n  'valor superior',\n  'errores comunes'\n];\n\nfor (const expresion of expresionesControladas) {\n  if (\n    textoActividad.includes(expresion) &&\n    !textoRag.includes(expresion) &&\n    !textoErrores.includes(expresion)\n  ) {\n    motivos.push(\n      `La actividad introduce \"${expresion}\", que no aparece en el RAG ni en los errores reales del intento.`\n    );\n  }\n}\n\nconst validaFinal = motivos.length === 0;\n\nreturn {\n  json: {\n    actividad,\n    evaluacion_ia: evaluacion,\n    guardrail_determinista: {\n      valido: validaFinal,\n      motivos\n    },\n    valida_final: validaFinal\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2640,
+        160
+      ],
+      "id": "8e3b7588-5933-4a9b-a56a-4436931587f6",
+      "name": "Guardrail determinista - Refuerzo"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nconst documentos = items\n  .map((item) => ({\n    contenido: item.json.document?.pageContent ?? '',\n    metadata: item.json.document?.metadata ?? {},\n    score: item.json.score ?? null,\n  }))\n  .filter((doc) => doc.contenido);\n\nconst contextoRag = documentos\n  .map(\n    (doc, index) =>\n      `FRAGMENTO ${index + 1}:\\n${doc.contenido}`\n  )\n  .join('\\n\\n');\n\nreturn [\n  {\n    json: {\n      contexto_rag: contextoRag,\n      referencias_rag: documentos.map((doc) => ({\n        metadata: doc.metadata,\n        score: doc.score,\n      })),\n    },\n  },\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1296,
+        -48
+      ],
+      "id": "6c7f4690-790b-4377-a1d3-7e7252e0cce1",
+      "name": "Unificar contexto RAG refuerzo"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Registrar intento": {
+      "main": [
+        [
+          {
+            "node": "Recuperar actividad y perfil",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recuperar actividad y perfil": {
+      "main": [
+        [
+          {
+            "node": "Calcular número de intento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calcular número de intento": {
+      "main": [
+        [
+          {
+            "node": "Guardar intento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar intento": {
+      "main": [
+        [
+          {
+            "node": "¿Necesita refuerzo?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Necesita refuerzo?": {
+      "main": [
+        [
+          {
+            "node": "Recuperar RAG para refuerzo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respuesta  - Intento registrado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Recuperar RAG para refuerzo",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recuperar RAG para refuerzo": {
+      "main": [
+        [
+          {
+            "node": "Unificar contexto RAG refuerzo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "IA1 - Planificación refuerzo",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "IA1 - Planificación refuerzo",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IA1 - Planificación refuerzo": {
+      "main": [
+        [
+          {
+            "node": "¿RAG suficiente refuerzo?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿RAG suficiente refuerzo?": {
+      "main": [
+        [
+          {
+            "node": "IA2 - Generación refuerzo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "IA2 - Generación refuerzo",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "IA2 - Generación refuerzo",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IA2 - Generación refuerzo": {
+      "main": [
+        [
+          {
+            "node": "IA3 - Evaluación refuerzo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "IA3 - Evaluación refuerzo",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser2": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "IA3 - Evaluación refuerzo",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IA3 - Evaluación refuerzo": {
+      "main": [
+        [
+          {
+            "node": "Guardrail determinista - Refuerzo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar actividad de refuerzo": {
+      "main": [
+        [
+          {
+            "node": "Respuesta - Refuerzo generado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Refuerzo válido?": {
+      "main": [
+        [
+          {
+            "node": "Guardar actividad de refuerzo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Revisión - Refuerzo no válido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardrail determinista - Refuerzo": {
+      "main": [
+        [
+          {
+            "node": "¿Refuerzo válido?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Unificar contexto RAG refuerzo": {
+      "main": [
+        [
+          {
+            "node": "IA1 - Planificación refuerzo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "a2104ffd-014d-4430-a8f5-781b062f7738",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1aafd9336c0d1bfb1b6ea10346f42afca01929ac97db96ed6af1586120385704"
+  },
+  "nodeGroups": [],
+  "id": "yoJOjpXXWqA792kv",
+  "tags": []
+}
