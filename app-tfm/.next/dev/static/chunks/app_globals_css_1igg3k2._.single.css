@@ -1,23 +1,20 @@
+/* [project]/app/globals.css [app-client] (css) */
 * {
   box-sizing: border-box;
 }
 
-html,
-body {
+html, body {
   margin: 0;
   padding: 0;
 }
 
 body {
-  background: #f5f7fb;
   color: #172033;
+  background: #f5f7fb;
   font-family: Arial, Helvetica, sans-serif;
 }
 
-button,
-input,
-textarea,
-select {
+button, input, textarea, select {
   font: inherit;
 }
 
@@ -37,101 +34,94 @@ select {
 }
 
 .descripcion {
+  color: #657086;
   max-width: 680px;
   margin: 0;
-  color: #657086;
   font-size: 17px;
   line-height: 1.6;
 }
 
 .eyebrow {
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: #5367e8;
   margin: 0;
   font-size: 13px;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: #5367e8;
 }
 
-.panel,
-.actividad {
-  background: white;
+.panel, .actividad {
+  background: #fff;
   border: 1px solid #e3e7ef;
   border-radius: 18px;
   padding: 28px;
-  box-shadow: 0 12px 35px rgba(24, 32, 51, 0.06);
+  box-shadow: 0 12px 35px #1820330f;
 }
 
-.panelTitulo,
-.actividadCabecera {
-  display: flex;
-  align-items: flex-start;
+.panelTitulo, .actividadCabecera {
   justify-content: space-between;
+  align-items: flex-start;
   gap: 20px;
+  display: flex;
 }
 
-.panelTitulo h2,
-.actividadCabecera h2 {
+.panelTitulo h2, .actividadCabecera h2 {
   margin: 0;
 }
 
 .perfil {
-  background: #eef1ff;
   color: #4253bd;
-  padding: 7px 11px;
+  background: #eef1ff;
   border-radius: 999px;
+  padding: 7px 11px;
   font-size: 13px;
   font-weight: 700;
 }
 
 .formulario {
-  display: grid;
   gap: 20px;
   margin-top: 26px;
+  display: grid;
 }
 
 .formulario label {
-  display: grid;
   gap: 8px;
   font-weight: 600;
+  display: grid;
 }
 
-.formulario input,
-.formulario textarea,
-.formulario select {
-  width: 100%;
+.formulario input, .formulario textarea, .formulario select {
+  color: #172033;
+  background: #fff;
   border: 1px solid #ccd3df;
   border-radius: 10px;
-  padding: 12px 14px;
-  background: white;
-  color: #172033;
   outline: none;
+  width: 100%;
+  padding: 12px 14px;
 }
 
 .formulario textarea {
-  min-height: 95px;
   resize: vertical;
+  min-height: 95px;
 }
 
-.formulario input:focus,
-.formulario textarea:focus,
-.formulario select:focus {
+.formulario input:focus, .formulario textarea:focus, .formulario select:focus {
   border-color: #5367e8;
 }
 
 .formulario button {
-  width: fit-content;
+  color: #fff;
+  cursor: pointer;
+  background: #5367e8;
   border: 0;
   border-radius: 10px;
+  width: fit-content;
   padding: 13px 20px;
-  background: #5367e8;
-  color: white;
   font-weight: 700;
-  cursor: pointer;
 }
 
 .formulario button:disabled {
-  opacity: 0.65;
+  opacity: .65;
   cursor: wait;
 }
 
@@ -145,26 +135,26 @@ select {
 }
 
 .etiquetas {
-  display: flex;
-  gap: 8px;
   flex-wrap: wrap;
   justify-content: flex-end;
+  gap: 8px;
+  display: flex;
 }
 
 .badge {
-  background: #f0f2f7;
   color: #475267;
+  text-transform: capitalize;
+  background: #f0f2f7;
   border-radius: 999px;
   padding: 7px 11px;
   font-size: 13px;
   font-weight: 700;
-  text-transform: capitalize;
 }
 
 .bloque {
+  border-top: 1px solid #edf0f5;
   margin-top: 26px;
   padding-top: 22px;
-  border-top: 1px solid #edf0f5;
 }
 
 .bloque h3 {
@@ -173,21 +163,21 @@ select {
 }
 
 .bloque p {
+  color: #4f5a6e;
   margin: 0;
   line-height: 1.7;
-  color: #4f5a6e;
 }
 
 .enunciado {
   white-space: pre-wrap;
-  line-height: 1.75;
   color: #303b50;
+  line-height: 1.75;
 }
 
 .conceptos {
-  display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  display: flex;
 }
 
 .conceptos span {
@@ -206,16 +196,16 @@ select {
 }
 
 .mensajeFinal {
-  margin: 24px 0 0;
   color: #657086;
+  margin: 24px 0 0;
   font-size: 14px;
 }
 
 .mensajeError {
-  margin-top: 24px;
-  border: 1px solid #f1c6c6;
   background: #fff7f7;
+  border: 1px solid #f1c6c6;
   border-radius: 12px;
+  margin-top: 24px;
   padding: 16px 18px;
 }
 
@@ -228,13 +218,11 @@ select {
     padding-top: 32px;
   }
 
-  .panel,
-  .actividad {
+  .panel, .actividad {
     padding: 20px;
   }
 
-  .panelTitulo,
-  .actividadCabecera {
+  .panelTitulo, .actividadCabecera {
     flex-direction: column;
   }
 
@@ -246,6 +234,7 @@ select {
     width: 100%;
   }
 }
+
 .resultado {
   margin-top: 30px;
 }
@@ -255,51 +244,49 @@ select {
 }
 
 .formularioResultado {
-  display: grid;
   gap: 18px;
   margin-top: 20px;
+  display: grid;
 }
 
 .formularioResultado label {
-  display: grid;
   gap: 8px;
   font-weight: 600;
+  display: grid;
 }
 
-.formularioResultado input,
-.formularioResultado textarea {
-  width: 100%;
+.formularioResultado input, .formularioResultado textarea {
+  color: #172033;
+  background: #fff;
   border: 1px solid #ccd3df;
   border-radius: 10px;
-  padding: 12px 14px;
-  background: white;
-  color: #172033;
   outline: none;
+  width: 100%;
+  padding: 12px 14px;
 }
 
 .formularioResultado textarea {
-  min-height: 90px;
   resize: vertical;
+  min-height: 90px;
 }
 
-.formularioResultado input:focus,
-.formularioResultado textarea:focus {
+.formularioResultado input:focus, .formularioResultado textarea:focus {
   border-color: #5367e8;
 }
 
 .formularioResultado button {
-  width: fit-content;
+  color: #fff;
+  cursor: pointer;
+  background: #5367e8;
   border: 0;
   border-radius: 10px;
+  width: fit-content;
   padding: 13px 20px;
-  background: #5367e8;
-  color: white;
   font-weight: 700;
-  cursor: pointer;
 }
 
 .formularioResultado button:disabled {
-  opacity: 0.65;
+  opacity: .65;
   cursor: wait;
 }
 
@@ -313,42 +300,44 @@ select {
 }
 
 .mensajeExito {
+  background: #f7faf8;
+  border: 1px solid #cfd8d3;
+  border-radius: 12px;
   margin-top: 20px;
   padding: 16px 18px;
-  border: 1px solid #cfd8d3;
-  background: #f7faf8;
-  border-radius: 12px;
 }
 
 .mensajeExito p {
-  margin: 6px 0 0;
   color: #4f5a6e;
+  margin: 6px 0 0;
 }
+
 .mensajeAviso {
+  background: #fffaf0;
+  border: 1px solid #e6d6a8;
+  border-radius: 12px;
   margin-top: 20px;
   padding: 16px 18px;
-  border: 1px solid #e6d6a8;
-  background: #fffaf0;
-  border-radius: 12px;
 }
 
 .mensajeAviso p {
-  margin: 6px 0 0;
   color: #5f5848;
+  margin: 6px 0 0;
 }
+
 .refuerzo {
-  margin-top: 28px;
-  padding: 26px;
+  background: #fbfcff;
   border: 1px solid #dfe4ee;
   border-radius: 16px;
-  background: #fbfcff;
+  margin-top: 28px;
+  padding: 26px;
 }
 
 .refuerzoCabecera {
-  display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 20px;
+  display: flex;
 }
 
 .refuerzoCabecera h2 {
@@ -361,33 +350,34 @@ select {
     flex-direction: column;
   }
 }
+
 .alumnadoPanel {
   margin-top: 28px;
 }
 
 .listaPerfiles {
-  display: grid;
   gap: 18px;
   margin-top: 24px;
+  display: grid;
 }
 
 .tarjetaPerfil {
+  background: #fff;
   border: 1px solid #e2e6ee;
   border-radius: 14px;
   padding: 20px;
-  background: #ffffff;
 }
 
 .tarjetaPerfil.perfilActivo {
   border-color: #5367e8;
-  box-shadow: 0 0 0 2px rgba(83, 103, 232, 0.08);
+  box-shadow: 0 0 0 2px #5367e814;
 }
 
 .perfilCabecera {
-  display: flex;
-  align-items: flex-start;
   justify-content: space-between;
+  align-items: flex-start;
   gap: 16px;
+  display: flex;
 }
 
 .perfilCabecera h3 {
@@ -401,27 +391,27 @@ select {
 }
 
 .estadoPerfil {
-  padding: 6px 10px;
   border-radius: 999px;
+  padding: 6px 10px;
   font-size: 12px;
   font-weight: 700;
 }
 
 .estadoCompleto {
-  background: #eef7f1;
   color: #3e6750;
+  background: #eef7f1;
 }
 
 .estadoIncompleto {
-  background: #fff5e9;
   color: #876333;
+  background: #fff5e9;
 }
 
 .datosPerfil {
-  display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 18px;
   margin-top: 20px;
+  display: grid;
 }
 
 .datosPerfil strong {
@@ -429,26 +419,26 @@ select {
 }
 
 .datosPerfil p {
-  margin: 6px 0 0;
   color: #657086;
+  margin: 6px 0 0;
   line-height: 1.5;
 }
 
 .botonPerfil {
-  margin-top: 20px;
+  color: #fff;
+  cursor: pointer;
+  background: #5367e8;
   border: 0;
   border-radius: 9px;
+  margin-top: 20px;
   padding: 10px 15px;
-  background: #5367e8;
-  color: white;
   font-weight: 700;
-  cursor: pointer;
 }
 
 .botonPerfil:disabled {
-  background: #e3e6ec;
   color: #8a93a3;
   cursor: not-allowed;
+  background: #e3e6ec;
 }
 
 .nuevoPerfil {
@@ -456,8 +446,8 @@ select {
 }
 
 .textoSecundario {
-  margin-top: 20px;
   color: #657086;
+  margin-top: 20px;
 }
 
 @media (max-width: 750px) {
@@ -469,3 +459,5 @@ select {
     flex-direction: column;
   }
 }
+
+/*# sourceMappingURL=app_globals_css_1igg3k2._.single.css.map*/
