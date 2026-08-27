@@ -7,6 +7,33 @@ Las versiones comprendidas entre v0.1 y v0.9 se han reconstruido retrospectivame
 El control formal de versiones mediante Git comienza a partir de la versión v0.10.
 
 ---
+## v0.13 - Normalización y segmentación del material docente RAG
+
+- Se incorpora un subworkflow reutilizable para la normalización determinista del material docente.
+- La normalización se implementa mediante Python sin modificar el contenido académico.
+- Se eliminan espacios y saltos de línea innecesarios preservando la indentación de fragmentos de código.
+- Se incorpora un Recursive Character Text Splitter con un tamaño de chunk de 800 caracteres y un solapamiento de 120.
+- Se crea la tabla `materiales_docentes` para separar el documento lógico de sus fragmentos vectorizados.
+- Se incorpora la relación `material_id` entre `materiales_docentes` y `documentos_rag`.
+- Se almacena el número de fragmentos generados para cada material.
+- La interfaz de material docente pasa a mostrar un único registro por material, independientemente del número de chunks.
+- Se valida la recuperación vectorial de los nuevos fragmentos desde el workflow principal `TFM`.
+- El antiguo workflow independiente de carga RAG queda sustituido por el flujo integrado de gestión y normalización del material docente.
+
+## v0.12 - Gestión de material docente RAG
+
+- Se incorpora un nuevo workflow de n8n para la gestión del material docente utilizado por el sistema RAG.
+- Se implementan las operaciones de listado y creación de documentos mediante un webhook.
+- Los nuevos materiales se almacenan en Supabase mediante PGVector Store.
+- Se generan embeddings con `text-embedding-3-small`.
+- Se almacenan metadatos asociados al material: título, tema y fuente.
+- Se incorpora una nueva API interna en Next.js para comunicar la aplicación web con el workflow de gestión de material RAG.
+- Se desarrolla la sección `/material-docente`.
+- La interfaz permite introducir nuevo contenido docente desde la aplicación.
+- El material almacenado puede consultarse desde la propia interfaz.
+- Se añade respuesta explícita desde n8n tras la inserción del documento para confirmar correctamente la operación al frontend.
+- Se mantiene pendiente la normalización estructural del contenido y su transformación a Markdown antes de la generación de embeddings.
+
 ## v0.11 - Gestión de alumnado
 
 ### Cambios

@@ -8,6 +8,8 @@ type DocumentoRag = {
   tema: string | null;
   fuente: string | null;
   texto: string;
+  numero_chunks?: number;
+  estado?: string;
   creado_en?: string;
 };
 
@@ -226,7 +228,13 @@ export default function MaterialDocentePage() {
                 <p>
                   <strong>Fuente:</strong>{" "}
                   {documento.fuente || "No indicada"}
-                </p>
+                  </p>
+                  {documento.numero_chunks !== undefined && (
+                  <p>
+                    <strong>Fragmentos RAG:</strong>{" "}
+                  {documento.numero_chunks}
+                  </p>
+                 )}
 
                 <p>{documento.texto}</p>
               </article>

@@ -1,0 +1,67 @@
+{
+  "name": "TFM - Normalización material docente",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "jsonExample",
+        "jsonExample": "{\n  \"texto\": \"El bucle for permite repetir instrucciones.   \\n\\n\\n\\nfor i in range(5):\\n    print(i)   \\n\\n\",\n  \"titulo\": \"Introducción a los bucles for\",\n  \"tema\": \"Bucles for\",\n  \"fuente\": \"Material docente\"\n}"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "286e3d6e-e5b8-4663-a3d5-60e44a7b4d0d",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "language": "pythonNative",
+        "pythonCode": "datos = _item[\"json\"]\n\ntexto_original = datos.get(\"texto\") or \"\"\ntitulo = datos.get(\"titulo\") or \"\"\ntema = datos.get(\"tema\") or \"\"\nfuente = datos.get(\"fuente\") or \"\"\n\ntexto_original = str(texto_original)\ntitulo = str(titulo).strip()\ntema = str(tema).strip()\nfuente = str(fuente).strip()\n\n# Validación básica\nif not texto_original.strip():\n    raise Exception(\"El material docente no contiene texto.\")\n\n# 1. Unificar saltos de línea\ntexto_normalizado = (\n    texto_original\n    .replace(\"\\r\\n\", \"\\n\")\n    .replace(\"\\r\", \"\\n\")\n)\n\n# 2. Sustituir espacios no separables\ntexto_normalizado = texto_normalizado.replace(\"\\u00A0\", \" \")\n\n# 3. Eliminar espacios y tabuladores al final de cada línea.\n# Se conserva la indentación inicial para no romper código.\nlineas = []\n\nfor linea in texto_normalizado.split(\"\\n\"):\n    lineas.append(linea.rstrip(\" \\t\"))\n\ntexto_normalizado = \"\\n\".join(lineas)\n\n# 4. Reducir bloques de 3 o más saltos de línea\nwhile \"\\n\\n\\n\" in texto_normalizado:\n    texto_normalizado = texto_normalizado.replace(\n        \"\\n\\n\\n\",\n        \"\\n\\n\"\n    )\n\n# 5. Limpiar inicio y final\ntexto_normalizado = texto_normalizado.strip()\n\nreturn {\n    \"json\": {\n        \"texto_original\": texto_original,\n        \"texto_normalizado\": texto_normalizado,\n        \"titulo\": titulo,\n        \"tema\": tema,\n        \"fuente\": fuente,\n        \"normalizacion\": {\n            \"aplicada\": texto_original != texto_normalizado,\n            \"caracteres_originales\": len(texto_original),\n            \"caracteres_normalizados\": len(texto_normalizado)\n        }\n    }\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "00a45790-6bb5-45fa-90c7-2cd73c6b057b",
+      "name": "Code in Python"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Code in Python",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in Python": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "ab8e04fd-bb8f-4b06-b044-1c82a1d5d2a3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1aafd9336c0d1bfb1b6ea10346f42afca01929ac97db96ed6af1586120385704"
+  },
+  "nodeGroups": [],
+  "id": "jdn8is6ztsKxkKWr",
+  "tags": []
+}

@@ -87,7 +87,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "select\n  coalesce(\n    json_agg(\n      json_build_object(\n        'id', id,\n        'titulo', metadata ->> 'titulo',\n        'tema', metadata ->> 'tema',\n        'fuente', metadata ->> 'fuente',\n        'texto', text,\n        'creado_en', creado_en\n      )\n      order by creado_en desc\n    ),\n    '[]'::json\n  ) as documentos\nfrom public.documentos_rag;",
+        "query": "select\n  coalesce(\n    json_agg(\n      json_build_object(\n        'id', id,\n        'titulo', titulo,\n        'tema', tema,\n        'fuente', fuente,\n        'texto', texto_normalizado,\n        'numero_chunks', numero_chunks,\n        'estado', estado,\n        'creado_en', creado_en\n      )\n      order by creado_en desc\n    ),\n    '[]'::json\n  ) as documentos\nfrom public.materiales_docentes\nwhere estado = 'activo';",
         "options": {}
       },
       "type": "n8n-nodes-base.postgres",
@@ -170,7 +170,7 @@
       "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
       "typeVersion": 1.3,
       "position": [
-        304,
+        704,
         64
       ],
       "id": "a1cc6e71-e6d8-4be7-a649-a55eb4946b7e",
@@ -189,8 +189,8 @@
       "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
       "typeVersion": 1.2,
       "position": [
-        304,
-        256
+        704,
+        288
       ],
       "id": "f514035d-760b-4cd9-ad2c-4ef8265351eb",
       "name": "Embeddings OpenAI",
@@ -204,10 +204,15 @@
     {
       "parameters": {
         "jsonMode": "expressionData",
-        "jsonData": "={{ $json.texto }}",
+        "jsonData": "={{$json.texto_normalizado}}",
+        "textSplittingMode": "custom",
         "options": {
           "metadata": {
             "metadataValues": [
+              {
+                "name": "material_id",
+                "value": "={{$json.id}}"
+              },
               {
                 "name": "titulo",
                 "value": "={{ $json.titulo }}"
@@ -218,7 +223,7 @@
               },
               {
                 "name": "fuente",
-                "value": "={{ $json.fuente }}"
+                "value": "={{$json.fuente}}"
               }
             ]
           }
@@ -227,8 +232,8 @@
       "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
       "typeVersion": 1.1,
       "position": [
-        480,
-        256
+        800,
+        288
       ],
       "id": "91a1e48e-5275-4d15-bd3d-3cddd1d2a79e",
       "name": "Default Data Loader"
@@ -244,12 +249,172 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        672,
+        1296,
         64
       ],
       "id": "2320687d-3f7a-4dd8-a735-b1dda4a7448c",
       "name": "Respuesta - Material creado",
       "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "jdn8is6ztsKxkKWr",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/jdn8is6ztsKxkKWr",
+          "cachedResultName": "TFM - Normalización material docente"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "texto": "={{$json.texto}}",
+            "titulo": "={{$json.titulo}}",
+            "tema": "={{$json.tema}}",
+            "fuente": "={{$json.fuente}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "texto",
+              "displayName": "texto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "titulo",
+              "displayName": "titulo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "tema",
+              "displayName": "tema",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "fuente",
+              "displayName": "fuente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        304,
+        64
+      ],
+      "id": "54adc319-11a0-42ab-beaf-b9ab9a2896e7",
+      "name": "llamada a  'TFM - Normalización material docente'"
+    },
+    {
+      "parameters": {
+        "chunkSize": 800,
+        "chunkOverlap": 120,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        800,
+        464
+      ],
+      "id": "85e6c9dd-1331-4f15-abed-d094d000953b",
+      "name": "Recursive Character Text Splitter"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "insert into public.materiales_docentes (\n    titulo,\n    tema,\n    fuente,\n    texto_original,\n    texto_normalizado\n)\nvalues (\n    $1,\n    $2,\n    $3,\n    $4,\n    $5\n)\nreturning *;",
+        "options": {
+          "queryReplacement": "={{ [\n  $json.titulo,\n  $json.tema,\n  $json.fuente,\n  $json.texto_original,\n  $json.texto_normalizado\n] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        528,
+        64
+      ],
+      "id": "33ee21c5-a6a8-4a57-81e5-7e893411df7e",
+      "name": "Guardar material docente",
+      "credentials": {
+        "postgres": {
+          "id": "LF46SQyz7oBTLI2P",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "update public.documentos_rag\nset material_id = $1\nwhere material_id is null\n  and metadata ->> 'material_id' = $1::text;",
+        "options": {
+          "queryReplacement": "={{ [   $('Guardar material docente').first().json.id ] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        960,
+        64
+      ],
+      "id": "f9644552-4bd0-4928-8dfa-55842e9fecf0",
+      "name": "Vincular chunks al material",
+      "credentials": {
+        "postgres": {
+          "id": "LF46SQyz7oBTLI2P",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "update public.materiales_docentes\nset numero_chunks = (\n    select count(*)\n    from public.documentos_rag\n    where material_id = $1\n)\nwhere id = $1\nreturning *;",
+        "options": {
+          "queryReplacement": "={{ [   $('Guardar material docente').first().json.id ] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        1120,
+        64
+      ],
+      "id": "58662b07-3f17-467c-be4f-4bcd3da1142b",
+      "name": "Actualizar número de chunks",
+      "credentials": {
+        "postgres": {
+          "id": "LF46SQyz7oBTLI2P",
+          "name": "Postgres account"
+        }
+      }
     }
   ],
   "pinData": {},
@@ -298,7 +463,7 @@
       "main": [
         [
           {
-            "node": "Postgres PGVector Store",
+            "node": "llamada a  'TFM - Normalización material docente'",
             "type": "main",
             "index": 0
           }
@@ -331,6 +496,61 @@
       "main": [
         [
           {
+            "node": "Vincular chunks al material",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "llamada a  'TFM - Normalización material docente'": {
+      "main": [
+        [
+          {
+            "node": "Guardar material docente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar material docente": {
+      "main": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vincular chunks al material": {
+      "main": [
+        [
+          {
+            "node": "Actualizar número de chunks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar número de chunks": {
+      "main": [
+        [
+          {
             "node": "Respuesta - Material creado",
             "type": "main",
             "index": 0
@@ -345,7 +565,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "e0f64d52-b9df-4104-ac25-4b5fc16ecdaf",
+  "versionId": "2fe65f66-3cf9-44c9-9483-df530b8259a5",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "1aafd9336c0d1bfb1b6ea10346f42afca01929ac97db96ed6af1586120385704"
