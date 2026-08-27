@@ -554,3 +554,9 @@ select {
     overflow-x: auto;
   }
 }
+.accionesDocumento {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}

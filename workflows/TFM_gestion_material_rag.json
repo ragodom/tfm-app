@@ -70,6 +70,81 @@
               },
               "renameOutput": true,
               "outputKey": "Crear"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "58d49bd2-cc99-4873-998f-384d33d9500d",
+                    "leftValue": "eliminar",
+                    "rightValue": "={{$json.body.accion}}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Eliminar"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "f5ed8de1-b991-4719-8ed7-5edb5571b35c",
+                    "leftValue": "desactivar",
+                    "rightValue": "={{$json.body.accion}}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Desactivar"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "6f5b5f0b-5065-4daf-a78f-ce9fe79b67f2",
+                    "leftValue": "reactivar",
+                    "rightValue": "={{$json.body.accion}}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Reactivar"
             }
           ]
         },
@@ -87,7 +162,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "select\n  coalesce(\n    json_agg(\n      json_build_object(\n        'id', id,\n        'titulo', titulo,\n        'tema', tema,\n        'fuente', fuente,\n        'texto', texto_normalizado,\n        'numero_chunks', numero_chunks,\n        'estado', estado,\n        'creado_en', creado_en\n      )\n      order by creado_en desc\n    ),\n    '[]'::json\n  ) as documentos\nfrom public.materiales_docentes\nwhere estado = 'activo';",
+        "query": "select\n  coalesce(\n    json_agg(\n      json_build_object(\n        'id', id,\n        'titulo', titulo,\n        'tema', tema,\n        'fuente', fuente,\n        'texto', texto_normalizado,\n        'numero_chunks', numero_chunks,\n        'estado', estado,\n        'creado_en', creado_en\n      )\n      order by creado_en desc\n    ),\n    '[]'::json\n  ) as documentos\nfrom public.materiales_docentes\n",
         "options": {}
       },
       "type": "n8n-nodes-base.postgres",
@@ -104,21 +179,6 @@
           "name": "Postgres account"
         }
       }
-    },
-    {
-      "parameters": {
-        "respondWith": "json",
-        "responseBody": "={{ {\n  ok: true,\n  documentos: $json.documentos\n} }}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1.5,
-      "position": [
-        304,
-        -128
-      ],
-      "id": "7e46fcf6-c4f3-4471-961d-5ff9d321353b",
-      "name": "Respond to Webhook"
     },
     {
       "parameters": {
@@ -326,7 +386,7 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        304,
+        224,
         64
       ],
       "id": "54adc319-11a0-42ab-beaf-b9ab9a2896e7",
@@ -358,7 +418,7 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.7,
       "position": [
-        528,
+        576,
         64
       ],
       "id": "33ee21c5-a6a8-4a57-81e5-7e893411df7e",
@@ -415,6 +475,351 @@
           "name": "Postgres account"
         }
       }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "delete from public.materiales_docentes\nwhere id = $1\nreturning\n    id,\n    titulo,\n    tema,\n    fuente;",
+        "options": {
+          "queryReplacement": "={{ [\n  $json.body.material_id\n] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        32,
+        272
+      ],
+      "id": "3d483c6f-781f-41a6-a074-3f853d61c919",
+      "name": "Eliminar material docente",
+      "credentials": {
+        "postgres": {
+          "id": "LF46SQyz7oBTLI2P",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\n  ok: true,\n  mensaje: \"El material docente se ha eliminado correctamente.\",\n  material_eliminado: {\n    id: Number($json.id),\n    titulo: $json.titulo\n  }\n} }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        176,
+        272
+      ],
+      "id": "0fa23eca-3dbe-47fc-9746-4a5d7400a7c7",
+      "name": "Respuesta - Material eliminado"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\n  ok: true,\n  documentos: $json.documentos\n} }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        224,
+        -128
+      ],
+      "id": "7e46fcf6-c4f3-4471-961d-5ff9d321353b",
+      "name": "Respuesta - Material listado"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "with material_actualizado as (\n    update public.materiales_docentes\n    set\n        estado = 'inactivo',\n        numero_chunks = 0\n    where id = $1\n    returning\n        id,\n        titulo,\n        tema,\n        fuente,\n        estado\n),\nchunks_eliminados as (\n    delete from public.documentos_rag\n    where material_id = $1\n    returning id\n)\nselect\n    m.*,\n    (\n        select count(*)\n        from chunks_eliminados\n    ) as chunks_eliminados\nfrom material_actualizado m;",
+        "options": {
+          "queryReplacement": "={{ [   Number($json.body.material_id) ] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        16,
+        496
+      ],
+      "id": "7e0fdd7d-826a-4ed8-81e9-97e306962b82",
+      "name": "Desactivar - Material docente",
+      "credentials": {
+        "postgres": {
+          "id": "LF46SQyz7oBTLI2P",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\n  ok: true,\n  mensaje: \"El material docente se ha desactivado correctamente.\",\n  material: {\n    id: Number($json.id),\n    titulo: $json.titulo,\n    estado: $json.estado,\n    chunks_eliminados: Number($json.chunks_eliminados)\n  }\n} }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        240,
+        496
+      ],
+      "id": "fbde87c4-89c8-47d8-9d76-ffda10df2bce",
+      "name": "Respuesta - Material desactivado"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select\n    id,\n    titulo,\n    tema,\n    fuente,\n    texto_original,\n    texto_normalizado,\n    numero_chunks,\n    estado,\n    creado_en\nfrom public.materiales_docentes\nwhere id = $1\n  and estado = 'inactivo';",
+        "options": {
+          "queryReplacement": "={{ [   Number($json.body.material_id) ] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        0,
+        704
+      ],
+      "id": "0cc1c7cd-3a73-4082-8f9f-96bc3ec9befb",
+      "name": "Recuperar material para reactivar",
+      "credentials": {
+        "postgres": {
+          "id": "LF46SQyz7oBTLI2P",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        928
+      ],
+      "id": "6b957633-e23d-41b7-a828-5ddc786a0196",
+      "name": "Embeddings OpenAI - Reactivación",
+      "credentials": {
+        "openAiApi": {
+          "id": "GcydM2GfSP0X4aIZ",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{$json.texto_normalizado}}",
+        "textSplittingMode": "custom",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "material_id",
+                "value": "={{$json.id}}"
+              },
+              {
+                "name": "titulo",
+                "value": "={{ $json.titulo }}"
+              },
+              {
+                "name": "tema",
+                "value": "={{ $json.tema }}"
+              },
+              {
+                "name": "fuente",
+                "value": "={{$json.fuente}}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        336,
+        928
+      ],
+      "id": "00bd1745-9efa-4f54-9b6e-82e315067405",
+      "name": "Default Data Loader - Reactivación"
+    },
+    {
+      "parameters": {
+        "chunkSize": 800,
+        "chunkOverlap": 120,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        336,
+        1104
+      ],
+      "id": "9c054dfe-a204-440d-a701-c461863ad140",
+      "name": "Recursive Character Text Splitter - Reactivación"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": "documentos_rag",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.3,
+      "position": [
+        240,
+        704
+      ],
+      "id": "c67e2579-7fe0-4104-be6a-9dac9c48aa3d",
+      "name": "Postgres PGVector Store - Reactivación",
+      "credentials": {
+        "postgres": {
+          "id": "LF46SQyz7oBTLI2P",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "update public.documentos_rag\nset material_id = $1\nwhere material_id is null\n  and metadata ->> 'material_id' = $1::text;",
+        "options": {
+          "queryReplacement": "={{ [   $('Recuperar material para reactivar').first().json.id ] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        608,
+        704
+      ],
+      "id": "1bc82f97-a22e-40a9-8bd2-6b62bfa14228",
+      "name": "Vincular chunks - Reactivación",
+      "credentials": {
+        "postgres": {
+          "id": "LF46SQyz7oBTLI2P",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "update public.materiales_docentes\nset\n    estado = 'activo',\n    numero_chunks = (\n        select count(*)\n        from public.documentos_rag\n        where material_id = $1\n    )\nwhere id = $1\nreturning\n    id,\n    titulo,\n    tema,\n    fuente,\n    numero_chunks,\n    estado;",
+        "options": {
+          "queryReplacement": "={{ [   $('Recuperar material para reactivar').first().json.id ] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        832,
+        704
+      ],
+      "id": "694a9de8-e86e-46fc-98cc-6e5fe083f8d8",
+      "name": "Reactivar material docente",
+      "credentials": {
+        "postgres": {
+          "id": "LF46SQyz7oBTLI2P",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\n  ok: true,\n  mensaje: \"El material docente se ha reactivado correctamente.\",\n  material: {\n    id: Number($json.id),\n    titulo: $json.titulo,\n    estado: $json.estado,\n    numero_chunks: Number($json.numero_chunks)\n  }\n} }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1056,
+        704
+      ],
+      "id": "32a0b991-e34f-487e-9fdb-d177a6fa8ccc",
+      "name": "Respuesta - Material reactivado"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "with entrada as (\n    select\n        $1::text as texto_normalizado,\n        $2::text as texto_original,\n        $3::text as titulo,\n        $4::text as tema,\n        $5::text as fuente\n),\nexistente as (\n    select\n        id,\n        titulo,\n        tema,\n        fuente,\n        estado,\n        numero_chunks\n    from public.materiales_docentes\n    where md5(texto_normalizado) = md5($1::text)\n    order by id desc\n    limit 1\n)\nselect\n    e.*,\n    (x.id is not null) as duplicado,\n    x.id as material_existente_id,\n    x.titulo as material_existente_titulo,\n    x.estado as material_existente_estado,\n    x.numero_chunks as material_existente_chunks\nfrom entrada e\nleft join existente x on true;",
+        "options": {
+          "queryReplacement": "={{ [   $json.texto_normalizado,   $json.texto_original,   $json.titulo,   $json.tema,   $json.fuente ] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        448,
+        -208
+      ],
+      "id": "7e5b00a5-e2f6-48c9-9996-0bdea3ddf229",
+      "name": "Comprobar material duplicado",
+      "credentials": {
+        "postgres": {
+          "id": "LF46SQyz7oBTLI2P",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "cc4c8524-b9e9-4d0b-9469-e099b9447a00",
+              "leftValue": "={{$json.duplicado}}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        608,
+        -208
+      ],
+      "id": "4aa2d415-73e8-4a6e-94fc-6bdfb21cceff",
+      "name": "¿Material duplicado?"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\n  ok: false,\n  error: \"MATERIAL_DUPLICADO\",\n  mensaje:\n    $json.material_existente_estado === \"inactivo\"\n      ? \"Este contenido ya existe como material inactivo. Puedes reactivarlo en lugar de volver a cargarlo.\"\n      : \"Este contenido ya existe en el material docente.\",\n  material_existente: {\n    id: Number($json.material_existente_id),\n    titulo: $json.material_existente_titulo,\n    estado: $json.material_existente_estado,\n    numero_chunks: Number($json.material_existente_chunks)\n  }\n} }}",
+        "options": {
+          "responseCode": 409
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        832,
+        -256
+      ],
+      "id": "8c94a714-67bd-4618-8eed-f80fc3523a7e",
+      "name": "Respuesta - Material duplicado"
     }
   ],
   "pinData": {},
@@ -445,6 +850,27 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Eliminar material docente",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Desactivar - Material docente",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Recuperar material para reactivar",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -452,7 +878,7 @@
       "main": [
         [
           {
-            "node": "Respond to Webhook",
+            "node": "Respuesta - Material listado",
             "type": "main",
             "index": 0
           }
@@ -507,7 +933,7 @@
       "main": [
         [
           {
-            "node": "Guardar material docente",
+            "node": "Comprobar material duplicado",
             "type": "main",
             "index": 0
           }
@@ -557,6 +983,134 @@
           }
         ]
       ]
+    },
+    "Eliminar material docente": {
+      "main": [
+        [
+          {
+            "node": "Respuesta - Material eliminado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Desactivar - Material docente": {
+      "main": [
+        [
+          {
+            "node": "Respuesta - Material desactivado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recuperar material para reactivar": {
+      "main": [
+        [
+          {
+            "node": "Postgres PGVector Store - Reactivación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI - Reactivación": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Postgres PGVector Store - Reactivación",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader - Reactivación": {
+      "ai_document": [
+        [
+          {
+            "node": "Postgres PGVector Store - Reactivación",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter - Reactivación": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader - Reactivación",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres PGVector Store - Reactivación": {
+      "main": [
+        [
+          {
+            "node": "Vincular chunks - Reactivación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vincular chunks - Reactivación": {
+      "main": [
+        [
+          {
+            "node": "Reactivar material docente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reactivar material docente": {
+      "main": [
+        [
+          {
+            "node": "Respuesta - Material reactivado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Comprobar material duplicado": {
+      "main": [
+        [
+          {
+            "node": "¿Material duplicado?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Material duplicado?": {
+      "main": [
+        [
+          {
+            "node": "Respuesta - Material duplicado",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Guardar material docente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
@@ -565,7 +1119,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "2fe65f66-3cf9-44c9-9483-df530b8259a5",
+  "versionId": "2b33d9b9-f2b6-4480-82f8-8d599740ffb3",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "1aafd9336c0d1bfb1b6ea10346f42afca01929ac97db96ed6af1586120385704"

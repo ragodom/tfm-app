@@ -64,7 +64,93 @@ export default function MaterialDocentePage() {
       setCargando(false);
     }
   }
+  async function eliminarDocumento(materialId: number) {
+    const confirmar = window.confirm(
+      "¿Seguro que quieres eliminar este material docente? También se eliminarán sus fragmentos RAG asociados."
+    );
 
+    if (!confirmar) {
+      return;
+    }
+
+    setError("");
+    setMensaje("");
+
+    try {
+      const response = await fetch("/api/gestionar-material-rag", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          accion: "eliminar",
+          material_id: materialId,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.ok) {
+        setError(
+          data?.mensaje ||
+            "No se ha podido eliminar el material docente."
+        );
+        return;
+      }
+
+      setMensaje(
+        data?.mensaje ||
+          "El material docente se ha eliminado correctamente."
+      );
+
+      await cargarDocumentos();
+    } catch {
+      setError(
+        "Se ha producido un error al eliminar el material docente."
+      );
+    }
+  }
+  async function cambiarEstadoDocumento(
+    materialId: number,
+    accion: "desactivar" | "reactivar"
+  ) {
+    setError("");
+    setMensaje("");
+
+    try {
+      const response = await fetch("/api/gestionar-material-rag", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          accion,
+          material_id: materialId,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.ok) {
+        setError(
+          data?.mensaje ||
+            `No se ha podido ${accion} el material docente.`
+        );
+        return;
+      }
+
+      setMensaje(
+        data?.mensaje ||
+          `El material docente se ha ${accion === "desactivar" ? "desactivado" : "reactivado"} correctamente.`
+      );
+
+      await cargarDocumentos();
+    } catch {
+      setError(
+        `Se ha producido un error al ${accion} el material docente.`
+      );
+    }
+  }
   async function crearDocumento(
     event: FormEvent<HTMLFormElement>
   ) {
@@ -145,64 +231,68 @@ export default function MaterialDocentePage() {
           <p>{mensaje}</p>
         </section>
       )}
+<section className="panel materialFormulario">
+  <div className="panelTitulo">
+    <div>
+      <p className="eyebrow">Nuevo material</p>
+      <h2>Añadir contenido docente</h2>
+    </div>
+  </div>
 
-      <section className="panel">
-        <h2>Añadir contenido docente</h2>
+  <form onSubmit={crearDocumento} className="formulario">
+    <label>
+      Título
+      <input
+        type="text"
+        value={titulo}
+        onChange={(e) => setTitulo(e.target.value)}
+        placeholder="Ej.: Introducción a los bucles while"
+        required
+      />
+    </label>
 
-        <form onSubmit={crearDocumento} className="formulario">
-          <label>
-            Título
-            <input
-              type="text"
-              value={titulo}
-              onChange={(e) => setTitulo(e.target.value)}
-              placeholder="Ej.: Introducción a los bucles while"
-              required
-            />
-          </label>
+    <label>
+      Tema
+      <input
+        type="text"
+        value={tema}
+        onChange={(e) => setTema(e.target.value)}
+        placeholder="Ej.: Bucles while"
+        required
+      />
+    </label>
 
-          <label>
-            Tema
-            <input
-              type="text"
-              value={tema}
-              onChange={(e) => setTema(e.target.value)}
-              placeholder="Ej.: Bucles while"
-              required
-            />
-          </label>
+    <label>
+      Fuente
+      <input
+        type="text"
+        value={fuente}
+        onChange={(e) => setFuente(e.target.value)}
+        placeholder="Ej.: Material docente de programación"
+        required
+      />
+    </label>
 
-          <label>
-            Fuente
-            <input
-              type="text"
-              value={fuente}
-              onChange={(e) => setFuente(e.target.value)}
-              placeholder="Ej.: Material docente de programación"
-              required
-            />
-          </label>
+    <label>
+      Contenido
+      <textarea
+        value={texto}
+        onChange={(e) => setTexto(e.target.value)}
+        placeholder="Introduce aquí el contenido académico..."
+        rows={10}
+        className="textoMaterial"
+        required
+      />
+    </label>
 
-          <label>
-            Contenido
-            <textarea
-              value={texto}
-              onChange={(e) => setTexto(e.target.value)}
-              placeholder="Introduce aquí el contenido académico..."
-              rows={10}
-              required
-            />
-          </label>
-
-          <button type="submit" disabled={guardando}>
-            {guardando
-              ? "Incorporando al RAG..."
-              : "Añadir al material docente"}
-          </button>
-        </form>
-      </section>
-
-      <section className="panel">
+    <button type="submit" disabled={guardando}>
+      {guardando
+        ? "Incorporando al RAG..."
+        : "Añadir al material docente"}
+    </button>
+  </form>
+</section>
+            <section className="panel">
         <h2>Material disponible</h2>
 
         {cargando ? (
@@ -228,15 +318,60 @@ export default function MaterialDocentePage() {
                 <p>
                   <strong>Fuente:</strong>{" "}
                   {documento.fuente || "No indicada"}
-                  </p>
-                  {documento.numero_chunks !== undefined && (
+                </p>
+
+                {documento.numero_chunks !== undefined && (
                   <p>
                     <strong>Fragmentos RAG:</strong>{" "}
-                  {documento.numero_chunks}
+                    {documento.numero_chunks}
                   </p>
-                 )}
+                )}
 
                 <p>{documento.texto}</p>
+
+                <p>
+                  <strong>Estado:</strong>{" "}
+                  {documento.estado === "activo"
+                    ? "Activo"
+                    : "Inactivo"}
+                </p>
+
+                <div className="accionesDocumento">
+                  {documento.estado === "activo" ? (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        cambiarEstadoDocumento(
+                          documento.id,
+                          "desactivar"
+                        )
+                      }
+                    >
+                      Desactivar
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        cambiarEstadoDocumento(
+                          documento.id,
+                          "reactivar"
+                        )
+                      }
+                    >
+                      Reactivar
+                    </button>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      eliminarDocumento(documento.id)
+                    }
+                  >
+                    Eliminar
+                  </button>
+                </div>
               </article>
             ))}
           </div>

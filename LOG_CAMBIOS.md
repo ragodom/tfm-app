@@ -7,6 +7,29 @@ Las versiones comprendidas entre v0.1 y v0.9 se han reconstruido retrospectivame
 El control formal de versiones mediante Git comienza a partir de la versión v0.10.
 
 ---
+## v0.14 - Gestión del ciclo de vida del material docente
+
+- Se amplía la gestión del material docente desde la aplicación web.
+- Se incorpora la eliminación de materiales docentes.
+- La eliminación de un material elimina automáticamente sus fragmentos RAG asociados mediante la relación `ON DELETE CASCADE`.
+- Se incorpora la posibilidad de desactivar materiales sin eliminar su contenido fuente.
+- Al desactivar un material:
+  - su estado pasa a `inactivo`;
+  - sus fragmentos vectorizados se eliminan de `documentos_rag`;
+  - el material deja de participar en la recuperación RAG;
+  - el texto original y normalizado se conservan para permitir su posterior reactivación.
+- Se incorpora la reactivación de materiales docentes.
+- Al reactivar un material:
+  - se recupera su `texto_normalizado`;
+  - se regeneran los chunks utilizando la configuración 800/120;
+  - se vuelven a generar los embeddings;
+  - los nuevos fragmentos se vinculan mediante `material_id`;
+  - se actualizan el estado y el número de chunks.
+- La interfaz de material docente permite eliminar, desactivar y reactivar materiales.
+- Se incorpora detección determinista de materiales duplicados a partir del contenido normalizado.
+- Los contenidos duplicados se bloquean antes de generar nuevos chunks o embeddings.
+- Se valida mediante pruebas que un contenido duplicado no genera un nuevo material ni fragmentos RAG adicionales.
+
 ## v0.13 - Normalización y segmentación del material docente RAG
 
 - Se incorpora un subworkflow reutilizable para la normalización determinista del material docente.
