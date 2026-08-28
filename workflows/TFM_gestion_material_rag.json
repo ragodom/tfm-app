@@ -12,7 +12,7 @@
       "typeVersion": 2.1,
       "position": [
         -368,
-        -32
+        128
       ],
       "id": "099a066b-ca3c-4146-a4ec-c23394888dcf",
       "name": "Webhook",
@@ -145,6 +145,31 @@
               },
               "renameOutput": true,
               "outputKey": "Reactivar"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "68b96c12-7e09-4509-9988-76b877129257",
+                    "leftValue": "crear_archivo",
+                    "rightValue": "={{$json.body.accion}}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Crear archivo"
             }
           ]
         },
@@ -154,7 +179,7 @@
       "typeVersion": 3.4,
       "position": [
         -144,
-        -32
+        64
       ],
       "id": "74cff250-1029-489c-9b55-a4d279fa5cc0",
       "name": "Switch"
@@ -169,7 +194,7 @@
       "typeVersion": 2.7,
       "position": [
         80,
-        -128
+        -256
       ],
       "id": "92372f1a-445b-4e74-9e2a-160e43ac00ed",
       "name": "Listar documentos RAG",
@@ -215,8 +240,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.5,
       "position": [
-        80,
-        64
+        800,
+        48
       ],
       "id": "5b78b312-e411-416f-b724-1322f0a737e6",
       "name": "Preparar documento RAG"
@@ -230,8 +255,8 @@
       "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
       "typeVersion": 1.3,
       "position": [
-        704,
-        64
+        1952,
+        240
       ],
       "id": "a1cc6e71-e6d8-4be7-a649-a55eb4946b7e",
       "name": "Postgres PGVector Store",
@@ -249,8 +274,8 @@
       "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
       "typeVersion": 1.2,
       "position": [
-        704,
-        288
+        1920,
+        480
       ],
       "id": "f514035d-760b-4cd9-ad2c-4ef8265351eb",
       "name": "Embeddings OpenAI",
@@ -292,8 +317,8 @@
       "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
       "typeVersion": 1.1,
       "position": [
-        800,
-        288
+        2048,
+        480
       ],
       "id": "91a1e48e-5275-4d15-bd3d-3cddd1d2a79e",
       "name": "Default Data Loader"
@@ -309,8 +334,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        1296,
-        64
+        2864,
+        240
       ],
       "id": "2320687d-3f7a-4dd8-a735-b1dda4a7448c",
       "name": "Respuesta - Material creado",
@@ -386,8 +411,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        224,
-        64
+        1024,
+        48
       ],
       "id": "54adc319-11a0-42ab-beaf-b9ab9a2896e7",
       "name": "llamada a  'TFM - Normalización material docente'"
@@ -401,8 +426,8 @@
       "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
       "typeVersion": 1,
       "position": [
-        800,
-        464
+        2048,
+        688
       ],
       "id": "85e6c9dd-1331-4f15-abed-d094d000953b",
       "name": "Recursive Character Text Splitter"
@@ -418,8 +443,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.7,
       "position": [
-        576,
-        64
+        1696,
+        240
       ],
       "id": "33ee21c5-a6a8-4a57-81e5-7e893411df7e",
       "name": "Guardar material docente",
@@ -441,8 +466,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.7,
       "position": [
-        960,
-        64
+        2416,
+        240
       ],
       "id": "f9644552-4bd0-4928-8dfa-55842e9fecf0",
       "name": "Vincular chunks al material",
@@ -464,8 +489,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.7,
       "position": [
-        1120,
-        64
+        2640,
+        240
       ],
       "id": "58662b07-3f17-467c-be4f-4bcd3da1142b",
       "name": "Actualizar número de chunks",
@@ -487,8 +512,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.7,
       "position": [
-        32,
-        272
+        80,
+        -64
       ],
       "id": "3d483c6f-781f-41a6-a074-3f853d61c919",
       "name": "Eliminar material docente",
@@ -510,8 +535,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        176,
-        272
+        288,
+        -64
       ],
       "id": "0fa23eca-3dbe-47fc-9746-4a5d7400a7c7",
       "name": "Respuesta - Material eliminado"
@@ -525,8 +550,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        224,
-        -128
+        448,
+        -256
       ],
       "id": "7e46fcf6-c4f3-4471-961d-5ff9d321353b",
       "name": "Respuesta - Material listado"
@@ -542,8 +567,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.7,
       "position": [
-        16,
-        496
+        80,
+        224
       ],
       "id": "7e0fdd7d-826a-4ed8-81e9-97e306962b82",
       "name": "Desactivar - Material docente",
@@ -563,8 +588,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        240,
-        496
+        448,
+        224
       ],
       "id": "fbde87c4-89c8-47d8-9d76-ffda10df2bce",
       "name": "Respuesta - Material desactivado"
@@ -580,8 +605,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.7,
       "position": [
-        0,
-        704
+        80,
+        624
       ],
       "id": "0cc1c7cd-3a73-4082-8f9f-96bc3ec9befb",
       "name": "Recuperar material para reactivar",
@@ -599,8 +624,8 @@
       "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
       "typeVersion": 1.2,
       "position": [
-        240,
-        928
+        320,
+        656
       ],
       "id": "6b957633-e23d-41b7-a828-5ddc786a0196",
       "name": "Embeddings OpenAI - Reactivación",
@@ -642,8 +667,8 @@
       "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
       "typeVersion": 1.1,
       "position": [
-        336,
-        928
+        448,
+        656
       ],
       "id": "00bd1745-9efa-4f54-9b6e-82e315067405",
       "name": "Default Data Loader - Reactivación"
@@ -657,8 +682,8 @@
       "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
       "typeVersion": 1,
       "position": [
-        336,
-        1104
+        528,
+        864
       ],
       "id": "9c054dfe-a204-440d-a701-c461863ad140",
       "name": "Recursive Character Text Splitter - Reactivación"
@@ -672,8 +697,8 @@
       "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
       "typeVersion": 1.3,
       "position": [
-        240,
-        704
+        336,
+        416
       ],
       "id": "c67e2579-7fe0-4104-be6a-9dac9c48aa3d",
       "name": "Postgres PGVector Store - Reactivación",
@@ -696,7 +721,7 @@
       "typeVersion": 2.7,
       "position": [
         608,
-        704
+        416
       ],
       "id": "1bc82f97-a22e-40a9-8bd2-6b62bfa14228",
       "name": "Vincular chunks - Reactivación",
@@ -718,8 +743,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.7,
       "position": [
-        832,
-        704
+        752,
+        416
       ],
       "id": "694a9de8-e86e-46fc-98cc-6e5fe083f8d8",
       "name": "Reactivar material docente",
@@ -741,8 +766,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        1056,
-        704
+        800,
+        640
       ],
       "id": "32a0b991-e34f-487e-9fdb-d177a6fa8ccc",
       "name": "Respuesta - Material reactivado"
@@ -750,7 +775,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "with entrada as (\n    select\n        $1::text as texto_normalizado,\n        $2::text as texto_original,\n        $3::text as titulo,\n        $4::text as tema,\n        $5::text as fuente\n),\nexistente as (\n    select\n        id,\n        titulo,\n        tema,\n        fuente,\n        estado,\n        numero_chunks\n    from public.materiales_docentes\n    where md5(texto_normalizado) = md5($1::text)\n    order by id desc\n    limit 1\n)\nselect\n    e.*,\n    (x.id is not null) as duplicado,\n    x.id as material_existente_id,\n    x.titulo as material_existente_titulo,\n    x.estado as material_existente_estado,\n    x.numero_chunks as material_existente_chunks\nfrom entrada e\nleft join existente x on true;",
+        "query": "with existente as (\n    select\n        id,\n        titulo,\n        estado,\n        numero_chunks\n    from public.materiales_docentes\n    where huella_contenido = md5($1::text)\n    limit 1\n)\nselect\n    $1::text as texto_normalizado,\n    $2::text as texto_original,\n    $3::text as titulo,\n    $4::text as tema,\n    $5::text as fuente,\n\n    exists(\n        select 1\n        from existente\n    ) as duplicado,\n\n    (\n        select id\n        from existente\n    ) as material_existente_id,\n\n    (\n        select titulo\n        from existente\n    ) as material_existente_titulo,\n\n    (\n        select estado\n        from existente\n    ) as material_existente_estado,\n\n    (\n        select numero_chunks\n        from existente\n    ) as material_existente_chunks;",
         "options": {
           "queryReplacement": "={{ [   $json.texto_normalizado,   $json.texto_original,   $json.titulo,   $json.tema,   $json.fuente ] }}"
         }
@@ -758,8 +783,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.7,
       "position": [
-        448,
-        -208
+        1248,
+        48
       ],
       "id": "7e5b00a5-e2f6-48c9-9996-0bdea3ddf229",
       "name": "Comprobar material duplicado",
@@ -798,8 +823,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        608,
-        -208
+        1472,
+        48
       ],
       "id": "4aa2d415-73e8-4a6e-94fc-6bdfb21cceff",
       "name": "¿Material duplicado?"
@@ -815,11 +840,132 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        832,
-        -256
+        1696,
+        48
       ],
       "id": "8c94a714-67bd-4618-8eed-f80fc3523a7e",
       "name": "Respuesta - Material duplicado"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "archivo",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        800,
+        928
+      ],
+      "id": "d9c910cb-f728-4477-821e-e7189134cc21",
+      "name": "Extraer texto PDF"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d012920c-c06c-45d7-a398-39040c09d61c",
+              "name": "texto",
+              "value": "={{ $('Extraer texto PDF').first().json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "a629d640-9a95-4883-929d-0fe285e3c6bd",
+              "name": "=titulo",
+              "value": "={{ $('Webhook').first().json.body.titulo }}",
+              "type": "string"
+            },
+            {
+              "id": "15f15c2d-edbd-4242-84d5-677005e89f68",
+              "name": "=tema",
+              "value": "={{ $('Webhook').first().json.body.tema }}",
+              "type": "string"
+            },
+            {
+              "id": "74193aa2-e871-4ee4-bcfd-a902a5f68433",
+              "name": "=fuente",
+              "value": "={{ $('Webhook').first().json.body.fuente }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1088,
+        928
+      ],
+      "id": "d881509e-4102-418c-9c09-438a671bbecc",
+      "name": "Preparar documento desde PDF"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const archivo = $binary?.archivo;\n\nif (!archivo) {\n  return {\n    json: {\n      ...$json,\n      archivo_valido: false,\n      error_archivo: \"ARCHIVO_NO_RECIBIDO\",\n      mensaje_archivo: \"No se ha recibido ningún archivo PDF.\"\n    },\n    binary: $binary\n  };\n}\n\nconst mimeType = archivo.mimeType || \"\";\nconst fileName = archivo.fileName || \"\";\nconst fileSize = archivo.fileSize || \"0\";\n\nfunction convertirABytes(valor) {\n  if (typeof valor === \"number\") {\n    return valor;\n  }\n\n  const texto = String(valor).trim().toLowerCase();\n  const numero = parseFloat(texto.replace(\",\", \".\"));\n\n  if (Number.isNaN(numero)) {\n    return 0;\n  }\n\n  if (texto.includes(\"gb\")) return numero * 1024 * 1024 * 1024;\n  if (texto.includes(\"mb\")) return numero * 1024 * 1024;\n  if (texto.includes(\"kb\")) return numero * 1024;\n\n  return numero;\n}\n\nconst sizeBytes = convertirABytes(fileSize);\nconst limiteBytes = 5 * 1024 * 1024;\n\nconst esPdf =\n  mimeType === \"application/pdf\" ||\n  fileName.toLowerCase().endsWith(\".pdf\");\n\nconst dentroDelLimite = sizeBytes <= limiteBytes;\n\nlet error = null;\nlet mensaje = null;\n\nif (!esPdf) {\n  error = \"TIPO_ARCHIVO_NO_VALIDO\";\n  mensaje = \"El archivo debe estar en formato PDF.\";\n} else if (!dentroDelLimite) {\n  error = \"ARCHIVO_DEMASIADO_GRANDE\";\n  mensaje = \"El archivo PDF supera el límite máximo permitido de 5 MB.\";\n}\n\nreturn {\n  json: {\n    ...$json,\n    archivo_valido: esPdf && dentroDelLimite,\n    error_archivo: error,\n    mensaje_archivo: mensaje,\n    archivo_info: {\n      nombre: fileName,\n      mime_type: mimeType,\n      tamano_original: fileSize,\n      tamano_bytes: Math.round(sizeBytes),\n      limite_bytes: limiteBytes\n    }\n  },\n  binary: $binary\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        80,
+        1024
+      ],
+      "id": "dbd85828-3d96-41f0-82c4-73ea1cd1b088",
+      "name": "Validar archivo PDF"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "7f05c0a0-ad86-4fe0-b14f-0005415d9389",
+              "leftValue": "={{$json.archivo_valido}}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        1024
+      ],
+      "id": "56edc597-87f4-4a8a-b88d-34e4cef62431",
+      "name": "¿Archivo permitido?"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\n  ok: false,\n  error: $json.error_archivo,\n  mensaje: $json.mensaje_archivo,\n  archivo: $json.archivo_info\n} }}",
+        "options": {
+          "responseCode": 413
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        800,
+        1120
+      ],
+      "id": "c33599a1-0950-4f5a-9fa4-087b28e09c2d",
+      "name": "Respuesta - Archivo no permitido"
     }
   ],
   "pinData": {},
@@ -868,6 +1014,13 @@
         [
           {
             "node": "Recuperar material para reactivar",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Validar archivo PDF",
             "type": "main",
             "index": 0
           }
@@ -1111,6 +1264,57 @@
           }
         ]
       ]
+    },
+    "Extraer texto PDF": {
+      "main": [
+        [
+          {
+            "node": "Preparar documento desde PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar documento desde PDF": {
+      "main": [
+        [
+          {
+            "node": "llamada a  'TFM - Normalización material docente'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar archivo PDF": {
+      "main": [
+        [
+          {
+            "node": "¿Archivo permitido?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Archivo permitido?": {
+      "main": [
+        [
+          {
+            "node": "Extraer texto PDF",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respuesta - Archivo no permitido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
@@ -1119,7 +1323,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "2b33d9b9-f2b6-4480-82f8-8d599740ffb3",
+  "versionId": "cae14647-55ff-434f-bcbd-997883800692",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "1aafd9336c0d1bfb1b6ea10346f42afca01929ac97db96ed6af1586120385704"
