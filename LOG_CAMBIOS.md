@@ -7,6 +7,22 @@ Las versiones comprendidas entre v0.1 y v0.9 se han reconstruido retrospectivame
 El control formal de versiones mediante Git comienza a partir de la versión v0.10.
 
 ---
+## v0.15
+
+- Añadida carga de material docente mediante archivos PDF.
+- Incorporada extracción de texto desde PDF en n8n.
+- Reutilización del subworkflow de normalización para material textual y PDF.
+- Integrada detección de duplicados también para documentos PDF.
+- Añadida protección de duplicados a nivel de base de datos mediante huella de contenido e índice UNIQUE.
+- Añadida validación de integridad entre materiales y chunks RAG.
+- Añadido límite de 5 MB para archivos PDF:
+  - validación preventiva en frontend;
+  - validación de backend en n8n.
+- Añadida respuesta controlada para archivos demasiado grandes.
+- Adaptada la API de Next.js para reenviar JSON y multipart/form-data.
+- Mejorada la interfaz de selección de archivos PDF.
+- Validada la carga correcta, el bloqueo de duplicados y el rechazo de archivos de gran tamaño.
+
 ## v0.14 - Gestión del ciclo de vida del material docente
 
 - Se amplía la gestión del material docente desde la aplicación web.

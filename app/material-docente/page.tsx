@@ -17,12 +17,13 @@ export default function MaterialDocentePage() {
   const [documentos, setDocumentos] = useState<DocumentoRag[]>([]);
   const [cargando, setCargando] = useState(true);
   const [guardando, setGuardando] = useState(false);
-
+  const [aviso, setAviso] = useState("");
+  const [archivo, setArchivo] = useState<File | null>(null);
+  const [claveArchivo, setClaveArchivo] = useState(0);
   const [titulo, setTitulo] = useState("");
   const [tema, setTema] = useState("");
   const [fuente, setFuente] = useState("");
   const [texto, setTexto] = useState("");
-
   const [error, setError] = useState("");
   const [mensaje, setMensaje] = useState("");
 
@@ -151,17 +152,41 @@ export default function MaterialDocentePage() {
       );
     }
   }
-  async function crearDocumento(
-    event: FormEvent<HTMLFormElement>
-  ) {
-    event.preventDefault();
+async function crearDocumento(
+  event: FormEvent<HTMLFormElement>
+) {
+  event.preventDefault();
 
-    setGuardando(true);
-    setError("");
-    setMensaje("");
+  if (!archivo && !texto.trim()) {
+    setError(
+      "Introduce contenido académico o selecciona un archivo PDF."
+    );
+    return;
+  }
 
-    try {
-      const response = await fetch("/api/gestionar-material-rag", {
+  setGuardando(true);
+  setError("");
+  setMensaje("");
+  setAviso("");
+
+  try {
+    let response: Response;
+
+    if (archivo) {
+      const formData = new FormData();
+
+      formData.append("accion", "crear_archivo");
+      formData.append("titulo", titulo);
+      formData.append("tema", tema);
+      formData.append("fuente", fuente);
+      formData.append("archivo", archivo);
+
+      response = await fetch("/api/gestionar-material-rag", {
+        method: "POST",
+        body: formData,
+      });
+    } else {
+      response = await fetch("/api/gestionar-material-rag", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -174,36 +199,55 @@ export default function MaterialDocentePage() {
           texto,
         }),
       });
+    }
 
-      const data = await response.json();
+    const data = await response.json();
 
-      if (!response.ok || !data.ok) {
-        setError(
+    if (!response.ok || !data.ok) {
+      if (data?.error === "MATERIAL_DUPLICADO") {
+        setAviso(
           data?.mensaje ||
-            "No se ha podido incorporar el material al RAG."
+            "Este contenido ya existe en el material docente."
         );
         return;
       }
 
-      setMensaje(
-        data?.mensaje ||
-          "El material docente se ha incorporado correctamente."
-      );
+      if (data?.error === "ARCHIVO_DEMASIADO_GRANDE") {
+        setAviso(
+          data?.mensaje ||
+            "El archivo PDF supera el tamaño máximo permitido."
+        );
+        return;
+      }
 
-      setTitulo("");
-      setTema("");
-      setFuente("");
-      setTexto("");
-
-      await cargarDocumentos();
-    } catch {
       setError(
-        "Se ha producido un error al guardar el material docente."
+        data?.mensaje ||
+          "No se ha podido incorporar el material al RAG."
       );
-    } finally {
-      setGuardando(false);
+      return;
     }
+
+    setMensaje(
+      data?.mensaje ||
+        "El material docente se ha incorporado correctamente."
+    );
+
+    setTitulo("");
+    setTema("");
+    setFuente("");
+    setTexto("");
+    setArchivo(null);
+    setClaveArchivo((valor) => valor + 1);
+
+    await cargarDocumentos();
+  } catch {
+    setError(
+      "Se ha producido un error al guardar el material docente."
+    );
+  } finally {
+    setGuardando(false);
   }
+}
 
   return (
     <main className="pagina">
@@ -229,6 +273,13 @@ export default function MaterialDocentePage() {
         <section className="panel">
           <strong>Material incorporado</strong>
           <p>{mensaje}</p>
+        </section>
+      )}
+
+      {aviso && (
+        <section className="mensajeAviso">
+          <strong>Material ya existente</strong>
+          <p>{aviso}</p>
         </section>
       )}
 <section className="panel materialFormulario">
@@ -281,9 +332,36 @@ export default function MaterialDocentePage() {
         placeholder="Introduce aquí el contenido académico..."
         rows={10}
         className="textoMaterial"
-        required
+        required={!archivo}
       />
     </label>
+
+<label>
+  Archivo PDF
+
+  <div className="selectorArchivo">
+    <input
+      key={claveArchivo}
+      id="archivoPdf"
+      type="file"
+      accept=".pdf,application/pdf"
+      className="inputArchivoOculto"
+      onChange={(e) => {
+        const fichero = e.target.files?.[0] ?? null;
+        setArchivo(fichero);
+      }}
+    />
+
+    <label htmlFor="archivoPdf" className="botonArchivo">
+      Seleccionar archivo
+    </label>
+
+    <span className="nombreArchivo">
+      {archivo ? archivo.name : "Ningún archivo seleccionado"}
+    </span>
+  </div>
+</label>
+
 
     <button type="submit" disabled={guardando}>
       {guardando
