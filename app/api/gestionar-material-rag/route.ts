@@ -2,8 +2,6 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-
     const n8nUrl = process.env.N8N_GESTIONAR_MATERIAL_RAG_URL;
 
     if (!n8nUrl) {
@@ -17,13 +15,28 @@ export async function POST(request: Request) {
       );
     }
 
-    const response = await fetch(n8nUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
+    const contentType = request.headers.get("content-type") || "";
+
+    let response: Response;
+
+    if (contentType.includes("multipart/form-data")) {
+      const formData = await request.formData();
+
+      response = await fetch(n8nUrl, {
+        method: "POST",
+        body: formData,
+      });
+    } else {
+      const body = await request.json();
+
+      response = await fetch(n8nUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+    }
 
     const responseText = await response.text();
 

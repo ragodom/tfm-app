@@ -560,3 +560,43 @@ select {
   margin-top: 16px;
   flex-wrap: wrap;
 }
+.mensajeAviso {
+  margin: 20px 0;
+  padding: 16px 18px;
+  border: 1px solid #d8dce8;
+  border-radius: 12px;
+  background: #f7f8fc;
+}
+
+.mensajeAviso strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.mensajeAviso p {
+  margin: 0;
+}
+.selectorArchivo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.inputArchivoOculto {
+  display: none;
+}
+
+.botonArchivo {
+  display: inline-block;
+  padding: 8px 12px;
+  border: 1px solid #bfc7d9;
+  border-radius: 8px;
+  cursor: pointer;
+  background: white;
+  font-weight: 500;
+}
+
+.nombreArchivo {
+  white-space: nowrap;
+}
