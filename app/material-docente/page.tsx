@@ -18,6 +18,7 @@ export default function MaterialDocentePage() {
   const [cargando, setCargando] = useState(true);
   const [guardando, setGuardando] = useState(false);
   const [aviso, setAviso] = useState("");
+  const [tituloAviso, setTituloAviso] = useState("");
   const [archivo, setArchivo] = useState<File | null>(null);
   const [claveArchivo, setClaveArchivo] = useState(0);
   const [titulo, setTitulo] = useState("");
@@ -168,6 +169,7 @@ async function crearDocumento(
   setError("");
   setMensaje("");
   setAviso("");
+  setTituloAviso("");
 
   try {
     let response: Response;
@@ -204,21 +206,22 @@ async function crearDocumento(
     const data = await response.json();
 
     if (!response.ok || !data.ok) {
-      if (data?.error === "MATERIAL_DUPLICADO") {
-        setAviso(
-          data?.mensaje ||
-            "Este contenido ya existe en el material docente."
-        );
-        return;
-      }
-
-      if (data?.error === "ARCHIVO_DEMASIADO_GRANDE") {
-        setAviso(
-          data?.mensaje ||
-            "El archivo PDF supera el tamaño máximo permitido."
-        );
-        return;
-      }
+     if (data?.error === "MATERIAL_DUPLICADO") {
+      setTituloAviso("Material ya existente");
+      setAviso(
+        data?.mensaje ||
+          "Este contenido ya existe en el material docente."
+      );
+      return;
+    }
+         if (data?.error === "ARCHIVO_DEMASIADO_GRANDE") {
+          setTituloAviso("Archivo no permitido");
+          setAviso(
+            data?.mensaje ||
+              "El archivo PDF supera el tamaño máximo permitido."
+          );
+          return;
+        }
 
       setError(
         data?.mensaje ||
@@ -278,9 +281,9 @@ async function crearDocumento(
 
       {aviso && (
         <section className="mensajeAviso">
-          <strong>Material ya existente</strong>
-          <p>{aviso}</p>
-        </section>
+          <strong>{tituloAviso || "Aviso"}</strong>
+         <p>{aviso}</p>
+       </section>
       )}
 <section className="panel materialFormulario">
   <div className="panelTitulo">
@@ -341,16 +344,51 @@ async function crearDocumento(
 
   <div className="selectorArchivo">
     <input
-      key={claveArchivo}
-      id="archivoPdf"
-      type="file"
-      accept=".pdf,application/pdf"
-      className="inputArchivoOculto"
-      onChange={(e) => {
-        const fichero = e.target.files?.[0] ?? null;
-        setArchivo(fichero);
-      }}
-    />
+  key={claveArchivo}
+  id="archivoPdf"
+  type="file"
+  accept=".pdf,application/pdf"
+  className="inputArchivoOculto"
+onChange={(e) => {
+  const fichero = e.target.files?.[0] ?? null;
+
+  // Limpiar mensajes anteriores
+  setError("");
+  setAviso("");
+  setTituloAviso("");
+
+  if (!fichero) {
+    setArchivo(null);
+    return;
+  }
+
+  const esPdf =
+    fichero.type === "application/pdf" ||
+    fichero.name.toLowerCase().endsWith(".pdf");
+
+  if (!esPdf) {
+    setArchivo(null);
+    setTituloAviso("Archivo no permitido");
+    setAviso("Solo se permiten archivos en formato PDF.");
+    setClaveArchivo((valor) => valor + 1);
+    return;
+  }
+
+  const limiteBytes = 5 * 1024 * 1024;
+
+  if (fichero.size > limiteBytes) {
+    setArchivo(null);
+    setTituloAviso("Archivo no permitido");
+    setAviso(
+      "El archivo PDF supera el límite máximo permitido de 5 MB."
+    );
+    setClaveArchivo((valor) => valor + 1);
+    return;
+  }
+
+  setArchivo(fichero);
+}}
+/>
 
     <label htmlFor="archivoPdf" className="botonArchivo">
       Seleccionar archivo

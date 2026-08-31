@@ -7,6 +7,22 @@ Las versiones comprendidas entre v0.1 y v0.9 se han reconstruido retrospectivame
 El control formal de versiones mediante Git comienza a partir de la versión v0.10.
 
 ---
+## v0.16 - Correcciones finales y validación funcional
+
+- Realizada batería final de pruebas de extremo a extremo.
+- Corregida la respuesta HTTP para perfiles incompletos:
+  - `PERFIL_INCOMPLETO` devuelve HTTP 422.
+- Corregido un error de sintaxis detectado en `Unificar contexto RAG`.
+- Validado el mecanismo de regeneración automática de actividades.
+- Validado el registro de intentos con y sin generación de refuerzo.
+- Validado el rechazo de actividades de refuerzo que no superan los controles.
+- Validada la generación correcta de refuerzos a partir de errores concretos.
+- Añadido acceso "Cambiar alumno" desde el generador de actividades.
+- Mejorada la validación y presentación de errores en la carga de archivos PDF.
+- Añadida validación preventiva en frontend para PDFs superiores a 5 MB.
+- Mantenido el guardrail equivalente en n8n para proteger el backend.
+- Eliminados archivos temporales utilizados durante las pruebas.
+
 ## v0.15
 
 - Añadida carga de material docente mediante archivos PDF.
