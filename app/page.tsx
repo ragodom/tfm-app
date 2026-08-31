@@ -224,6 +224,9 @@ async function registrarIntento(event: FormEvent<HTMLFormElement>) {
 >
           {perfilNombre && <strong>{perfilNombre}</strong>}
          <span>Perfil #{perfilId}</span>
+         <a href="/alumnado" className="cambiarAlumno">
+            Cambiar alumno
+        </a>
         </div>
       ) : (
   <span className="perfil">Sin perfil seleccionado</span>

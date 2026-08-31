@@ -104,7 +104,9 @@
       "parameters": {
         "respondWith": "json",
         "responseBody": "{\n  \"ok\": false,\n  \"error\": \"PERFIL_INCOMPLETO\",\n  \"mensaje\": \"El perfil debe estar correctamente cumplimentado antes de generar una actividad personalizada.\"\n}",
-        "options": {}
+        "options": {
+          "responseCode": 422
+        }
       },
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
@@ -742,7 +744,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const items = $input.all();\n\nconst documentos = items\n  .map((item) => ({\n    contenido: item.json.document?.pageContent ?? '',\n    metadata: item.json.document?.metadata ?? {},\n    score: item.json.score ?? null,\n  }))\n  .filter((doc) => doc.contenido);\n\nconst contextoRag = documentos\n  .map(\n    (doc, index) =>\n      `FRAGMENTO ${index + 1}:\\n${doc.contenido}`\n  )\n  const vistos = new Set();\n\nconst documentosUnicos = documentos.filter((doc) => {\n  const clave = doc.contenido\n    .trim()\n    .replace(/\\s+/g, ' ')\n    .toLowerCase();\n\n  if (vistos.has(clave)) {\n    return false;\n  }\n\n  vistos.add(clave);\n  return true;\n});\n  .join('\\n\\n');\n\nreturn [\n  {\n    json: {\n      contexto_rag: contextoRag,\n      referencias_rag: documentos.map((doc) => ({\n        metadata: doc.metadata,\n        score: doc.score,\n      })),\n    },\n  },\n];"
+        "jsCode": "const items = $input.all();\n\nconst documentos = items\n  .map((item) => ({\n    contenido: item.json.document?.pageContent ?? '',\n    metadata: item.json.document?.metadata ?? {},\n    score: item.json.score ?? null,\n  }))\n  .filter((doc) => doc.contenido);\n\nconst contextoRag = documentos\n  .map(\n    (doc, index) =>\n      `FRAGMENTO ${index + 1}:\\n${doc.contenido}`\n  )\n  const vistos = new Set();\n\nconst documentosUnicos = documentos.filter((doc) => {\n  const clave = doc.contenido\n    .trim()\n    .replace(/\\s+/g, ' ')\n    .toLowerCase();\n\n  if (vistos.has(clave)) {\n    return false;\n  }\n\n  vistos.add(clave);\n  return true;\n})\n  .join('\\n\\n');\n\nreturn [\n  {\n    json: {\n      contexto_rag: contextoRag,\n      referencias_rag: documentos.map((doc) => ({\n        metadata: doc.metadata,\n        score: doc.score,\n      })),\n    },\n  },\n];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1117,7 +1119,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "48dd4e71-97be-4b8e-8f51-d66390d7196e",
+  "versionId": "b7f2eaa6-4228-4493-ba51-97a102c1fb35",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "1aafd9336c0d1bfb1b6ea10346f42afca01929ac97db96ed6af1586120385704"

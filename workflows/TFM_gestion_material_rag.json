@@ -12,7 +12,7 @@
       "typeVersion": 2.1,
       "position": [
         -368,
-        128
+        160
       ],
       "id": "099a066b-ca3c-4146-a4ec-c23394888dcf",
       "name": "Webhook",
@@ -179,7 +179,7 @@
       "typeVersion": 3.4,
       "position": [
         -144,
-        64
+        96
       ],
       "id": "74cff250-1029-489c-9b55-a4d279fa5cc0",
       "name": "Switch"
@@ -240,8 +240,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.5,
       "position": [
-        800,
-        48
+        1024,
+        80
       ],
       "id": "5b78b312-e411-416f-b724-1322f0a737e6",
       "name": "Preparar documento RAG"
@@ -255,8 +255,8 @@
       "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
       "typeVersion": 1.3,
       "position": [
-        1952,
-        240
+        2176,
+        272
       ],
       "id": "a1cc6e71-e6d8-4be7-a649-a55eb4946b7e",
       "name": "Postgres PGVector Store",
@@ -274,8 +274,8 @@
       "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
       "typeVersion": 1.2,
       "position": [
-        1920,
-        480
+        2160,
+        512
       ],
       "id": "f514035d-760b-4cd9-ad2c-4ef8265351eb",
       "name": "Embeddings OpenAI",
@@ -317,8 +317,8 @@
       "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
       "typeVersion": 1.1,
       "position": [
-        2048,
-        480
+        2288,
+        512
       ],
       "id": "91a1e48e-5275-4d15-bd3d-3cddd1d2a79e",
       "name": "Default Data Loader"
@@ -334,8 +334,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        2864,
-        240
+        3088,
+        272
       ],
       "id": "2320687d-3f7a-4dd8-a735-b1dda4a7448c",
       "name": "Respuesta - Material creado",
@@ -411,8 +411,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        1024,
-        48
+        1248,
+        80
       ],
       "id": "54adc319-11a0-42ab-beaf-b9ab9a2896e7",
       "name": "llamada a  'TFM - Normalización material docente'"
@@ -426,8 +426,8 @@
       "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
       "typeVersion": 1,
       "position": [
-        2048,
-        688
+        2368,
+        720
       ],
       "id": "85e6c9dd-1331-4f15-abed-d094d000953b",
       "name": "Recursive Character Text Splitter"
@@ -443,8 +443,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.7,
       "position": [
-        1696,
-        240
+        1920,
+        272
       ],
       "id": "33ee21c5-a6a8-4a57-81e5-7e893411df7e",
       "name": "Guardar material docente",
@@ -466,8 +466,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.7,
       "position": [
-        2416,
-        240
+        2640,
+        272
       ],
       "id": "f9644552-4bd0-4928-8dfa-55842e9fecf0",
       "name": "Vincular chunks al material",
@@ -489,8 +489,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.7,
       "position": [
-        2640,
-        240
+        2864,
+        272
       ],
       "id": "58662b07-3f17-467c-be4f-4bcd3da1142b",
       "name": "Actualizar número de chunks",
@@ -535,7 +535,7 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        288,
+        448,
         -64
       ],
       "id": "0fa23eca-3dbe-47fc-9746-4a5d7400a7c7",
@@ -720,8 +720,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.7,
       "position": [
-        608,
-        416
+        800,
+        624
       ],
       "id": "1bc82f97-a22e-40a9-8bd2-6b62bfa14228",
       "name": "Vincular chunks - Reactivación",
@@ -743,8 +743,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.7,
       "position": [
-        752,
-        416
+        1024,
+        624
       ],
       "id": "694a9de8-e86e-46fc-98cc-6e5fe083f8d8",
       "name": "Reactivar material docente",
@@ -766,8 +766,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        800,
-        640
+        1248,
+        624
       ],
       "id": "32a0b991-e34f-487e-9fdb-d177a6fa8ccc",
       "name": "Respuesta - Material reactivado"
@@ -783,8 +783,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.7,
       "position": [
-        1248,
-        48
+        1472,
+        80
       ],
       "id": "7e5b00a5-e2f6-48c9-9996-0bdea3ddf229",
       "name": "Comprobar material duplicado",
@@ -823,8 +823,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        1472,
-        48
+        1696,
+        80
       ],
       "id": "4aa2d415-73e8-4a6e-94fc-6bdfb21cceff",
       "name": "¿Material duplicado?"
@@ -840,8 +840,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        1696,
-        48
+        1920,
+        80
       ],
       "id": "8c94a714-67bd-4618-8eed-f80fc3523a7e",
       "name": "Respuesta - Material duplicado"
@@ -896,7 +896,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.5,
       "position": [
-        1088,
+        1024,
         928
       ],
       "id": "d881509e-4102-418c-9c09-438a671bbecc",
@@ -1323,7 +1323,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "cae14647-55ff-434f-bcbd-997883800692",
+  "versionId": "b26278e2-f1ff-4c5a-a8f4-29d9ad56853b",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "1aafd9336c0d1bfb1b6ea10346f42afca01929ac97db96ed6af1586120385704"
