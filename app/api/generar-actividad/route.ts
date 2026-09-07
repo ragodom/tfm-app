@@ -24,16 +24,50 @@ export async function POST(request: Request) {
       body: JSON.stringify(body),
     });
 
-    const data = await response.json();
+    const raw = await response.text();
+
+    if (!raw.trim()) {
+      console.error(
+        "n8n devolvió una respuesta vacía. Status:",
+        response.status
+      );
+
+      return NextResponse.json(
+        {
+          ok: false,
+          error: "n8n ha procesado la solicitud pero ha devuelto una respuesta vacía",
+        },
+        { status: 502 }
+      );
+    }
+
+    let data;
+
+    try {
+      data = JSON.parse(raw);
+    } catch {
+      console.error("Respuesta no JSON recibida desde n8n:", raw);
+
+      return NextResponse.json(
+        {
+          ok: false,
+          error: "n8n ha devuelto una respuesta con formato no válido",
+          detalle: raw.slice(0, 500),
+        },
+        { status: 502 }
+      );
+    }
 
     return NextResponse.json(data, {
       status: response.status,
     });
-  } catch {
+  } catch (error) {
+    console.error("Error en /api/generar-actividad:", error);
+
     return NextResponse.json(
       {
         ok: false,
-        error: "No se ha podido conectar con n8n",
+        error: "No se ha podido procesar la comunicación con n8n",
       },
       { status: 500 }
     );

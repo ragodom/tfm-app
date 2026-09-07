@@ -11,10 +11,35 @@ type Actividad = {
   dificultad?: string;
   puntuacion_maxima?: number;
   errores_trabajados?: string[];
+
+  personalizacion_aplicada?: {
+    interes_principal?: string;
+    tipo_integracion?: string;
+    escenario?: string;
+    papel_alumnado?: string;
+  };
+
+  retos?: {
+    numero?: number;
+    situacion?: string;
+    pregunta?: string;
+    puntuacion?: number;
+  }[];
+
+  cierre_narrativo?: string;
+
+  dificultad?: string;
+  puntuacion_maxima?: number;
+  errores_trabajados?: string[];
 };
 
 type RespuestaN8n = {
   ok?: boolean;
+  error?: string;
+
+  solicitud_id?: string;
+  estado?: string;
+
   actividad_id?: number;
   mensaje?: string;
   regenerada?: boolean;
@@ -68,60 +93,148 @@ export default function Home() {
       setPerfilNombre(nombreGuardado);
     }
 }, []);
+  type RespuestaN8n = {
+  ok?: boolean;
+  error?: string;
 
-  async function generarActividad(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  solicitud_id?: string;
+  estado?: string;
 
-    if (!perfilId) {
-  setError(
-    "Debes seleccionar un perfil de alumnado antes de generar una actividad."
-  );
-  return;
+  actividad_id?: number;
+  mensaje?: string;
+  regenerada?: boolean;
+  actividad?: Actividad;
+};
+async function esperar(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-    setCargando(true);
-    setError("");
-    setRespuesta(null);
+async function consultarEstadoGeneracion(
+  solicitudId: string
+): Promise<RespuestaN8n> {
+  const maxIntentos = 120;
 
-    try {
-      const response = await fetch("/api/generar-actividad", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          perfil_id: perfilId,
-          objetivo,
-          tema,
-          dificultad,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(
-          data?.mensaje ||
-            data?.message ||
-            "No se ha podido generar la actividad."
-        );
-        return;
+  for (let intento = 0; intento < maxIntentos; intento++) {
+    const response = await fetch(
+      `/api/estado-generacion?solicitud_id=${encodeURIComponent(solicitudId)}`,
+      {
+        method: "GET",
+        cache: "no-store",
       }
+    );
 
-      setRespuesta(data);
-      setFechaInicio(new Date());
-      setPuntuacion("");
-      setErroresIntento("");
-      setRespuestaIntento(null);
-      setErrorIntento("");
-      console.log("Respuesta completa:", data);
-      console.log("Actividad ID:", data.actividad_id);
-    } catch {
-      setError("Se ha producido un error al conectar con el servidor.");
-    } finally {
-      setCargando(false);
+    const data: RespuestaN8n = await response.json();
+
+    if (!response.ok || data.ok === false) {
+      throw new Error(
+        data.mensaje ||
+          data.error ||
+          "No se ha podido consultar el estado de la generación."
+      );
     }
+
+    if (
+      data.estado === "completada" &&
+      data.actividad_id &&
+      data.actividad
+    ) {
+      return data;
+    }
+
+    if (data.estado === "revision") {
+      throw new Error(
+        data.mensaje ||
+          "La actividad requiere revisión por parte del profesorado."
+      );
+    }
+
+    if (data.estado === "error") {
+      throw new Error(
+        data.mensaje ||
+          "No se ha podido completar la generación de la actividad."
+      );
+    }
+
+    await esperar(3000);
   }
+
+  throw new Error(
+    "La generación está tardando más de lo esperado."
+  );
+}
+
+async function generarActividad(event: FormEvent<HTMLFormElement>) {
+  event.preventDefault();
+
+  if (!perfilId) {
+    setError(
+      "Debes seleccionar un perfil de alumnado antes de generar una actividad."
+    );
+    return;
+  }
+
+  setCargando(true);
+  setError("");
+  setRespuesta(null);
+
+  try {
+    const response = await fetch("/api/generar-actividad", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        perfil_id: perfilId,
+        objetivo,
+        tema,
+        dificultad,
+      }),
+    });
+
+    const data: RespuestaN8n = await response.json();
+
+    if (!response.ok || data.ok === false) {
+      setError(
+        data.mensaje ||
+          data.error ||
+          "No se ha podido iniciar la generación de la actividad."
+      );
+      return;
+    }
+
+    if (!data.solicitud_id) {
+      setError(
+        "La generación se ha iniciado, pero no se ha recibido el identificador de la solicitud."
+      );
+      return;
+    }
+
+    console.log("Generación iniciada:", data.solicitud_id);
+
+    const resultadoFinal = await consultarEstadoGeneracion(
+      data.solicitud_id
+    );
+
+    setRespuesta(resultadoFinal);
+    setFechaInicio(new Date());
+    setPuntuacion("");
+    setErroresIntento("");
+    setRespuestaIntento(null);
+    setErrorIntento("");
+
+    console.log("Actividad completada:", resultadoFinal);
+    console.log("Actividad ID:", resultadoFinal.actividad_id);
+  } catch (error) {
+    setError(
+      error instanceof Error
+        ? error.message
+        : "Se ha producido un error al conectar con el servidor."
+    );
+  } finally {
+    setCargando(false);
+  }
+}
+
 async function registrarIntento(event: FormEvent<HTMLFormElement>) {
   event.preventDefault();
 
@@ -320,6 +433,41 @@ async function registrarIntento(event: FormEvent<HTMLFormElement>) {
               </div>
             </div>
           )}
+          
+          {respuesta.actividad.retos &&
+  respuesta.actividad.retos.length > 0 && (
+    <div className="bloque">
+      <h3>Retos</h3>
+
+      {respuesta.actividad.retos.map((reto, index) => (
+        <div
+          key={reto.numero ?? index}
+          className="enunciado"
+        >
+          <strong>
+            Reto {reto.numero ?? index + 1}
+            {reto.puntuacion !== undefined
+              ? ` · ${reto.puntuacion} puntos`
+              : ""}
+          </strong>
+
+          {reto.situacion && <p>{reto.situacion}</p>}
+
+          {reto.pregunta && (
+            <p>
+              <strong>Pregunta:</strong> {reto.pregunta}
+            </p>
+          )}
+        </div>
+      ))}
+    </div>
+  )}
+          {respuesta.actividad.cierre_narrativo && (
+          <div className="bloque">
+            <h3>Cierre de la actividad</h3>
+            <p>{respuesta.actividad.cierre_narrativo}</p>
+          </div>
+        )}
 
           {respuesta.actividad.conceptos_utilizados &&
             respuesta.actividad.conceptos_utilizados.length > 0 && (
@@ -507,9 +655,9 @@ async function registrarIntento(event: FormEvent<HTMLFormElement>) {
 </div>
 )}
 
-          {respuesta.mensaje && (
-            <p className="mensajeFinal">{respuesta.mensaje}</p>
-          )}
+      {respuesta.mensaje && !respuestaIntento && (
+        <p className="mensajeFinal">{respuesta.mensaje}</p>
+      )}
         </section>
       )}
     </main>

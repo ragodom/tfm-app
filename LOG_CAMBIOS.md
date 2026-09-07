@@ -7,6 +7,20 @@ Las versiones comprendidas entre v0.1 y v0.9 se han reconstruido retrospectivame
 El control formal de versiones mediante Git comienza a partir de la versión v0.10.
 
 ---
+## v0.17
+
+- Se cambia la generación principal a un modelo asíncrono para evitar timeouts HTTP durante ejecuciones largas de n8n.
+- Se incorpora la tabla `solicitudes_generacion` para registrar el estado de las solicitudes.
+- Se añade el workflow `TFM - Estado generación` para consultar los estados `procesando`, `completada`, `revision` y `error`.
+- Se incorpora polling desde la aplicación Next.js hasta obtener el resultado final de la generación.
+- Se mejora la personalización de las actividades mediante estrategias narrativas, situacionales y temáticas integradas.
+- Se actualizan los Structured Output Parsers de planificación, generación, regeneración y evaluación.
+- Se refuerzan las restricciones RAG para evitar generalizaciones, transformaciones, combinaciones y deducciones no respaldadas.
+- Se actualizan los guardrails deterministas para inspeccionar también los retos y la nueva estructura de las actividades.
+- Se alinea el flujo de refuerzo con la nueva estructura de personalización y retos.
+- Se valida el flujo de refuerzo tanto para actividades aceptadas como para actividades derivadas a revisión del profesorado.
+- Se mejora la presentación de las actividades y de los estados del proceso en la interfaz web.
+
 ## v0.16 - Correcciones finales y validación funcional
 
 - Realizada batería final de pruebas de extremo a extremo.

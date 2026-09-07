@@ -1,0 +1,99 @@
+{
+  "name": "TFM - Estado generación",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "estado-generacion",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "62349e5a-1997-456f-a464-7da252c93587",
+      "name": "Webhook - Estado generación",
+      "webhookId": "b2a4a4c7-7fd0-450b-98b1-6f5748d2c4a5"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select\n    s.id as solicitud_id,\n    s.estado,\n    s.actividad_id,\n    s.mensaje,\n    s.creado_en,\n    s.actualizado_en,\n    a.contenido,\n    a.regeneraciones\nfrom public.solicitudes_generacion s\nleft join public.actividades a\n    on a.id = s.actividad_id\nwhere s.id = $1::uuid\nlimit 1;",
+        "options": {
+          "queryReplacement": "={{ $('Webhook - Estado generación').first().json.query.solicitud_id }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        224,
+        0
+      ],
+      "id": "4199263e-c594-47b3-8b30-20cb525a39d5",
+      "name": "Consultar estado generación",
+      "credentials": {
+        "postgres": {
+          "id": "LF46SQyz7oBTLI2P",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ (() => {\n  const estado = $json.estado;\n\n  let actividad = null;\n\n  if ($json.contenido) {\n    const raw = typeof $json.contenido === 'string'\n      ? JSON.parse($json.contenido)\n      : $json.contenido;\n\n    actividad = raw?.output?.output ?? raw?.output ?? raw;\n  }\n\n  return {\n    ok: true,\n    solicitud_id: $json.solicitud_id,\n    estado,\n    actividad_id: $json.actividad_id\n      ? Number($json.actividad_id)\n      : null,\n    mensaje: $json.mensaje ?? null,\n    regenerada: Number($json.regeneraciones ?? 0) > 0,\n    actividad\n  };\n})() }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        448,
+        0
+      ],
+      "id": "4d7415d7-fc04-40b9-82df-80f73f015f18",
+      "name": "Respuesta - Estado generación"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook - Estado generación": {
+      "main": [
+        [
+          {
+            "node": "Consultar estado generación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar estado generación": {
+      "main": [
+        [
+          {
+            "node": "Respuesta - Estado generación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "56bc406d-289c-48cf-83c1-6ac3cabb044b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1aafd9336c0d1bfb1b6ea10346f42afca01929ac97db96ed6af1586120385704"
+  },
+  "nodeGroups": [],
+  "id": "dJ9GXFitxGH4gTPd",
+  "tags": []
+}

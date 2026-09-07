@@ -132,7 +132,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        848,
+        896,
         192
       ],
       "id": "1eb9ddc1-64a9-44b9-a3f9-93f316d52535",
@@ -149,7 +149,7 @@
       "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
       "typeVersion": 1.3,
       "position": [
-        1040,
+        1120,
         -64
       ],
       "id": "80956b16-bec7-4381-8228-e8cccd317ad1",
@@ -168,8 +168,8 @@
       "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
       "typeVersion": 1.2,
       "position": [
-        1056,
-        112
+        1200,
+        176
       ],
       "id": "3bd4e4d3-f93d-471a-ae3c-4cdb9f048a01",
       "name": "Embeddings OpenAI",
@@ -188,7 +188,7 @@
         "messages": {
           "messageValues": [
             {
-              "message": "Actúa como un sistema de planificación de actividades educativas de refuerzo.\n\nTu función NO es generar todavía la actividad final. Debes analizar la actividad original, el resultado del intento, los errores registrados, el perfil y el contenido académico recuperado mediante RAG para elaborar una planificación de refuerzo.\n\nREGLAS:\n\n- Utiliza exclusivamente conceptos académicos presentes explícitamente en el contenido recuperado mediante RAG.\n- No introduzcas conceptos, reglas, explicaciones o ejemplos académicos que no estén respaldados por el RAG.\n- Los errores incluidos en \"errores_a_reforzar\" deben proceder únicamente del intento registrado.\n- No inventes errores frecuentes, hipotéticos o deducidos a partir de la puntuación obtenida.\n- Si no se proporciona ningún error concreto, devuelve \"errores_a_reforzar\": [].\n- El objetivo de refuerzo debe mantener relación con la actividad original y centrarse especialmente en los errores reales registrados.\n- Los intereses, aficiones y preferencias del perfil solo pueden utilizarse para contextualizar la futura actividad y nunca como fuente de contenido académico.\n- Los conceptos incluidos en \"conceptos_permitidos\" deben proceder exclusivamente del contenido RAG.\n- No generes todavía la actividad de refuerzo.\n\nSUFICIENCIA DEL RAG:\n\n- Comprueba si el contenido recuperado mediante RAG contiene información suficiente para trabajar los errores registrados y el objetivo de refuerzo.\n- \"rag_suficiente\" será true únicamente cuando el material recuperado permita desarrollar el refuerzo sin utilizar conocimiento académico externo.\n- No consideres suficiente el contenido solo porque pertenezca al mismo tema general.\n- Si el RAG no permite trabajar alguno de los errores registrados o el objetivo de refuerzo, devuelve \"rag_suficiente\": false.\n- Cuando \"rag_suficiente\" sea false, explica brevemente la causa en \"motivo_rag\".\n\nDevuelve únicamente la planificación siguiendo la estructura definida por el formato de salida."
+              "message": "Actúa como un sistema de análisis y planificación de actividades educativas de refuerzo.\n\nTu función NO es generar la actividad final. Debes analizar la actividad original, el resultado del intento, los errores registrados, el perfil del alumnado y el contenido académico recuperado mediante RAG para elaborar una planificación estructurada de refuerzo.\n\nREGLAS ACADÉMICAS:\n\n- Utiliza exclusivamente contenido académico presente explícitamente en el RAG.\n- No introduzcas conceptos, reglas, explicaciones, ejemplos ni conocimientos académicos externos.\n- Los conceptos incluidos en \"conceptos_permitidos\" deben proceder exclusivamente del contenido RAG.\n- El objetivo de refuerzo debe mantener relación con la actividad original y centrarse prioritariamente en las dificultades reales detectadas en el intento.\n\nERRORES A REFORZAR:\n\n- \"errores_a_reforzar\" debe contener únicamente errores registrados explícitamente en el intento.\n- No inventes errores frecuentes, hipotéticos o deducidos a partir de la puntuación obtenida.\n- No interpretes una puntuación baja como evidencia de un error concreto si dicho error no ha sido registrado.\n- Si no se proporciona ningún error concreto, devuelve \"errores_a_reforzar\": [].\n\nPERSONALIZACIÓN:\n\n- Los intereses, aficiones y preferencias del perfil pueden utilizarse únicamente para personalizar el contexto, la narrativa, los ejemplos o la progresión de la futura actividad.\n- La personalización nunca puede introducir ni ampliar contenido académico.\n- Siempre que resulte natural, utiliza algún elemento del perfil como hilo conductor del refuerzo para mantener continuidad contextual durante la actividad.\n- La personalización es secundaria respecto al objetivo de refuerzo: nunca adaptes o suavices los errores reales para favorecer la narrativa.\n- Si ningún elemento del perfil puede integrarse de forma coherente, no fuerces una contextualización artificial.\n\nSUFICIENCIA DEL RAG:\n\n- Comprueba si el contenido recuperado contiene la información académica necesaria para trabajar realmente el objetivo de refuerzo y los errores registrados.\n- \"rag_suficiente\" será true únicamente cuando el refuerzo pueda desarrollarse sin recurrir a conocimiento externo ni a extrapolaciones no respaldadas.\n- No consideres suficiente el RAG únicamente porque pertenezca al mismo tema general.\n- Si algún error que deba trabajarse requiere información académica ausente del RAG, \"rag_suficiente\" será false.\n- Cuando \"rag_suficiente\" sea false, explica brevemente la causa en \"motivo_rag\".\n\nNo generes ninguna actividad, pregunta o ejercicio final.\n\nDevuelve únicamente la planificación siguiendo la estructura definida por el formato de salida."
             }
           ]
         },
@@ -197,7 +197,7 @@
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.9,
       "position": [
-        1472,
+        1696,
         48
       ],
       "id": "de4257a0-593e-40c8-a82d-163b63ac6f2a",
@@ -205,12 +205,12 @@
     },
     {
       "parameters": {
-        "jsonSchemaExample": "{\n  \"objetivo_refuerzo\": \"Reforzar el uso de range() junto con el bucle for\",\n  \"errores_a_reforzar\": [\n    \"Dificultades al utilizar range() correctamente.\"\n  ],\n  \"conceptos_permitidos\": [\n    \"bucle for\",\n    \"función range()\"\n  ],\n  \"estrategia_refuerzo\": \"Actividad práctica centrada en el error registrado\",\n  \"intereses_utilizables\": [\n    \"automovilismo\"\n  ],\n  \"dificultad\": \"básica\",\n  \"rag_suficiente\": true,\n  \"motivo_rag\": \"\"\n}\n"
+        "jsonSchemaExample": "{\n  \"objetivo_refuerzo\": \"Reforzar el uso de range() junto con el bucle for\",\n  \"errores_a_reforzar\": [\n    \"Dificultad registrada en el intento relacionada con el uso de range().\"\n  ],\n  \"conceptos_permitidos\": [\n    \"for\",\n    \"range()\"\n  ],\n  \"estrategia_refuerzo\": \"Trabajar directamente el error registrado mediante tareas basadas únicamente en la información explícita del RAG.\",\n  \"intereses_utilizables\": [\n    \"automovilismo\"\n  ],\n  \"estrategia_personalizacion\": {\n    \"interes_principal\": \"automovilismo\",\n    \"tipo_integracion\": \"narrativa\",\n    \"escenario\": \"una sesión de entrenamiento de automovilismo\",\n    \"papel_alumnado\": \"miembro del equipo encargado de completar distintas comprobaciones\",\n    \"progresion\": \"cada reto permite avanzar en la sesión mientras se refuerza el error registrado\",\n    \"elementos_recurrentes\": [\n      \"entrenamiento\",\n      \"equipo\",\n      \"sesión\"\n    ]\n  },\n  \"dificultad\": \"básica\",\n  \"rag_suficiente\": true,\n  \"motivo_rag\": \"El material recuperado contiene la información necesaria para trabajar el error registrado.\"\n}"
       },
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
       "position": [
-        1616,
+        1840,
         272
       ],
       "id": "2d235761-44e5-4e29-969a-31654aacb188",
@@ -231,7 +231,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
       "position": [
-        1472,
+        1712,
         272
       ],
       "id": "358fc14a-604e-458f-a48d-92d47f2e1225",
@@ -271,7 +271,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        1824,
+        2048,
         48
       ],
       "id": "1e313e5a-576f-4341-8cd8-f6434b45734a",
@@ -292,7 +292,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
       "position": [
-        2048,
+        2288,
         32
       ],
       "id": "e64c182a-9843-4286-9d3e-60c492c1ca20",
@@ -306,12 +306,12 @@
     },
     {
       "parameters": {
-        "jsonSchemaExample": "{\n  \"titulo\": \"Refuerzo del uso de range()\",\n  \"enunciado\": \"Realiza una actividad práctica utilizando un bucle for y la función range().\",\n  \"objetivo\": \"Reforzar el uso correcto de range() en bucles for\",\n  \"errores_trabajados\": [\n    \"Dificultades al utilizar range() correctamente.\"\n  ],\n  \"conceptos_utilizados\": [\n    \"bucle for\",\n    \"función range()\"\n  ],\n  \"contexto_personalizacion\": \"ciclismo\",\n  \"dificultad\": \"básica\",\n  \"puntuacion_maxima\": 10\n}"
+        "jsonSchemaExample": "{\n  \"titulo\": \"Refuerzo del uso de range()\",\n  \"enunciado\": \"Participas en una sesión de entrenamiento de ciclismo. A lo largo de varios retos trabajarás específicamente el error registrado utilizando únicamente la información académica proporcionada.\",\n  \"objetivo\": \"Reforzar el uso de range() junto con el bucle for\",\n  \"errores_trabajados\": [\n    \"Error registrado originalmente en el intento.\"\n  ],\n  \"conceptos_utilizados\": [\n    \"for\",\n    \"range()\"\n  ],\n  \"contexto_personalizacion\": \"ciclismo\",\n  \"personalizacion_aplicada\": {\n    \"interes_principal\": \"ciclismo\",\n    \"tipo_integracion\": \"narrativa\",\n    \"escenario\": \"una sesión de entrenamiento de ciclismo\",\n    \"papel_alumnado\": \"miembro del equipo que debe completar distintas comprobaciones\",\n    \"progresion\": \"cada reto representa una nueva fase del entrenamiento mientras se trabaja el error registrado\",\n    \"elementos_recurrentes\": [\n      \"entrenamiento\",\n      \"equipo\",\n      \"sesión\"\n    ]\n  },\n  \"retos\": [\n    {\n      \"numero\": 1,\n      \"situacion\": \"Antes de comenzar el entrenamiento debes revisar el ejemplo proporcionado en el material.\",\n      \"pregunta\": \"Escribe exactamente el código del ejemplo proporcionado.\",\n      \"puntuacion\": 4\n    },\n    {\n      \"numero\": 2,\n      \"situacion\": \"Durante la siguiente fase debes comprobar el resultado del mismo ejemplo.\",\n      \"pregunta\": \"Según el material, indica la salida mostrada por el código.\",\n      \"puntuacion\": 3\n    },\n    {\n      \"numero\": 3,\n      \"situacion\": \"Antes de finalizar la sesión debes revisar cuándo puede utilizarse la estructura trabajada.\",\n      \"pregunta\": \"Según el material, identifica en qué situación puede utilizarse un bucle for.\",\n      \"puntuacion\": 3\n    }\n  ],\n  \"cierre_narrativo\": \"Al completar los retos finalizas la sesión de refuerzo trabajando específicamente el error registrado.\",\n  \"dificultad\": \"básica\",\n  \"puntuacion_maxima\": 10\n}"
       },
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
       "position": [
-        2192,
+        2416,
         32
       ],
       "id": "8166aea7-c9dd-4ec3-a8f9-7507e64eef2b",
@@ -325,7 +325,7 @@
         "messages": {
           "messageValues": [
             {
-              "message": "Actúa como un sistema de generación de actividades educativas de refuerzo.\n\nDebes generar una única actividad de refuerzo a partir de la planificación recibida, los errores reales registrados y el contenido académico recuperado mediante RAG.\n\nREGLAS OBLIGATORIAS:\n\n- Utiliza exclusivamente conceptos académicos presentes explícitamente en el contenido recuperado mediante RAG.\n- Respeta los conceptos permitidos definidos en la planificación.\n- La actividad debe centrarse específicamente en los errores reales detectados en el intento.\n- No inventes errores adicionales, errores frecuentes o dificultades hipotéticas.\n- Mantén el objetivo de refuerzo establecido en la planificación.\n- Mantén el nivel de dificultad indicado.\n- La actividad debe ser diferente de la actividad original y estar orientada específicamente al refuerzo.\n- Los intereses, aficiones y preferencias del perfil solo pueden utilizarse para contextualizar la actividad y nunca como fuente de contenido académico.\n\nRESTRICCIÓN DEL CONTENIDO ACADÉMICO:\n\n- No introduzcas conceptos, definiciones, reglas, propiedades, explicaciones o ejemplos académicos que no estén explícitamente respaldados por el RAG.\n- No generalices ejemplos concretos del material a reglas generales que no aparezcan expresamente en él.\n- Si el RAG proporciona únicamente un ejemplo o resultado concreto, puedes pedir identificarlo, reproducirlo o aplicarlo directamente, pero no explicar por qué ocurre salvo que esa explicación también aparezca en el material.\n- No plantees situaciones que obliguen a deducir conocimiento académico ausente del RAG.\n- Cada pregunta o tarea debe poder resolverse utilizando exclusivamente la información contenida en el RAG y los datos reales del intento.\n\nANTES DE DEVOLVER LA ACTIVIDAD:\n\n- Revisa individualmente cada pregunta, afirmación y ejemplo.\n- Si alguno requiere información académica que no aparece explícitamente en el RAG, elimínalo o reformúlalo.\n- Comprueba que los errores trabajados coincidan con los errores reales registrados en el intento.\n\nCOMPROBACIÓN FINAL OBLIGATORIA:\n\n- Antes de devolver la actividad, compara todos los ejemplos utilizados con los ejemplos presentes en el contenido RAG.\n- No cambies valores, números o parámetros de un ejemplo para crear casos nuevos.\n- Si el RAG contiene únicamente un ejemplo concreto, reutiliza únicamente ese ejemplo.\n- Si necesitas variar la actividad, modifica únicamente el contexto o la forma de preguntar, pero no el contenido académico ni los ejemplos disponibles.\n\nDevuelve únicamente la actividad de refuerzo siguiendo la estructura definida por el formato de salida."
+              "message": "Actúa como un sistema de generación de actividades educativas de refuerzo.\n\nDebes generar una única actividad de refuerzo utilizando la planificación recibida, los errores reales registrados y el contenido académico recuperado mediante RAG.\n\nREGLAS GENERALES:\n\n- Utiliza exclusivamente contenido académico presente explícitamente en el RAG.\n- Respeta los \"conceptos_permitidos\" definidos en la planificación.\n- Mantén el \"objetivo_refuerzo\" y el nivel de dificultad establecidos.\n- La actividad debe centrarse prioritariamente en los errores reales incluidos en \"errores_a_reforzar\".\n- No inventes errores frecuentes, hipotéticos, adicionales ni dificultades deducidas a partir de la puntuación.\n- Sigue la \"estrategia_refuerzo\" definida por IA1.\n- La actividad de refuerzo debe diferenciarse de la actividad original en el planteamiento, el contexto o la forma de trabajar los contenidos, pero nunca mediante la introducción de contenido académico no respaldado.\n- Si el RAG solo permite reutilizar un ejemplo concreto, es válido reutilizarlo desde una perspectiva diferente.\n\nPERSONALIZACIÓN:\n\n- Sigue la \"estrategia_personalizacion\" definida por IA1.\n- Utiliza el interés principal, el escenario, el papel del alumnado, la progresión y los elementos recurrentes siempre que resulten compatibles con el objetivo de refuerzo.\n- La personalización debe mantenerse de forma coherente durante la actividad y no limitarse al título o a una mención aislada.\n- Los elementos narrativos o contextuales pueden ser creativos, pero nunca pueden introducir, modificar ni ampliar contenido académico.\n- La personalización es secundaria respecto al refuerzo: si existe conflicto entre la narrativa y los errores que deben trabajarse, prioriza siempre el objetivo de refuerzo y el contenido RAG.\n- Si la planificación indica \"sin_personalizacion_natural\", no fuerces una contextualización artificial.\n\nRESTRICCIONES ACADÉMICAS:\n\n- Todo lo que el alumnado necesite conocer para responder debe estar explícitamente respaldado por el RAG.\n- No utilices conocimiento general ni inferencias para completar información ausente.\n- Conserva el grado de certeza y la modalidad de las afirmaciones del RAG. No conviertas expresiones como \"puede utilizarse\", \"en este ejemplo\" o similares en afirmaciones más categóricas o reglas generales.\n- No generalices ejemplos concretos a otros casos si el RAG no proporciona explícitamente la regla general necesaria.\n- No modifiques valores, argumentos, parámetros, funciones, operadores, instrucciones, expresiones o estructura de ejemplos concretos salvo que dicha transformación esté explícitamente respaldada.\n- No combines, repitas o encadenes ejemplos concretos para obtener nuevos resultados, efectos acumulados o conclusiones que no aparezcan expresamente en el RAG.\n- No solicites contar, calcular o deducir cantidades, repeticiones, iteraciones, resultados o conclusiones que no estén indicados explícitamente, aunque puedan inferirse fácilmente.\n- No plantees el caso contrario de una afirmación ni situaciones que requieran inferir información ausente.\n- No solicites explicar \"por qué\", justificar o proporcionar una causa salvo que dicha explicación aparezca explícitamente en el RAG.\n- Cuando el material únicamente indique cuándo, cómo o en qué situación puede utilizarse un concepto, formula la tarea como identificación de dicha información y no como explicación causal.\n\nSi el RAG únicamente respalda un ejemplo concreto, puedes trabajar ese mismo contenido mediante:\n- reproducción;\n- identificación;\n- interpretación de su salida;\n- relación con afirmaciones explícitas del material.\n\nNo lo transformes, generalices ni combines para producir casos académicos nuevos.\n\nCONSTRUCCIÓN DEL REFUERZO:\n\n- Cada reto debe contribuir realmente a trabajar alguno de los errores incluidos en \"errores_a_reforzar\" o el objetivo de refuerzo.\n- Cada pregunta debe poder resolverse utilizando exclusivamente el RAG y los datos reales del intento.\n- Genera únicamente el número de retos que pueda respaldarse completamente mediante el contenido disponible.\n- No añadas retos únicamente para completar una narrativa o alcanzar una cantidad determinada.\n- Si no existen errores concretos registrados, orienta la actividad al \"objetivo_refuerzo\" sin inventar la causa de la puntuación obtenida.\n\nANTES DE DEVOLVER LA ACTIVIDAD:\n\nRevisa individualmente cada afirmación, ejemplo, reto y pregunta.\n\nComprueba que:\n- los errores trabajados coinciden con errores reales del intento;\n- todo el contenido académico está explícitamente respaldado por el RAG;\n- no existen generalizaciones, transformaciones, combinaciones o deducciones no respaldadas;\n- la actividad mantiene el objetivo de refuerzo;\n- la personalización sigue la estrategia de IA1 sin interferir con el contenido académico.\n\nSi algún elemento incumple estas condiciones, elimínalo o reformúlalo utilizando exclusivamente información explícita del RAG.\n\nDevuelve únicamente la actividad de refuerzo siguiendo la estructura definida por el formato de salida."
             }
           ]
         },
@@ -334,7 +334,7 @@
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.9,
       "position": [
-        2048,
+        2272,
         -208
       ],
       "id": "6e1a104b-db6d-449e-b5a6-bc3d12b446a4",
@@ -348,7 +348,7 @@
         "messages": {
           "messageValues": [
             {
-              "message": "Actúa como un sistema evaluador de actividades educativas de refuerzo.\n\nTu función es comprobar la actividad generada.\n\nNO debes corregirla.\nNO debes generar una nueva actividad.\nDebes limitarte a evaluarla con la información proporcionada.\n\nCOMPROBACIONES OBLIGATORIAS:\n\n1. CONTENIDO RAG\n\n- Todos los conceptos, explicaciones, reglas, ejemplos e instrucciones académicas presentes en la actividad deben estar respaldados explícitamente por el contenido recuperado mediante RAG.\n- No utilices conocimiento general del modelo para completar información ausente.\n- No deduzcas reglas generales a partir de ejemplos concretos.\n- Si la actividad solicita explicar por qué ocurre algo, la explicación necesaria debe aparecer explícitamente en el RAG.\n- Si detectas contenido académico no respaldado, añádelo a \"violaciones_rag\".\n\n2. ERRORES A REFORZAR\n\n- La actividad debe trabajar específicamente los errores reales registrados en el intento.\n- No debe introducir errores adicionales, hipotéticos o frecuentes que no estén presentes en los datos proporcionados.\n- \"error_reforzado\" será true únicamente cuando la actividad trabaje realmente los errores registrados.\n\n3. OBJETIVO DE REFUERZO\n\n- La actividad debe mantener el objetivo de refuerzo definido en la planificación.\n- No debe desviarse hacia otros objetivos académicos.\n\n4. PERSONALIZACIÓN\n\n- La contextualización debe utilizar únicamente intereses, aficiones o preferencias procedentes del perfil.\n- La personalización no puede introducir nuevos contenidos académicos.\n\nREGLAS DE DECISIÓN:\n\n- \"contenido_rag\" será true únicamente cuando todo el contenido académico esté respaldado por el RAG.\n- \"error_reforzado\" será true únicamente cuando la actividad trabaje los errores reales registrados.\n- \"objetivo_correcto\" será true únicamente cuando se mantenga el objetivo de refuerzo.\n- \"personalizacion_correcta\" será true únicamente cuando la contextualización corresponda con el perfil.\n- Si \"violaciones_rag\" contiene al menos un elemento, \"contenido_rag\" debe ser false.\n- \"valida\" solo podrá ser true cuando todas las comprobaciones anteriores sean true y \"violaciones_rag\" esté vacío.\n- Cuando \"valida\" sea false, explica de forma concreta el motivo.\n- Distingue entre contenido académico y simples instrucciones de realización de la actividad.\n- Instrucciones como \"utiliza únicamente los conceptos indicados\", \"responde por escrito\", \"selecciona una opción\" o indicaciones de formato no necesitan aparecer literalmente en el RAG.\n- Solo deben incluirse en \"violaciones_rag\" conceptos, afirmaciones, reglas, propiedades, explicaciones o ejemplos académicos que no estén respaldados por el material.\n\nNo corrijas los errores detectados. Limítate a identificarlos y evaluar la actividad.\n\n"
+              "message": "Actúa como un sistema evaluador de actividades educativas de refuerzo.\n\nTu función es comprobar si la actividad generada cumple los criterios académicos, trabaja realmente los errores registrados y mantiene el objetivo de refuerzo.\n\nNO debes generar una nueva actividad.\nNO debes modificar ni corregir la actividad.\nDebes limitarte a evaluarla utilizando exclusivamente la información proporcionada.\n\nCOMPROBACIONES OBLIGATORIAS:\n\n1. CONTENIDO RAG\n\n- Todo concepto, afirmación, explicación, regla, ejemplo, instrucción académica o conocimiento necesario para responder la actividad debe estar respaldado explícitamente por el contenido recuperado mediante RAG.\n- No utilices conocimiento general del modelo ni inferencias para completar información ausente.\n- Si detectas contenido académico no respaldado, añádelo a \"violaciones_rag\".\n\nEJEMPLOS, TRANSFORMACIONES E INFERENCIAS:\n\n- No deduzcas reglas generales a partir de ejemplos concretos.\n- Si el RAG proporciona únicamente un ejemplo concreto, no consideres respaldadas variantes de dicho ejemplo salvo que el material explique explícitamente la regla necesaria.\n- Comprueba si la actividad modifica valores, argumentos, parámetros, funciones, operadores, instrucciones, expresiones o estructura de ejemplos concretos.\n- Una variante no se considera respaldada únicamente porque conserve parte de la estructura del ejemplo original.\n- Comprueba si la actividad combina, repite o encadena ejemplos concretos para obtener resultados nuevos, acumulados o derivados.\n- No consideres respaldado un resultado que solo pueda obtenerse mediante una deducción, aunque dicha deducción sea sencilla.\n- Comprueba si alguna pregunta exige contar, calcular o deducir cantidades, repeticiones, iteraciones, resultados o conclusiones que no estén expresados explícitamente en el RAG.\n- No plantees como válida una situación contraria a una afirmación del material si para resolverla es necesario inferir información ausente.\n\nMODALIDAD Y CAUSALIDAD:\n\n- Conserva el grado de certeza y la modalidad de las afirmaciones del RAG.\n- No consideres válida una actividad que transforme expresiones como \"puede utilizarse\", \"en este ejemplo\" o similares en afirmaciones más categóricas o reglas generales.\n- Si la actividad solicita explicar \"por qué\", justificar o proporcionar una causa, dicha explicación causal debe aparecer explícitamente en el RAG.\n- Si el material únicamente indica cuándo, cómo o en qué situación puede utilizarse un concepto, la actividad puede pedir identificar esa información, pero no exigir una explicación causal adicional.\n\nRESTRICCIONES OPERATIVAS:\n\n- Distingue entre contenido académico y simples instrucciones de realización.\n- Las indicaciones de formato o restricciones que únicamente limiten la actividad al contenido disponible no necesitan aparecer literalmente en el RAG.\n- Instrucciones como \"utiliza únicamente el ejemplo proporcionado\", \"responde por escrito\" o \"selecciona una opción\" no constituyen por sí mismas contenido académico.\n- Una restricción operativa solo debe considerarse violación cuando se presente como una propiedad, regla o limitación académica del concepto.\n\n2. ERRORES A REFORZAR\n\n- La actividad debe trabajar realmente los errores incluidos en \"errores_a_reforzar\".\n- No es suficiente mencionar el error en el título, enunciado o contexto si los retos no contribuyen a reforzarlo.\n- Comprueba que los retos estén relacionados de forma directa con los errores reales registrados o con el objetivo de refuerzo derivado de ellos.\n- No consideres válidos errores adicionales, frecuentes, hipotéticos o deducidos a partir de la puntuación si no aparecen en los datos proporcionados.\n- \"error_reforzado\" será true únicamente cuando la actividad trabaje de forma efectiva los errores registrados.\n- Si no existen errores concretos registrados, no inventes ninguno: en ese caso comprueba que la actividad se centre en el objetivo de refuerzo definido.\n\n3. OBJETIVO DE REFUERZO\n\n- La actividad debe mantener directamente el objetivo de refuerzo definido en la planificación.\n- No debe desviarse hacia otros objetivos académicos.\n- \"objetivo_correcto\" será true únicamente cuando dicho objetivo se mantenga.\n\n4. PERSONALIZACIÓN\n\n- La contextualización debe corresponder con intereses, aficiones o preferencias incluidos realmente en el perfil.\n- La personalización debe integrarse de forma significativa en el desarrollo de la actividad y no limitarse al título, la introducción o una mención aislada.\n- Cuando la planificación establezca una estrategia narrativa, comprueba que exista un escenario coherente, un papel para el alumnado y continuidad entre los distintos retos.\n- La personalización puede modificar únicamente el contexto o la narrativa, nunca introducir, modificar ni ampliar contenido académico.\n- La personalización es secundaria respecto al refuerzo: no debe provocar que la actividad deje de centrarse en los errores reales.\n\nCLASIFICACIÓN DE LA PERSONALIZACIÓN:\n\nClasifica \"nivel_integracion_personalizacion\" utilizando exclusivamente uno de estos valores:\n\n- \"integrada\": el interés influye de forma clara y continuada en el escenario y en el desarrollo del refuerzo.\n- \"superficial\": el interés aparece, pero principalmente como elemento decorativo, introductorio o aislado.\n- \"nula\": la actividad no utiliza de forma reconocible información procedente del perfil.\n\n\"personalizacion_correcta\" solo podrá ser true cuando:\n- la contextualización corresponda realmente con el perfil;\n- \"nivel_integracion_personalizacion\" sea \"integrada\".\n\n\"motivo_personalizacion\" debe explicar brevemente la clasificación realizada.\n\nREGLAS DE DECISIÓN:\n\n- \"contenido_rag\" será true únicamente cuando todo el contenido académico esté respaldado explícitamente por el RAG.\n- Si \"violaciones_rag\" contiene al menos un elemento, \"contenido_rag\" debe ser false.\n- \"error_reforzado\" será true únicamente cuando la actividad trabaje realmente los errores registrados o, si no existen errores concretos, se centre correctamente en el objetivo de refuerzo.\n- \"objetivo_correcto\" será true únicamente cuando la actividad mantenga el objetivo de refuerzo.\n- \"personalizacion_correcta\" será true únicamente cuando se cumplan las condiciones establecidas en la sección de personalización.\n\n\"valida\" solo podrá ser true cuando:\n- contenido_rag = true\n- error_reforzado = true\n- objetivo_correcto = true\n- personalizacion_correcta = true\n- violaciones_rag esté vacío\n\nCuando \"valida\" sea false, explica de forma concreta el motivo.\n\nNo corrijas los errores detectados.\nLimítate a identificarlos y evaluar la actividad.\n\nDevuelve únicamente la estructura definida por el formato de salida."
             }
           ]
         },
@@ -357,8 +357,8 @@
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.9,
       "position": [
-        2352,
-        -208
+        2624,
+        -96
       ],
       "id": "f37294d4-2cc9-4dab-9347-bed29236ba54",
       "name": "IA3 - Evaluación refuerzo"
@@ -378,8 +378,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
       "position": [
-        2352,
-        32
+        2640,
+        128
       ],
       "id": "03e13350-f4ac-4cbd-af45-94cb5ddc9507",
       "name": "OpenAI Chat Model2",
@@ -392,13 +392,13 @@
     },
     {
       "parameters": {
-        "jsonSchemaExample": "{\n  \"valida\": true,\n  \"contenido_rag\": true,\n  \"error_reforzado\": true,\n  \"objetivo_correcto\": true,\n  \"personalizacion_correcta\": true,\n  \"violaciones_rag\": [],\n  \"motivo\": \"\"\n}"
+        "jsonSchemaExample": "{\n  \"valida\": true,\n  \"contenido_rag\": true,\n  \"error_reforzado\": true,\n  \"objetivo_correcto\": true,\n  \"personalizacion_correcta\": true,\n  \"nivel_integracion_personalizacion\": \"integrada\",\n  \"motivo_personalizacion\": \"El interés del alumnado se integra de forma continuada en el escenario y en los distintos retos de refuerzo.\",\n  \"violaciones_rag\": [],\n  \"motivo\": \"La actividad utiliza únicamente contenido respaldado por el RAG, trabaja el error registrado, mantiene el objetivo de refuerzo y presenta una personalización integrada.\"\n}"
       },
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
       "position": [
-        2496,
-        32
+        2768,
+        128
       ],
       "id": "20cc34d9-9c76-420f-9fc1-547b508d717e",
       "name": "Structured Output Parser2"
@@ -414,8 +414,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.7,
       "position": [
-        2976,
-        0
+        3424,
+        -192
       ],
       "id": "36e217a7-6339-4e1c-9275-e102ce69e7c1",
       "name": "Guardar actividad de refuerzo",
@@ -437,8 +437,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        3184,
-        0
+        3648,
+        -192
       ],
       "id": "a035516f-fc03-4570-8d7c-5b9d3b367b75",
       "name": "Respuesta - Refuerzo generado"
@@ -454,8 +454,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        2976,
-        224
+        3424,
+        0
       ],
       "id": "b4804e1c-81e1-4012-9df0-b0a5066bd1a4",
       "name": "Revisión - Refuerzo no válido"
@@ -488,11 +488,38 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        2800,
-        160
+        3200,
+        -96
       ],
       "id": "5992dd2d-ba9e-4b6e-a053-010b47eafa2f",
       "name": "¿Refuerzo válido?"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const actividad = $('IA2 - Generación refuerzo').first().json.output;\nconst evaluacion = $('IA3 - Evaluación refuerzo').first().json.output;\n\nconst rag =\n  $('Unificar contexto RAG refuerzo').first().json.contexto_rag ?? '';\n\nconst erroresIntento =\n  $('Registrar intento').first().json.body?.errores ?? '';\n\nconst retos = Array.isArray(actividad.retos)\n  ? actividad.retos\n  : [];\n\nconst erroresTrabajados = Array.isArray(actividad.errores_trabajados)\n  ? actividad.errores_trabajados\n  : [];\n\n// Texto completo de la actividad que debe inspeccionar el guardrail\nconst textoActividad = [\n  actividad.titulo ?? '',\n  actividad.enunciado ?? '',\n  actividad.objetivo ?? '',\n  ...(actividad.conceptos_utilizados ?? []),\n  actividad.contexto_personalizacion ?? '',\n  actividad.personalizacion_aplicada?.interes_principal ?? '',\n  actividad.personalizacion_aplicada?.tipo_integracion ?? '',\n  actividad.personalizacion_aplicada?.escenario ?? '',\n  actividad.personalizacion_aplicada?.papel_alumnado ?? '',\n  actividad.personalizacion_aplicada?.progresion ?? '',\n  ...(actividad.personalizacion_aplicada?.elementos_recurrentes ?? []),\n  ...erroresTrabajados,\n  ...retos.flatMap(reto => [\n    reto.situacion ?? '',\n    reto.pregunta ?? ''\n  ]),\n  actividad.cierre_narrativo ?? ''\n].join(' ').toLowerCase();\n\nconst textoRag = String(rag).toLowerCase();\n\nconst textoErrores = Array.isArray(erroresIntento)\n  ? erroresIntento.join(' ').toLowerCase()\n  : typeof erroresIntento === 'object' && erroresIntento !== null\n    ? JSON.stringify(erroresIntento).toLowerCase()\n    : String(erroresIntento).toLowerCase();\n\nconst motivos = [];\n\n\n// -----------------------------------------------------\n// 1. RESULTADO DE LA EVALUACIÓN MEDIANTE IA\n// -----------------------------------------------------\n\nif (evaluacion.valida !== true) {\n  motivos.push(\n    'IA3 ha marcado la actividad de refuerzo como no válida.'\n  );\n}\n\nif (evaluacion.contenido_rag !== true) {\n  motivos.push(\n    'IA3 indica que existe contenido no respaldado por el RAG.'\n  );\n}\n\nif (evaluacion.error_reforzado !== true) {\n  motivos.push(\n    'La actividad no trabaja correctamente el error registrado o el objetivo de refuerzo.'\n  );\n}\n\nif (evaluacion.objetivo_correcto !== true) {\n  motivos.push(\n    'La actividad no mantiene correctamente el objetivo de refuerzo.'\n  );\n}\n\nif (evaluacion.personalizacion_correcta !== true) {\n  motivos.push(\n    'La personalización no corresponde correctamente con el perfil o no está suficientemente integrada.'\n  );\n}\n\n\n// -----------------------------------------------------\n// 2. VIOLACIONES DETECTADAS POR IA3\n// -----------------------------------------------------\n\nconst violacionesRag = Array.isArray(evaluacion.violaciones_rag)\n  ? evaluacion.violaciones_rag\n  : [];\n\nif (violacionesRag.length > 0) {\n  motivos.push(\n    `IA3 ha detectado violaciones RAG: ${violacionesRag.join(' | ')}`\n  );\n}\n\n\n// -----------------------------------------------------\n// 3. COHERENCIA DE LOS ERRORES TRABAJADOS\n// -----------------------------------------------------\n\nconst hayErroresReales =\n  Array.isArray(erroresIntento)\n    ? erroresIntento.length > 0\n    : typeof erroresIntento === 'object' && erroresIntento !== null\n      ? Object.keys(erroresIntento).length > 0\n      : String(erroresIntento).trim() !== '';\n\nif (hayErroresReales && erroresTrabajados.length === 0) {\n  motivos.push(\n    'Existen errores reales registrados, pero la actividad no identifica ningún error trabajado.'\n  );\n}\n\nif (!hayErroresReales && erroresTrabajados.length > 0) {\n  motivos.push(\n    'La actividad declara errores trabajados aunque el intento no contiene errores concretos registrados.'\n  );\n}\n\n\n// -----------------------------------------------------\n// 4. EJEMPLOS NUMÉRICOS DE range()\n// -----------------------------------------------------\n\nfunction extraerRangeNumericos(texto) {\n  return [\n    ...String(texto).matchAll(/range\\s*\\(\\s*(\\d+)\\s*\\)/gi)\n  ].map(match => Number(match[1]));\n}\n\nconst ejemplosPermitidos = new Set(\n  extraerRangeNumericos(textoRag)\n);\n\nconst ejemplosActividad = [\n  ...new Set(extraerRangeNumericos(textoActividad))\n];\n\nconst ejemplosNoPermitidos = ejemplosActividad.filter(\n  numero => !ejemplosPermitidos.has(numero)\n);\n\nif (ejemplosNoPermitidos.length > 0) {\n  motivos.push(\n    `La actividad introduce ejemplos de range() no presentes explícitamente en el RAG: ${ejemplosNoPermitidos\n      .map(numero => `range(${numero})`)\n      .join(', ')}.`\n  );\n}\n\n\n// -----------------------------------------------------\n// 5. CANTIDADES INDIRECTAS ASOCIADAS A range()\n// -----------------------------------------------------\n\nfor (const reto of retos) {\n  const textoReto = [\n    reto.situacion ?? '',\n    reto.pregunta ?? ''\n  ].join(' ').toLowerCase();\n\n  if (/range\\s*\\(/i.test(textoReto)) {\n    const cantidades = [\n      ...textoReto.matchAll(\n        /\\b(\\d+)\\s+(vueltas|repeticiones|veces|iteraciones)\\b/gi\n      )\n    ].map(match => Number(match[1]));\n\n    const cantidadesNoPermitidas = [\n      ...new Set(\n        cantidades.filter(\n          numero => !ejemplosPermitidos.has(numero)\n        )\n      )\n    ];\n\n    if (cantidadesNoPermitidas.length > 0) {\n      motivos.push(\n        `Un reto asocia range() con cantidades no respaldadas explícitamente por el RAG: ${cantidadesNoPermitidas.join(', ')}.`\n      );\n    }\n  }\n}\n\n\n// -----------------------------------------------------\n// 6. GENERALIZACIÓN A range(n)\n// -----------------------------------------------------\n\nif (\n  textoActividad.includes('range(n)') &&\n  !textoRag.includes('range(n)')\n) {\n  motivos.push(\n    'La actividad generaliza el contenido a range(n), aunque esa regla no aparece en el RAG.'\n  );\n}\n\n\n// -----------------------------------------------------\n// 7. VARIANTES DE print()\n// -----------------------------------------------------\n\nfunction extraerArgumentosPrint(texto) {\n  return [\n    ...String(texto).matchAll(/print\\s*\\(\\s*([^)]+?)\\s*\\)/gi)\n  ].map(match =>\n    match[1]\n      .replace(/\\s+/g, ' ')\n      .trim()\n      .toLowerCase()\n  );\n}\n\nconst printPermitidos = new Set(\n  extraerArgumentosPrint(textoRag)\n);\n\nconst printActividad = [\n  ...new Set(extraerArgumentosPrint(textoActividad))\n];\n\nconst printNoPermitidos = printActividad.filter(\n  argumento => !printPermitidos.has(argumento)\n);\n\nif (printNoPermitidos.length > 0) {\n  motivos.push(\n    `La actividad introduce variantes de print() no presentes explícitamente en el RAG: ${printNoPermitidos\n      .map(argumento => `print(${argumento})`)\n      .join(', ')}.`\n  );\n}\n\n\n// -----------------------------------------------------\n// 8. EXPRESIONES ACADÉMICAS CONTROLADAS\n// -----------------------------------------------------\n\nconst expresionesControladas = [\n  'off-by-one',\n  'límite superior',\n  'valor superior',\n  'errores comunes'\n];\n\nfor (const expresion of expresionesControladas) {\n  if (\n    textoActividad.includes(expresion) &&\n    !textoRag.includes(expresion) &&\n    !textoErrores.includes(expresion)\n  ) {\n    motivos.push(\n      `La actividad introduce \"${expresion}\", que no aparece en el RAG ni en los errores reales del intento.`\n    );\n  }\n}\n\n\n// -----------------------------------------------------\n// 9. PUNTUACIÓN\n// -----------------------------------------------------\n\nconst puntuacionTotal = retos.reduce(\n  (total, reto) => total + Number(reto.puntuacion ?? 0),\n  0\n);\n\nif (Number(actividad.puntuacion_maxima) !== 10) {\n  motivos.push(\n    'La puntuación máxima de la actividad debe ser exactamente 10.'\n  );\n}\n\nif (puntuacionTotal !== 10) {\n  motivos.push(\n    `La suma de las puntuaciones de los retos debe ser 10 y actualmente es ${puntuacionTotal}.`\n  );\n}\n\n\n// -----------------------------------------------------\n// RESULTADO FINAL\n// -----------------------------------------------------\n\nconst validaFinal = motivos.length === 0;\n\nreturn {\n  json: {\n    actividad,\n    evaluacion_ia: evaluacion,\n    guardrail_determinista: {\n      valido: validaFinal,\n      motivos\n    },\n    valida_final: validaFinal\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2976,
+        -96
+      ],
+      "id": "8e3b7588-5933-4a9b-a56a-4436931587f6",
+      "name": "Guardrail determinista - Refuerzo"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nconst documentos = items\n  .map((item) => ({\n    contenido: item.json.document?.pageContent ?? '',\n    metadata: item.json.document?.metadata ?? {},\n    score: item.json.score ?? null,\n  }))\n  .filter((doc) => doc.contenido);\n\nconst contextoRag = documentos\n  .map(\n    (doc, index) =>\n      `FRAGMENTO ${index + 1}:\\n${doc.contenido}`\n  )\n  .join('\\n\\n');\n\nreturn [\n  {\n    json: {\n      contexto_rag: contextoRag,\n      referencias_rag: documentos.map((doc) => ({\n        metadata: doc.metadata,\n        score: doc.score,\n      })),\n    },\n  },\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1472,
+        48
+      ],
+      "id": "6c7f4690-790b-4377-a1d3-7e7252e0cce1",
+      "name": "Unificar contexto RAG refuerzo"
     },
     {
       "parameters": {
@@ -505,38 +532,11 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        2112,
+        2336,
         192
       ],
       "id": "97f3282b-4865-45ca-a0fc-95fcd3da210b",
-      "name": "Respond to Webhook"
-    },
-    {
-      "parameters": {
-        "mode": "runOnceForEachItem",
-        "jsCode": "const actividad = $('IA2 - Generación refuerzo').first().json.output;\nconst evaluacion = $('IA3 - Evaluación refuerzo').first().json.output;\n\nconst rag =\n  $('Unificar contexto RAG refuerzo').first().json.contexto_rag ?? '';\n\nconst erroresIntento =\n  $('Registrar intento').first().json.body?.errores ?? '';\n\nconst textoActividad = [\n  actividad.titulo ?? '',\n  actividad.enunciado ?? '',\n  ...(actividad.conceptos_utilizados ?? [])\n].join(' ').toLowerCase();\n\nconst textoRag = String(rag).toLowerCase();\nconst textoErrores = String(erroresIntento).toLowerCase();\n\nconst motivos = [];\n\n// 1. Resultado de la evaluación mediante IA\nif (evaluacion.valida !== true) {\n  motivos.push('IA3 ha marcado la actividad de refuerzo como no válida.');\n}\n\nif (evaluacion.contenido_rag !== true) {\n  motivos.push('IA3 indica que existe contenido no respaldado por el RAG.');\n}\n\nif (evaluacion.error_reforzado !== true) {\n  motivos.push('La actividad no trabaja correctamente el error registrado.');\n}\n\nif (evaluacion.objetivo_correcto !== true) {\n  motivos.push('La actividad no mantiene correctamente el objetivo de refuerzo.');\n}\n\nif (evaluacion.personalizacion_correcta !== true) {\n  motivos.push('La personalización no corresponde correctamente con el perfil.');\n}\n\n// 2. Violaciones detectadas por IA3\nconst violacionesRag = Array.isArray(evaluacion.violaciones_rag)\n  ? evaluacion.violaciones_rag\n  : [];\n\nif (violacionesRag.length > 0) {\n  motivos.push(\n    `IA3 ha detectado violaciones RAG: ${violacionesRag.join(' | ')}`\n  );\n}\n\n// 3. Debe existir al menos un error trabajado\nconst erroresTrabajados = Array.isArray(actividad.errores_trabajados)\n  ? actividad.errores_trabajados\n  : [];\n\nif (erroresTrabajados.length === 0) {\n  motivos.push('La actividad de refuerzo no identifica ningún error trabajado.');\n}\n\n// 4. Detectar ejemplos numéricos de range() que no existan en el RAG\nfunction extraerRangeNumericos(texto) {\n  return [\n    ...String(texto).matchAll(/range\\s*\\(\\s*(\\d+)\\s*\\)/gi)\n  ].map(match => Number(match[1]));\n}\n\nconst ejemplosPermitidos = new Set(extraerRangeNumericos(textoRag));\nconst ejemplosActividad = [...new Set(extraerRangeNumericos(textoActividad))];\n\nconst ejemplosNoPermitidos = ejemplosActividad.filter(\n  numero => !ejemplosPermitidos.has(numero)\n);\n\nif (ejemplosNoPermitidos.length > 0) {\n  motivos.push(\n    `La actividad introduce ejemplos de range() no presentes explícitamente en el RAG: ${ejemplosNoPermitidos\n      .map(numero => `range(${numero})`)\n      .join(', ')}.`\n  );\n}\n\n// 5. Evitar generalizaciones de range(n) si no aparecen en el material\nif (\n  textoActividad.includes('range(n)') &&\n  !textoRag.includes('range(n)')\n) {\n  motivos.push(\n    'La actividad generaliza el contenido a range(n), aunque esa regla no aparece en el RAG.'\n  );\n}\n\n// 6. Conceptos problemáticos no respaldados\nconst expresionesControladas = [\n  'off-by-one',\n  'límite superior',\n  'valor superior',\n  'errores comunes'\n];\n\nfor (const expresion of expresionesControladas) {\n  if (\n    textoActividad.includes(expresion) &&\n    !textoRag.includes(expresion) &&\n    !textoErrores.includes(expresion)\n  ) {\n    motivos.push(\n      `La actividad introduce \"${expresion}\", que no aparece en el RAG ni en los errores reales del intento.`\n    );\n  }\n}\n\nconst validaFinal = motivos.length === 0;\n\nreturn {\n  json: {\n    actividad,\n    evaluacion_ia: evaluacion,\n    guardrail_determinista: {\n      valido: validaFinal,\n      motivos\n    },\n    valida_final: validaFinal\n  }\n};"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        2640,
-        160
-      ],
-      "id": "8e3b7588-5933-4a9b-a56a-4436931587f6",
-      "name": "Guardrail determinista - Refuerzo"
-    },
-    {
-      "parameters": {
-        "jsCode": "const items = $input.all();\n\nconst documentos = items\n  .map((item) => ({\n    contenido: item.json.document?.pageContent ?? '',\n    metadata: item.json.document?.metadata ?? {},\n    score: item.json.score ?? null,\n  }))\n  .filter((doc) => doc.contenido);\n\nconst contextoRag = documentos\n  .map(\n    (doc, index) =>\n      `FRAGMENTO ${index + 1}:\\n${doc.contenido}`\n  )\n  .join('\\n\\n');\n\nreturn [\n  {\n    json: {\n      contexto_rag: contextoRag,\n      referencias_rag: documentos.map((doc) => ({\n        metadata: doc.metadata,\n        score: doc.score,\n      })),\n    },\n  },\n];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        1296,
-        -48
-      ],
-      "id": "6c7f4690-790b-4377-a1d3-7e7252e0cce1",
-      "name": "Unificar contexto RAG refuerzo"
+      "name": "Respuesta - RAG insuficiente refuerzo"
     }
   ],
   "pinData": {},
@@ -669,7 +669,7 @@
         ],
         [
           {
-            "node": "Respond to Webhook",
+            "node": "Respuesta - RAG insuficiente refuerzo",
             "type": "main",
             "index": 0
           }
@@ -800,7 +800,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "a2104ffd-014d-4430-a8f5-781b062f7738",
+  "versionId": "f3649f17-94f2-4d1e-a834-27922e231913",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "1aafd9336c0d1bfb1b6ea10346f42afca01929ac97db96ed6af1586120385704"
