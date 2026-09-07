@@ -11,8 +11,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -1296,
-        320
+        -1520,
+        -416
       ],
       "id": "20f4f87b-0039-4c74-9977-74cbd50e5625",
       "name": "Webhook",
@@ -46,8 +46,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -848,
-        320
+        -1072,
+        -416
       ],
       "id": "85050f3e-1514-42cf-a70b-f2e7c5d86f68",
       "name": "¿Perfil existe?"
@@ -79,8 +79,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -624,
-        224
+        -848,
+        -512
       ],
       "id": "6f7027c6-2245-4da7-b80b-010f71652bb3",
       "name": "¿Perfil completo?"
@@ -94,8 +94,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        -624,
-        416
+        -848,
+        -320
       ],
       "id": "aeadcc33-f55b-42c9-8176-0034284b7140",
       "name": "Perfil inexistente"
@@ -111,8 +111,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        -336,
-        368
+        -432,
+        -192
       ],
       "id": "9305a2d6-0b33-40c2-bee1-a9b448dd5767",
       "name": "Error - perfil incompleto"
@@ -128,8 +128,8 @@
       "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
       "typeVersion": 1.3,
       "position": [
-        -400,
-        -32
+        -208,
+        -608
       ],
       "id": "e724ebc2-ac5a-4433-b354-d189b185d235",
       "name": "Postgres PGVector Store",
@@ -147,8 +147,8 @@
       "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
       "typeVersion": 1.2,
       "position": [
-        -336,
-        208
+        -208,
+        -400
       ],
       "id": "35eb593f-b910-4bed-9e5a-cdf7f0363fe1",
       "name": "Embeddings OpenAI",
@@ -174,8 +174,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
       "position": [
-        48,
-        320
+        240,
+        -400
       ],
       "id": "f76ca27a-b6a1-4ad0-a319-ba58fba51446",
       "name": "OpenAI Chat Model",
@@ -188,13 +188,13 @@
     },
     {
       "parameters": {
-        "jsonSchemaExample": "{\n  \"objetivo\": \"Utilizar estructuras repetitivas en Python\",\n  \"conceptos_permitidos\": [\n    \"bucle for en Python\",\n    \"función range()\"\n  ],\n  \"dificultad\": \"básica\",\n  \"intereses_utilizables\": [\n    \"automovilismo\"\n  ],\n  \"errores_a_reforzar\": [],\n  \"tipo_actividad\": \"ejercicio práctico\",\n  \"rag_suficiente\": true,\n  \"motivo_rag\": \"\"\n}"
+        "jsonSchemaExample": "{\n  \"objetivo\": \"Comprender el funcionamiento del bucle for\",\n  \"conceptos_permitidos\": [\n    \"for\",\n    \"range()\"\n  ],\n  \"dificultad\": \"básica\",\n  \"intereses_utilizables\": [\n    \"montaña\"\n  ],\n  \"estrategia_personalizacion\": {\n    \"interes_principal\": \"montaña\",\n    \"tipo_integracion\": \"narrativa\",\n    \"escenario\": \"una ruta de montaña organizada en varias etapas\",\n    \"papel_alumnado\": \"senderista que debe completar el recorrido\",\n    \"progresion\": \"cada reto permite avanzar hasta el siguiente punto de la ruta\",\n    \"elementos_recurrentes\": [\n      \"etapas\",\n      \"puntos de control\",\n      \"recorrido\"\n    ]\n  },\n  \"errores_a_reforzar\": [],\n  \"tipo_actividad\": \"ejercicio práctico\",\n  \"rag_suficiente\": true,\n  \"motivo_rag\": \"El material recuperado contiene información suficiente sobre for y range().\"\n}"
       },
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
       "position": [
-        192,
-        320
+        368,
+        -400
       ],
       "id": "83a5528d-5842-464a-b1cf-25f463889142",
       "name": "Structured Output Parser"
@@ -210,8 +210,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.7,
       "position": [
-        -1072,
-        320
+        -1296,
+        -416
       ],
       "id": "f1947562-c1d1-4286-8767-31ff433230c8",
       "name": "Recuperar perfil",
@@ -238,8 +238,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
       "position": [
-        544,
-        48
+        816,
+        -656
       ],
       "id": "ec133efc-3281-434d-8e64-2e196594325a",
       "name": "OpenAI Chat Model1",
@@ -253,12 +253,12 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=PLANIFICACIÓN GENERADA POR IA1:\n\n{{ JSON.stringify($('IA1 - Planificación').item.json) }}\n\n\nCONTENIDO ACADÉMICO RECUPERADO MEDIANTE RAG:\n\n{{ $('Unificar contexto RAG').first().json.contexto_rag }}\n\n\nPERFIL UTILIZADO PARA LA PERSONALIZACIÓN:\n\nIntereses:\n{{ $('Recuperar perfil').item.json.intereses }}\n\nAficiones:\n{{ $('Recuperar perfil').item.json.aficiones }}\n\nPreferencias:\n{{ $('Recuperar perfil').item.json.preferencias }}",
+        "text": "=PLANIFICACIÓN GENERADA POR IA1:\n\n{{ JSON.stringify($('IA1 - Planificación').item.json, null, 2) }}\n\n\nCONTENIDO ACADÉMICO RECUPERADO MEDIANTE RAG:\n\n{{ $('Unificar contexto RAG').first().json.contexto_rag }}\n\n\nPERFIL UTILIZADO PARA LA PERSONALIZACIÓN:\n\nIntereses:\n{{ $('Recuperar perfil').item.json.intereses }}\n\nAficiones:\n{{ $('Recuperar perfil').item.json.aficiones }}\n\nPreferencias:\n{{ $('Recuperar perfil').item.json.preferencias }}",
         "hasOutputParser": true,
         "messages": {
           "messageValues": [
             {
-              "message": "=Actúa como un sistema de generación de actividades educativas personalizadas.\n\nDebes generar una única actividad educativa utilizando la planificación proporcionada y el contenido académico recuperado mediante RAG.\n\nREGLAS OBLIGATORIAS:\n\n- Utiliza exclusivamente conceptos académicos presentes explícitamente en el contenido recuperado mediante RAG.\n- Respeta los conceptos permitidos establecidos en la planificación.\n- No introduzcas conceptos académicos adicionales.\n- Mantén el objetivo de aprendizaje indicado.\n- Ajusta la actividad al nivel de dificultad solicitado.\n- Utiliza los intereses, aficiones o preferencias del perfil únicamente para contextualizar la actividad.\n- La personalización no debe modificar ni ampliar el contenido académico.\n- Si se proporcionan errores reales de intentos anteriores, puedes utilizarlos para orientar la actividad. No inventes errores adicionales.\n\nRESTRICCIÓN DEL CONTENIDO ACADÉMICO:\n\n- No generalices ejemplos concretos del RAG a reglas generales que no aparezcan explícitamente en el material.\n- No introduzcas definiciones, propiedades, explicaciones causales o excepciones que no estén presentes en el RAG.\n- No crees ejemplos que requieran deducir conocimiento académico ausente del material.\n- Si el RAG contiene únicamente un ejemplo concreto, puedes reproducirlo, identificarlo o utilizarlo directamente, pero no extrapolarlo a otros casos.\n- No plantees situaciones contrarias al contenido proporcionado si para responder es necesario realizar una inferencia que no aparece explícitamente en el RAG.\n- No plantees el caso contrario de una afirmación presente en el RAG.\n- Por ejemplo, si el material indica que un concepto se utiliza \"cuando se conoce previamente el número de repeticiones\", no preguntes ni afirmes qué ocurre \"cuando no se conoce\" dicho número, salvo que esa información aparezca explícitamente en el RAG.\n\nREGLAS PARA LAS PREGUNTAS:\n\n- Cada pregunta debe poder responderse utilizando exclusivamente el contenido RAG proporcionado.\n- No solicites explicar \"por qué\" ocurre algo salvo que esa explicación aparezca explícitamente en el RAG.\n- No introduzcas errores comunes, errores hipotéticos o conceptos erróneos que no procedan del historial real proporcionado.\n- Prioriza tareas de identificación, reproducción y aplicación directa de la información disponible.\n\nANTES DE DEVOLVER LA ACTIVIDAD:\n\nRevisa individualmente cada pregunta, afirmación y ejemplo.\n\nSi alguno requiere conocimiento académico que no aparece explícitamente en el RAG, elimínalo o reformúlalo utilizando únicamente la información disponible.\n\nDevuelve únicamente la actividad siguiendo la estructura definida."
+              "message": "=Actúa como un sistema de generación de actividades educativas personalizadas.\n\nDebes generar una única actividad educativa utilizando la planificación proporcionada y el contenido académico recuperado mediante RAG.\n\nREGLAS GENERALES:\n\n- Utiliza exclusivamente contenido académico presente explícitamente en el RAG.\n- Respeta los \"conceptos_permitidos\" establecidos en la planificación.\n- No introduzcas conceptos, reglas, definiciones, propiedades, explicaciones, excepciones ni conocimientos académicos adicionales.\n- Mantén el objetivo de aprendizaje y el nivel de dificultad solicitados.\n- Si se proporcionan errores reales de intentos anteriores, utilízalos únicamente para orientar la actividad. No inventes errores o dificultades.\n- En \"conceptos_utilizados\" incluye únicamente los nombres de los conceptos académicos empleados, nunca explicaciones, ejemplos, código o frases completas.\n- \"puntuacion_maxima\" debe ser siempre 10 y la suma de las puntuaciones de todos los retos debe ser exactamente 10.\n\nPERSONALIZACIÓN:\n\n- Sigue la estrategia definida por IA1, incluyendo el interés principal, el tipo de integración, el escenario, el papel del alumnado, la progresión y los elementos recurrentes.\n- La personalización debe influir de forma continuada en el escenario y en el desarrollo de los retos. No es suficiente mencionarla únicamente en el título, la introducción o un ejemplo aislado.\n- Cuando \"tipo_integracion\" sea \"narrativa\", los retos deben formar parte de una misma situación y representar una progresión coherente.\n- Cuando sea \"situacional\" o \"tematica\", adapta la actividad según la estrategia de IA1 sin forzar una narrativa artificial.\n- Si la planificación indica \"sin_personalizacion_natural\", no fuerces una contextualización artificial.\n- Los elementos narrativos o contextuales pueden ser creativos, pero nunca pueden introducir, modificar ni ampliar el contenido académico.\n- Si existe conflicto entre la personalización y las restricciones académicas, prioriza siempre el contenido RAG.\n\nRESTRICCIONES ACADÉMICAS:\n\n- Todo lo que el alumnado necesite conocer para responder debe estar explícitamente respaldado por el RAG.\n- No utilices conocimiento general ni inferencias para completar información ausente.\n- Conserva el grado de certeza y la modalidad de las afirmaciones originales. No conviertas expresiones como \"puede utilizarse\", \"en este ejemplo\" o similares en reglas más categóricas o generales.\n- No generalices un ejemplo concreto a otros casos si el RAG no proporciona explícitamente la regla general necesaria.\n- No construyas variantes de un ejemplo cambiando valores, argumentos, instrucciones, funciones, operadores, expresiones o estructura salvo que esas modificaciones estén explícitamente respaldadas.\n- No combines, repitas o encadenes ejemplos concretos para obtener nuevos resultados, efectos acumulados o conclusiones que no aparezcan expresamente en el RAG.\n- No plantees el caso contrario de una afirmación ni situaciones que exijan deducir información ausente.\n- No solicites calcular, contar o deducir cantidades, repeticiones, iteraciones, resultados o conclusiones que no estén indicados explícitamente, aunque puedan inferirse fácilmente.\n- Si el RAG solo proporciona un ejemplo concreto, puedes utilizarlo para reproducción, identificación, interpretación de su salida o relación con afirmaciones explícitas del material, pero no transformarlo ni extrapolarlo.\n\nEjemplo de la restricción anterior:\nSi el RAG únicamente contiene \"for i in range(5): print(i)\" y su salida, puedes pedir reproducir ese código o identificar su salida. No puedes cambiar range(5) por otros valores, sustituir print(i), añadir nuevas instrucciones, ejecutar varias copias para calcular un resultado conjunto ni deducir una regla general sobre range() salvo que el RAG la explique explícitamente.\n\nCONSTRUCCIÓN DE LOS RETOS:\n\n- Cada reto debe poder resolverse exclusivamente con el contenido RAG.\n- Genera únicamente el número de retos que pueda respaldarse completamente. No añadas retos para completar artificialmente la narrativa.\n- Los retos deben estar integrados de forma coherente en la estrategia de personalización.\n- Siempre que sea posible, cada reto debe representar un paso o avance dentro del escenario planteado.\n- Prioriza tareas de reproducción, identificación, interpretación y aplicación directa únicamente cuando dicha aplicación esté explícitamente respaldada por el RAG.\n- No solicites explicar \"por qué\", \"justificar\" o \"explicar la razón\" salvo que el RAG proporcione explícitamente esa explicación causal.\n- Cuando el material únicamente indique cuándo, cómo o en qué situación puede utilizarse un concepto, solicita identificar dicha información sin convertirla en una explicación causal.\n- No introduzcas errores comunes, hipotéticos o conceptos erróneos que no procedan de errores reales proporcionados.\n\nANTES DE DEVOLVER LA ACTIVIDAD:\n\nRevisa individualmente cada afirmación, ejemplo, reto y pregunta.\n\nComprueba que:\n- todo el contenido académico está explícitamente respaldado por el RAG;\n- no existen generalizaciones, transformaciones, combinaciones o deducciones no respaldadas;\n- se conserva el grado de certeza de las afirmaciones originales;\n- la personalización está integrada y procede del perfil;\n- la suma de las puntuaciones es exactamente 10.\n\nSi algún elemento incumple estas condiciones, elimínalo o reformúlalo utilizando exclusivamente información explícita del RAG.\n\nDevuelve únicamente la actividad siguiendo la estructura definida."
             }
           ]
         },
@@ -267,8 +267,8 @@
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.9,
       "position": [
-        528,
-        -176
+        800,
+        -864
       ],
       "id": "969f20df-3585-4796-aa65-c88f788a5a7b",
       "name": "IA2 - Generación"
@@ -281,7 +281,7 @@
         "messages": {
           "messageValues": [
             {
-              "message": "=Actúa como un sistema de análisis y planificación de actividades educativas.\n\nTu función NO es generar la actividad final. Debes analizar la solicitud, el perfil y el contenido académico recuperado mediante RAG para elaborar una planificación estructurada que utilizará posteriormente el modelo generador.\n\nREGLAS:\n\n- Utiliza exclusivamente conceptos académicos presentes explícitamente en el contenido recuperado mediante RAG.\n- No introduzcas conceptos académicos nuevos ni utilices conocimiento externo para completar información ausente.\n- Los intereses, aficiones y preferencias del perfil solo pueden utilizarse para contextualizar la futura actividad.\n- Identifica qué elementos del perfil pueden utilizarse de forma coherente para la personalización.\n- Los conceptos incluidos en \"conceptos_permitidos\" deben proceder del contenido RAG.\n- \"errores_a_reforzar\" solo puede contener errores reales proporcionados mediante el historial de intentos.\n- Si no se proporciona historial de errores, devuelve \"errores_a_reforzar\": [].\n\nSUFICIENCIA DEL RAG:\n\n- Comprueba si el contenido recuperado permite cumplir realmente el objetivo de aprendizaje solicitado.\n- \"rag_suficiente\" será true únicamente cuando el RAG contenga la información académica necesaria para trabajar el objetivo.\n- No consideres suficiente el contenido únicamente porque pertenezca al mismo tema general.\n- Si el objetivo requiere conceptos, reglas o explicaciones que no están respaldados por el contenido RAG, \"rag_suficiente\" será false.\n- Cuando \"rag_suficiente\" sea false, explica brevemente la causa en \"motivo_rag\".\n\nNo generes todavía ninguna actividad.\nDevuelve únicamente la estructura definida por el formato de salida."
+              "message": "=Actúa como un sistema de análisis y planificación de actividades educativas.\n\nTu función NO es generar la actividad final. Debes analizar la solicitud, el perfil del alumnado y el contenido académico recuperado mediante RAG para elaborar una planificación estructurada que utilizará posteriormente el modelo generador.\n\nREGLAS ACADÉMICAS:\n\n- Utiliza exclusivamente conceptos académicos presentes explícitamente en el contenido recuperado mediante RAG.\n- No introduzcas conceptos, reglas, explicaciones ni conocimientos académicos externos al RAG.\n- Los conceptos incluidos en \"conceptos_permitidos\" deben proceder del contenido RAG.\n- Los intereses, aficiones y preferencias del perfil pueden utilizarse para personalizar la forma de presentar la actividad, pero nunca como fuente de contenido académico.\n\nPERSONALIZACIÓN:\n\n- Identifica qué elementos del perfil pueden utilizarse de forma coherente con el objetivo de aprendizaje.\n- Selecciona preferentemente un interés principal que pueda actuar como hilo conductor de la actividad.\n- La personalización debe estar integrada en el desarrollo de la futura actividad y no limitarse al título, a una introducción o a una mención aislada.\n- Diseña una estrategia que pueda mantenerse mediante el escenario, el papel del alumnado, los ejemplos, los retos o la progresión de la actividad.\n- Los elementos narrativos pueden ser creativos siempre que no modifiquen, amplíen ni introduzcan contenido académico ajeno al RAG.\n- Si ningún elemento del perfil puede integrarse de forma natural, no fuerces una personalización artificial.\n\nDefine \"tipo_integracion\" utilizando exclusivamente uno de estos valores:\n\n- \"narrativa\": el interés permite construir una historia o progresión en la que el alumnado avanza resolviendo retos.\n- \"situacional\": el interés permite construir una situación coherente que contextualiza la actividad, aunque no exista una progresión narrativa.\n- \"tematica\": el interés puede utilizarse como contexto o en ejemplos, pero no permite construir de forma natural una situación o narrativa completa.\n- \"sin_personalizacion_natural\": utilizar los intereses del perfil produciría una contextualización artificial o poco coherente.\n\nLa estrategia de personalización debe definir:\n- interes_principal;\n- tipo_integracion;\n- escenario;\n- papel_alumnado;\n- progresion;\n- elementos_recurrentes.\n\nERRORES A REFORZAR:\n\n- \"errores_a_reforzar\" solo puede contener errores reales proporcionados mediante el historial de intentos.\n- Si no se proporciona historial de errores, devuelve \"errores_a_reforzar\": [].\n- No inventes dificultades o errores del alumnado.\n\nSUFICIENCIA DEL RAG:\n\n- Comprueba si el contenido recuperado contiene la información académica necesaria para trabajar realmente el objetivo de aprendizaje solicitado.\n- \"rag_suficiente\" será true únicamente cuando el RAG permita abordar dicho objetivo sin recurrir a conocimiento externo ni realizar extrapolaciones académicas no respaldadas.\n- No consideres suficiente el RAG únicamente porque pertenezca al mismo tema general.\n- Si faltan conceptos, reglas o explicaciones necesarias para trabajar el objetivo, \"rag_suficiente\" será false.\n- Cuando \"rag_suficiente\" sea false, explica brevemente la causa en \"motivo_rag\".\n\nNo generes ninguna actividad, pregunta o ejercicio final.\n\nDevuelve únicamente la estructura definida por el formato de salida."
             }
           ]
         },
@@ -290,21 +290,21 @@
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.9,
       "position": [
-        48,
-        80
+        224,
+        -608
       ],
       "id": "6967ea11-2ec4-4a53-aa9e-f361b82cd752",
       "name": "IA1 - Planificación"
     },
     {
       "parameters": {
-        "jsonSchemaExample": "{\n  \"titulo\": \"Las vueltas de la carrera\",\n  \"enunciado\": \"Desarrollar un programa utilizando un bucle for y la función range() para representar las vueltas de una carrera.\",\n  \"objetivo\": \"Utilizar estructuras repetitivas en Python\",\n  \"conceptos_utilizados\": [\n    \"for\",\n    \"range()\"\n  ],\n  \"contexto_personalizacion\": \"automovilismo\",\n  \"dificultad\": \"básica\",\n  \"puntuacion_maxima\": 10\n}"
+        "jsonSchemaExample": "{\n  \"titulo\": \"La ruta de los cinco refugios\",\n  \"enunciado\": \"Te encuentras realizando una ruta de montaña dividida en varias etapas. Para avanzar por el recorrido tendrás que resolver distintos retos utilizando únicamente el ejemplo y las afirmaciones proporcionadas en el material.\",\n  \"objetivo\": \"Utilizar estructuras repetitivas en Python\",\n  \"conceptos_utilizados\": [\n    \"for\",\n    \"range()\"\n  ],\n  \"contexto_personalizacion\": \"montaña\",\n  \"personalizacion_aplicada\": {\n    \"interes_principal\": \"montaña\",\n    \"tipo_integracion\": \"narrativa\",\n    \"escenario\": \"una ruta de montaña dividida en diferentes etapas\",\n    \"papel_alumnado\": \"senderista que debe avanzar por distintos puntos de la ruta\",\n    \"progresion\": \"cada reto representa una nueva etapa del recorrido\",\n    \"elementos_recurrentes\": [\n      \"etapas\",\n      \"puntos de control\",\n      \"recorrido\"\n    ]\n  },\n  \"retos\": [\n    {\n      \"numero\": 1,\n      \"situacion\": \"Llegas al primer punto de control y debes revisar el ejemplo proporcionado en el material.\",\n      \"pregunta\": \"Escribe exactamente el código del ejemplo proporcionado.\",\n      \"puntuacion\": 3\n    },\n    {\n      \"numero\": 2,\n      \"situacion\": \"En el siguiente punto de control debes interpretar el resultado del mismo ejemplo.\",\n      \"pregunta\": \"Según el material, indica qué números muestra el código del ejemplo.\",\n      \"puntuacion\": 3\n    },\n    {\n      \"numero\": 3,\n      \"situacion\": \"Antes de llegar al refugio final debes comprobar cuándo puede utilizarse la estructura trabajada.\",\n      \"pregunta\": \"Según el material, identifica en qué situación puede utilizarse un bucle for.\",\n      \"puntuacion\": 4\n    }\n  ],\n  \"cierre_narrativo\": \"Al completar los retos has llegado al refugio final de la ruta utilizando únicamente la información académica proporcionada.\",\n  \"dificultad\": \"básica\",\n  \"puntuacion_maxima\": 10\n}"
       },
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
       "position": [
-        672,
-        48
+        944,
+        -656
       ],
       "id": "5be3c09e-aea2-4284-ba17-d139ee07c415",
       "name": "Structured Output Parser1"
@@ -317,7 +317,7 @@
         "messages": {
           "messageValues": [
             {
-              "message": "Actúa como un sistema evaluador de actividades educativas generadas mediante inteligencia artificial.\n\nTu función es validar la actividad recibida.\n\nNO debes generar una nueva actividad.\nNO debes modificar ni corregir la actividad.\nDebes evaluarla únicamente con la información proporcionada.\n\nCOMPROBACIONES OBLIGATORIAS:\n\n1. CONTENIDO RAG\n\n- Todos los conceptos, afirmaciones, explicaciones, reglas, ejemplos e instrucciones académicas presentes en la actividad deben estar respaldados explícitamente por el contenido recuperado mediante RAG.\n- No utilices conocimiento general del modelo para completar información ausente.\n- No deduzcas reglas generales a partir de ejemplos concretos.\n- No consideres que una explicación está respaldada únicamente porque pueda inferirse del material.\n- Si la actividad solicita explicar por qué ocurre algo, la explicación necesaria debe aparecer explícitamente en el RAG.\n- Si detectas contenido académico no respaldado, añádelo a \"violaciones_rag\".\n\n2. OBJETIVO DE APRENDIZAJE\n\n- La actividad debe trabajar directamente el objetivo solicitado.\n- No debe desviarse hacia objetivos académicos diferentes.\n\n3. PERSONALIZACIÓN\n\n- La contextualización debe guardar relación con los intereses, aficiones o preferencias incluidos en el perfil.\n- La personalización solo puede utilizarse como contexto y no como fuente de nuevos conceptos académicos.\n\nREGLAS DE DECISIÓN:\n\n- \"contenido_rag\" será true únicamente cuando todo el contenido académico esté respaldado por el RAG.\n- \"objetivo_correcto\" será true únicamente cuando la actividad trabaje el objetivo solicitado.\n- \"personalizacion_correcta\" será true únicamente cuando la contextualización corresponda con el perfil.\n- Si \"violaciones_rag\" contiene al menos un elemento, \"contenido_rag\" debe ser false.\n- \"valida\" solo podrá ser true cuando:\n  - contenido_rag = true\n  - objetivo_correcto = true\n  - personalizacion_correcta = true\n  - violaciones_rag esté vacío.\n- Cuando \"valida\" sea false, explica de forma concreta el motivo.\n\nNo corrijas los errores detectados. Limítate a identificarlos y evaluar la actividad."
+              "message": "Actúa como un sistema evaluador de actividades educativas generadas mediante inteligencia artificial.\n\nTu función es validar la actividad recibida.\n\nNO debes generar una nueva actividad.\nNO debes modificar ni corregir la actividad.\nDebes evaluarla únicamente con la información proporcionada.\n\nCOMPROBACIONES OBLIGATORIAS:\n\n1. CONTENIDO RAG\n\n- Todo concepto, afirmación, explicación, regla, ejemplo, instrucción académica o conocimiento necesario para responder la actividad debe estar respaldado explícitamente por el contenido recuperado mediante RAG.\n- No utilices conocimiento general del modelo ni inferencias para completar información ausente.\n- No consideres respaldada una respuesta únicamente porque pueda deducirse fácilmente a partir del material.\n- Si detectas contenido académico no respaldado, añádelo a \"violaciones_rag\".\n\nEJEMPLOS Y EXTRAPOLACIONES:\n\n- No deduzcas reglas generales a partir de ejemplos concretos.\n- Si el RAG proporciona únicamente un ejemplo concreto, no consideres respaldadas variantes de dicho ejemplo salvo que el material explique explícitamente la regla necesaria para realizarlas.\n- Comprueba especialmente si la actividad modifica valores, argumentos, parámetros, funciones, operadores, instrucciones o estructura de ejemplos concretos.\n- Una variante no se considera respaldada únicamente porque conserve parte de la estructura del ejemplo original.\n- Si una pregunta exige construir, predecir o interpretar una variante que no aparece en el RAG, añádela a \"violaciones_rag\".\n\n- Comprueba también si la actividad combina, repite o encadena ejemplos concretos para solicitar un resultado nuevo.\n- No consideres respaldado un resultado acumulado, total o derivado de varias ejecuciones salvo que dicha composición aparezca explícitamente explicada en el RAG.\n\n- Comprueba si alguna pregunta exige contar, calcular o deducir cantidades, repeticiones, iteraciones, resultados o conclusiones que no estén expresados explícitamente en el material.\n- Si el resultado solicitado solo puede obtenerse mediante inferencia, debe considerarse no respaldado.\n\nMODALIDAD Y CAUSALIDAD:\n\n- Conserva el grado de certeza y la modalidad de las afirmaciones del RAG.\n- No conviertas expresiones como \"puede utilizarse\", \"en este ejemplo\" o similares en reglas más categóricas o generales.\n- Si la actividad solicita explicar \"por qué\", justificar o proporcionar una causa, dicha explicación causal debe aparecer explícitamente en el RAG.\n- Si el material únicamente indica cuándo, cómo o en qué situación puede utilizarse un concepto, la actividad puede pedir identificar esa condición, pero no exigir una justificación causal adicional.\n- No plantees como válida una situación contraria a una afirmación del RAG si dicha situación requiere información que no aparece explícitamente en el material.\n\nRESTRICCIONES OPERATIVAS:\n\n- Distingue entre contenido académico y restricciones operativas de la actividad.\n- Una instrucción que únicamente limite la actividad al contenido disponible en el RAG no necesita aparecer literalmente en el material.\n- Por ejemplo, \"utiliza únicamente el ejemplo proporcionado\" es una restricción operativa válida.\n- No la confundas con una afirmación académica como \"este concepto solo puede utilizarse de esta forma\".\n- Una restricción operativa solo debe considerarse violación si se presenta como propiedad, regla o limitación académica del concepto.\n\n2. OBJETIVO DE APRENDIZAJE\n\n- La actividad debe trabajar directamente el objetivo solicitado.\n- No debe desviarse hacia objetivos académicos diferentes.\n- \"objetivo_correcto\" será true únicamente cuando la actividad mantenga dicho objetivo.\n\n3. PERSONALIZACIÓN\n\n- La contextualización debe guardar relación real con los intereses, aficiones o preferencias incluidos en el perfil.\n- La personalización debe influir de forma significativa y continuada en el escenario y en el desarrollo de la actividad.\n- No consideres suficiente mencionar un interés únicamente en el título, la introducción o una frase aislada.\n- Cuando la planificación indique una integración narrativa, comprueba que exista un escenario coherente, un papel para el alumnado y continuidad entre los distintos retos.\n- La personalización puede modificar únicamente el contexto o la narrativa, nunca introducir ni ampliar contenido académico.\n\nCLASIFICACIÓN DE LA PERSONALIZACIÓN:\n\nClasifica \"nivel_integracion_personalizacion\" utilizando exclusivamente:\n\n- \"integrada\": el interés influye de forma clara y continuada en el escenario y en el desarrollo de la actividad.\n- \"superficial\": el interés aparece, pero principalmente como elemento decorativo, introductorio o aislado.\n- \"nula\": la actividad no utiliza de forma reconocible información procedente del perfil.\n\n\"personalizacion_correcta\" solo podrá ser true cuando:\n- la contextualización corresponda realmente con el perfil;\n- \"nivel_integracion_personalizacion\" sea \"integrada\".\n\n\"motivo_personalizacion\" debe explicar brevemente la clasificación realizada.\n\nREGLAS DE DECISIÓN:\n\n- \"contenido_rag\" será true únicamente cuando todo el contenido académico esté respaldado explícitamente por el RAG.\n- Si \"violaciones_rag\" contiene al menos un elemento, \"contenido_rag\" debe ser false.\n- \"objetivo_correcto\" será true únicamente cuando la actividad trabaje directamente el objetivo solicitado.\n- \"personalizacion_correcta\" será true únicamente cuando se cumplan las condiciones establecidas en la sección de personalización.\n\n\"valida\" solo podrá ser true cuando:\n- contenido_rag = true\n- objetivo_correcto = true\n- personalizacion_correcta = true\n- violaciones_rag esté vacío\n\nCuando \"valida\" sea false, explica de forma concreta el motivo.\n\nNo corrijas los errores detectados.\nLimítate a identificarlos y evaluar la actividad.\n\nDevuelve únicamente la estructura definida por el formato de salida."
             }
           ]
         },
@@ -326,8 +326,8 @@
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.9,
       "position": [
-        880,
-        -80
+        1152,
+        -768
       ],
       "id": "37bbd419-4a71-4848-a548-c04e4897b4d0",
       "name": "IA3 - Evaluación"
@@ -347,8 +347,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
       "position": [
-        896,
-        160
+        1152,
+        -544
       ],
       "id": "3966a3ce-1f62-4fe3-a739-575e041ea984",
       "name": "OpenAI Chat Model2",
@@ -361,13 +361,13 @@
     },
     {
       "parameters": {
-        "jsonSchemaExample": "{\n  \"valida\": true,\n  \"contenido_rag\": true,\n  \"objetivo_correcto\": true,\n  \"personalizacion_correcta\": true,\n  \"violaciones_rag\": [],\n  \"motivo\": \"\"\n}"
+        "jsonSchemaExample": "{\n  \"valida\": true,\n  \"contenido_rag\": true,\n  \"objetivo_correcto\": true,\n  \"personalizacion_correcta\": true,\n  \"nivel_integracion_personalizacion\": \"integrada\",\n  \"motivo_personalizacion\": \"El interés del alumnado se integra de forma continuada en el escenario, el papel asignado y los distintos retos.\",\n  \"violaciones_rag\": [],\n  \"motivo\": \"La actividad utiliza únicamente contenido respaldado por el RAG, mantiene el objetivo solicitado y presenta una personalización integrada.\"\n}"
       },
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
       "position": [
-        1024,
-        160
+        1296,
+        -544
       ],
       "id": "6003f64a-55b0-44d5-b2a3-e8535f720ee1",
       "name": "Structured Output Parser2"
@@ -383,8 +383,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.7,
       "position": [
-        1744,
-        -224
+        2016,
+        -912
       ],
       "id": "dfa436f0-d7a9-406b-8604-c14273fb9086",
       "name": "Guardar actividad",
@@ -403,7 +403,7 @@
         "messages": {
           "messageValues": [
             {
-              "message": "Actúa como un sistema de regeneración de actividades educativas.\n\nLa actividad generada previamente ha sido rechazada por el sistema evaluador.\n\nDebes generar una nueva versión corrigiendo específicamente los problemas detectados.\n\nREGLAS OBLIGATORIAS:\n\n- Utiliza exclusivamente conceptos académicos presentes en el contenido recuperado mediante RAG.\n- Respeta los conceptos permitidos establecidos por IA1.\n- No introduzcas conceptos académicos nuevos.\n- Mantén el objetivo de aprendizaje solicitado.\n- Ajusta la actividad al nivel de dificultad indicado.\n- Utiliza los intereses, aficiones o preferencias del perfil únicamente para contextualizar la actividad.\n- Corrige específicamente los problemas indicados por el evaluador.\n- No reproduzcas un error ya detectado en la actividad anterior.\n- No inventes errores adicionales que no procedan de los datos proporcionados.\n\nRESTRICCIÓN ESTRICTA DE EJEMPLOS Y DEDUCCIONES:\n\n- No crees ejemplos, reglas, propiedades o explicaciones académicas que no aparezcan explícitamente en el contenido RAG.\n- Si el RAG contiene únicamente un ejemplo concreto, utiliza únicamente dicho ejemplo y no lo generalices a otros casos.\n- No solicites explicar por qué ocurre un resultado si la explicación causal no aparece explícitamente en el RAG.\n- No deduzcas reglas generales a partir de un ejemplo concreto.\n- No plantees situaciones contrarias a las descritas en el material para que el estudiante tenga que inferir información ausente.\n- No introduzcas errores comunes, excepciones o casos hipotéticos que no aparezcan en el RAG o en el historial real proporcionado.\n- Prioriza preguntas de identificación, reproducción y aplicación directa de la información explícitamente disponible en el RAG.\n- No plantees el caso contrario de una afirmación presente en el RAG.\n- Por ejemplo, si el material indica que un concepto se utiliza \"cuando se conoce previamente el número de repeticiones\", no preguntes ni afirmes qué ocurre \"cuando no se conoce\" dicho número, salvo que esa información aparezca explícitamente en el RAG.\n- Si la evaluación anterior ha detectado una inferencia o un caso contrario no respaldado por el RAG, elimina completamente ese planteamiento en la nueva versión. No intentes reformularlo.\n\nAntes de devolver la nueva actividad, revisa cada pregunta y cada afirmación académica. Si alguna requiere conocimiento que no aparece explícitamente en el RAG, elimínala o reformúlala utilizando únicamente la información disponible.\n\nDevuelve únicamente la nueva actividad siguiendo la estructura definida."
+              "message": "Actúa como un sistema de regeneración de actividades educativas personalizadas.\n\nLa actividad anterior ha sido rechazada por el sistema evaluador.\n\nDebes generar una nueva versión corrigiendo específicamente los problemas detectados, manteniendo los elementos que ya eran válidos.\n\nREGLAS GENERALES:\n\n- Utiliza exclusivamente contenido académico presente explícitamente en el RAG.\n- Respeta los \"conceptos_permitidos\" establecidos por IA1.\n- No introduzcas conceptos, reglas, definiciones, propiedades, explicaciones, excepciones ni conocimientos académicos adicionales.\n- Mantén el objetivo de aprendizaje y el nivel de dificultad solicitados.\n- Conserva el grado de certeza y la modalidad de las afirmaciones del RAG. No conviertas expresiones como \"puede utilizarse\", \"en este ejemplo\" o similares en reglas más categóricas o generales.\n- En \"conceptos_utilizados\" incluye únicamente los nombres de los conceptos académicos empleados.\n- \"puntuacion_maxima\" debe ser siempre 10 y la suma de las puntuaciones de todos los retos debe ser exactamente 10.\n\nCORRECCIÓN DE LA ACTIVIDAD ANTERIOR:\n\n- Utiliza las observaciones de la evaluación anterior para identificar los elementos que deben corregirse.\n- Corrige específicamente los problemas señalados por el evaluador.\n- No vuelvas a introducir ningún contenido, ejemplo, variante, pregunta o inferencia que haya sido identificado como no respaldado por el RAG.\n- Mantén los elementos de la actividad anterior que hayan sido considerados válidos.\n- Si un planteamiento ha sido rechazado por requerir una inferencia, generalización o caso contrario no respaldado, elimínalo y sustitúyelo por otro basado directamente en información explícita del RAG.\n- No inventes nuevos errores o dificultades del alumnado. Si existen errores reales proporcionados, utilízalos únicamente para orientar la actividad.\n\nPERSONALIZACIÓN:\n\n- Mantén la estrategia de personalización definida por IA1.\n- Conserva el interés principal, el tipo de integración, el escenario, el papel del alumnado y la progresión siempre que no hayan sido identificados como causa del rechazo.\n- Si la evaluación anterior considera correcta la personalización, no la elimines únicamente para corregir un problema académico.\n- Cuando la estrategia sea narrativa, los retos deben continuar formando parte del mismo escenario y mantener una progresión coherente.\n- La personalización puede modificar únicamente el contexto y la narrativa, nunca introducir, modificar ni ampliar contenido académico.\n- Si existe conflicto entre la personalización y las restricciones académicas, prioriza siempre el RAG.\n\nRESTRICCIONES ACADÉMICAS:\n\n- Todo lo que el alumnado necesite conocer para responder debe estar explícitamente respaldado por el RAG.\n- No utilices conocimiento general ni inferencias para completar información ausente.\n- No generalices ejemplos concretos a otros casos si el RAG no proporciona explícitamente la regla general necesaria.\n- No modifiques valores, argumentos, funciones, instrucciones, operadores, expresiones o estructura de un ejemplo concreto salvo que dicha transformación esté explícitamente respaldada.\n- No combines, repitas o encadenes ejemplos concretos para obtener resultados acumulados, totales o derivados que no aparezcan expresamente en el RAG.\n- No solicites contar, calcular o deducir cantidades, repeticiones, iteraciones, resultados o conclusiones que no estén explícitamente indicados.\n- No plantees el caso contrario de una afirmación ni situaciones que exijan inferir información ausente.\n- No solicites explicar \"por qué\", justificar o proporcionar una causa salvo que la explicación causal aparezca explícitamente en el RAG.\n- Cuando el material únicamente indique cuándo, cómo o en qué situación puede utilizarse un concepto, pide identificar dicha información sin convertirla en una explicación causal.\n- No introduzcas errores comunes, excepciones o casos hipotéticos que no aparezcan en el RAG o en errores reales proporcionados.\n\nSi el RAG únicamente respalda un ejemplo concreto, utiliza ese mismo contenido desde perspectivas como:\n- reproducción;\n- identificación;\n- interpretación de su salida;\n- relación con afirmaciones explícitas del material.\n\nNo lo transformes, generalices ni combines para producir nuevos casos.\n\nCONSTRUCCIÓN DE LOS RETOS:\n\n- Cada reto debe poder resolverse exclusivamente con información explícita del RAG.\n- Genera únicamente el número de retos que pueda respaldarse completamente.\n- No añadas retos únicamente para completar la narrativa o alcanzar una cantidad determinada.\n- Integra los retos en la estrategia de personalización definida por IA1.\n- Prioriza reproducción, identificación, interpretación y aplicación directa únicamente cuando dicha aplicación esté explícitamente respaldada por el RAG.\n\nANTES DE DEVOLVER LA ACTIVIDAD:\n\nRevisa individualmente cada afirmación, ejemplo, reto y pregunta.\n\nComprueba que:\n- los problemas detectados en la evaluación anterior han sido corregidos;\n- no se reproduce ninguna violación anterior;\n- todo el contenido académico está explícitamente respaldado por el RAG;\n- no existen generalizaciones, transformaciones, combinaciones o deducciones no respaldadas;\n- se conserva la personalización cuando era válida;\n- la suma de las puntuaciones es exactamente 10.\n\nSi algún elemento incumple estas condiciones, elimínalo o reformúlalo utilizando exclusivamente información explícita del RAG.\n\nDevuelve únicamente la nueva actividad siguiendo la estructura definida."
             }
           ]
         },
@@ -412,8 +412,8 @@
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.9,
       "position": [
-        1680,
-        80
+        1952,
+        -608
       ],
       "id": "dd103a8d-7dfb-48ad-937f-88c58dcf886c",
       "name": "IA2 - Regeneración"
@@ -433,8 +433,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
       "position": [
-        1696,
-        304
+        1968,
+        -400
       ],
       "id": "8f202c46-2101-43bb-84c4-5139d13639e3",
       "name": "OpenAI Chat Model3",
@@ -447,13 +447,13 @@
     },
     {
       "parameters": {
-        "jsonSchemaExample": "{\n  \"titulo\": \"Las vueltas de la carrera\",\n  \"enunciado\": \"Desarrollar un programa utilizando un bucle for y la función range().\",\n  \"objetivo\": \"Utilizar estructuras repetitivas en Python\",\n  \"conceptos_utilizados\": [\n    \"for\",\n    \"range()\"\n  ],\n  \"contexto_personalizacion\": \"automovilismo\",\n  \"dificultad\": \"básica\",\n  \"puntuacion_maxima\": 10\n}"
+        "jsonSchemaExample": "{\n  \"titulo\": \"La carrera de las cinco vueltas\",\n  \"enunciado\": \"Participas en una sesión de cronometraje de un equipo de automovilismo. Para completar la tarea debes superar diferentes retos utilizando únicamente la información académica proporcionada.\",\n  \"objetivo\": \"Utilizar estructuras repetitivas en Python\",\n  \"conceptos_utilizados\": [\n    \"for\",\n    \"range()\"\n  ],\n  \"contexto_personalizacion\": \"automovilismo\",\n  \"personalizacion_aplicada\": {\n    \"interes_principal\": \"automovilismo\",\n    \"tipo_integracion\": \"narrativa\",\n    \"escenario\": \"una sesión de cronometraje de un equipo de automovilismo\",\n    \"papel_alumnado\": \"técnico de cronometraje que debe resolver distintos retos\",\n    \"progresion\": \"cada reto representa una fase de preparación y comprobación de la sesión\",\n    \"elementos_recurrentes\": [\n      \"sesión de cronometraje\",\n      \"equipo de automovilismo\",\n      \"vueltas\"\n    ]\n  },\n  \"retos\": [\n    {\n      \"numero\": 1,\n      \"situacion\": \"Antes de iniciar la sesión debes revisar el código disponible.\",\n      \"pregunta\": \"Escribe exactamente el código del ejemplo proporcionado en el material.\",\n      \"puntuacion\": 4\n    },\n    {\n      \"numero\": 2,\n      \"situacion\": \"El ingeniero necesita saber qué mostrará el programa.\",\n      \"pregunta\": \"Indica la salida del código según la información proporcionada en el material.\",\n      \"puntuacion\": 3\n    },\n    {\n      \"numero\": 3,\n      \"situacion\": \"Antes de finalizar la sesión debes decidir si el bucle utilizado es adecuado.\",\n      \"pregunta\": \"Según el material, indica cuándo puede utilizarse un bucle for.\",\n      \"puntuacion\": 3\n    }\n  ],\n  \"cierre_narrativo\": \"Al completar los retos finalizas la preparación del sistema de cronometraje.\",\n  \"dificultad\": \"básica\",\n  \"puntuacion_maxima\": 10\n}"
       },
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
       "position": [
-        1824,
-        304
+        2096,
+        -400
       ],
       "id": "896cefca-ea18-4bb0-8270-267579d2950a",
       "name": "Structured Output Parser3"
@@ -466,7 +466,7 @@
         "messages": {
           "messageValues": [
             {
-              "message": "Actúa como un sistema evaluador de actividades educativas regeneradas.\n\nTu función es comprobar si la nueva actividad corrige los problemas detectados anteriormente y cumple los criterios definidos.\n\nNO debes generar una nueva actividad.\nNO debes corregir la actividad.\nÚnicamente debes evaluarla.\n\nCOMPROBACIONES OBLIGATORIAS:\n\n1. CONTENIDO RAG\n- Todos los conceptos, afirmaciones, explicaciones, ejemplos e instrucciones académicas deben estar respaldados explícitamente por el contenido recuperado mediante RAG.\n- No utilices conocimiento general del modelo para completar información ausente.\n- No generalices ejemplos concretos a reglas que no aparezcan en el RAG.\n- Si se pide explicar por qué ocurre algo, esa explicación debe aparecer explícitamente en el contenido RAG.\n\n2. OBJETIVO\n- La actividad debe trabajar directamente el objetivo de aprendizaje solicitado.\n\n3. PERSONALIZACIÓN\n- La contextualización debe utilizar únicamente intereses, aficiones o preferencias existentes en el perfil.\n- La personalización no puede introducir contenido académico nuevo.\n\n4. CORRECCIÓN DE LA REGENERACIÓN\n- Comprueba que la nueva actividad haya corregido los problemas indicados en la evaluación anterior.\n- No debe reproducir los errores que provocaron el rechazo de la primera versión.\n\nREGLAS DE DECISIÓN:\n\n- \"contenido_rag\" será true únicamente si todo el contenido académico está respaldado por el RAG.\n- \"objetivo_correcto\" será true únicamente si la actividad mantiene el objetivo solicitado.\n- \"personalizacion_correcta\" será true únicamente si la personalización corresponde con el perfil.\n- \"valida\" solo podrá ser true cuando todas las comprobaciones sean true.\n- Si alguna comprobación falla, explica de forma concreta el motivo."
+              "message": "Actúa como un sistema evaluador de actividades educativas regeneradas.\n\nTu función es comprobar si la nueva actividad corrige los problemas detectados anteriormente y cumple los criterios de validación establecidos.\n\nNO debes generar una nueva actividad.\nNO debes modificar ni corregir la actividad.\nDebes limitarte a evaluarla utilizando exclusivamente la información proporcionada.\n\nCOMPROBACIONES OBLIGATORIAS:\n\n1. CONTENIDO RAG\n\n- Todo concepto, afirmación, explicación, regla, ejemplo, instrucción académica o conocimiento necesario para responder la actividad debe estar respaldado explícitamente por el contenido recuperado mediante RAG.\n- No utilices conocimiento general del modelo ni inferencias para completar información ausente.\n- No consideres respaldada una respuesta únicamente porque pueda deducirse fácilmente a partir del material.\n- Si detectas contenido académico no respaldado, añádelo a \"violaciones_rag\".\n\nEJEMPLOS Y EXTRAPOLACIONES:\n\n- No deduzcas reglas generales a partir de ejemplos concretos.\n- Si el RAG proporciona únicamente un ejemplo concreto, no consideres respaldadas variantes de dicho ejemplo salvo que el material explique explícitamente la regla necesaria para realizarlas.\n- Comprueba si la actividad modifica valores, argumentos, parámetros, funciones, operadores, instrucciones o estructura de ejemplos concretos.\n- Una variante no se considera respaldada únicamente porque conserve parte de la estructura del ejemplo original.\n- Si una pregunta exige construir, predecir o interpretar una variante que no aparece en el RAG, añádela a \"violaciones_rag\".\n- Comprueba también si la actividad combina, repite o encadena ejemplos concretos para solicitar resultados nuevos, acumulados o derivados.\n- Si dicha composición no aparece explícitamente respaldada por el RAG, considérala una violación.\n- Comprueba si alguna pregunta exige contar, calcular o deducir cantidades, repeticiones, iteraciones, resultados o conclusiones no expresados explícitamente en el material.\n- Si el resultado solicitado solo puede obtenerse mediante inferencia, debe considerarse no respaldado.\n\nMODALIDAD Y CAUSALIDAD:\n\n- Conserva el grado de certeza y la modalidad de las afirmaciones del RAG.\n- No conviertas expresiones como \"puede utilizarse\", \"en este ejemplo\" o similares en afirmaciones más categóricas o reglas generales.\n- Si la actividad solicita explicar \"por qué\", justificar o proporcionar una causa, dicha explicación debe aparecer explícitamente en el RAG.\n- Si el material únicamente indica cuándo, cómo o en qué situación puede utilizarse un concepto, la actividad puede pedir identificar dicha condición, pero no exigir una justificación causal adicional.\n- No consideres válido el caso contrario de una afirmación del RAG si para resolverlo es necesario inferir información ausente.\n\nRESTRICCIONES OPERATIVAS:\n\n- Distingue entre contenido académico y restricciones operativas de la actividad.\n- Una instrucción que únicamente limite la actividad al contenido disponible en el RAG no necesita aparecer literalmente en el material.\n- Por ejemplo, \"utiliza únicamente el ejemplo proporcionado\" es una restricción operativa válida.\n- No confundas esta restricción con una afirmación académica como \"este concepto solo puede utilizarse de esta forma\".\n- Una restricción operativa solo debe considerarse violación si se presenta como propiedad, regla o limitación académica del concepto.\n\n2. OBJETIVO DE APRENDIZAJE\n\n- La actividad debe trabajar directamente el objetivo solicitado.\n- No debe desviarse hacia objetivos académicos diferentes.\n- \"objetivo_correcto\" será true únicamente cuando se mantenga dicho objetivo.\n\n3. PERSONALIZACIÓN\n\n- La contextualización debe guardar relación real con los intereses, aficiones o preferencias incluidos en el perfil.\n- La personalización debe influir de forma significativa y continuada en el escenario y en el desarrollo de la actividad.\n- No consideres suficiente mencionar un interés únicamente en el título, la introducción o una frase aislada.\n- Cuando la planificación indique una integración narrativa, comprueba que exista un escenario coherente, un papel para el alumnado y continuidad entre los distintos retos.\n- La personalización puede modificar únicamente el contexto o la narrativa, nunca introducir ni ampliar contenido académico.\n\nCLASIFICACIÓN DE LA PERSONALIZACIÓN:\n\nClasifica \"nivel_integracion_personalizacion\" utilizando exclusivamente uno de estos valores:\n\n- \"integrada\": el interés influye de forma clara y continuada en el escenario y en el desarrollo de la actividad.\n- \"superficial\": el interés aparece, pero principalmente como elemento decorativo, introductorio o aislado.\n- \"nula\": la actividad no utiliza de forma reconocible información procedente del perfil.\n\n\"personalizacion_correcta\" solo podrá ser true cuando:\n- la contextualización corresponda realmente con el perfil;\n- \"nivel_integracion_personalizacion\" sea \"integrada\".\n\n\"motivo_personalizacion\" debe explicar brevemente la clasificación realizada.\n\n4. CORRECCIÓN DE LA REGENERACIÓN\n\n- Compara la nueva actividad con los problemas identificados en la evaluación anterior.\n- Comprueba que las violaciones que provocaron el rechazo hayan sido eliminadas o corregidas.\n- La actividad no debe reproducir contenidos, variantes, inferencias, ejemplos o planteamientos que hayan sido identificados previamente como no respaldados.\n- Si una violación anterior sigue presente, añádela de nuevo a \"violaciones_rag\" y considera la actividad no válida.\n- La corrección de una violación no debe introducir nuevos problemas académicos ni eliminar una personalización que anteriormente era correcta sin una razón justificada.\n\nREGLAS DE DECISIÓN:\n\n- \"contenido_rag\" será true únicamente cuando todo el contenido académico esté respaldado explícitamente por el RAG.\n- Si \"violaciones_rag\" contiene al menos un elemento, \"contenido_rag\" debe ser false.\n- \"objetivo_correcto\" será true únicamente cuando la actividad mantenga el objetivo solicitado.\n- \"personalizacion_correcta\" será true únicamente cuando se cumplan las condiciones establecidas en la sección de personalización.\n\n\"valida\" solo podrá ser true cuando:\n- contenido_rag = true\n- objetivo_correcto = true\n- personalizacion_correcta = true\n- violaciones_rag esté vacío\n- los problemas detectados en la evaluación anterior hayan sido corregidos\n\nCuando \"valida\" sea false, explica de forma concreta el motivo.\n\nNo corrijas los errores detectados.\nLimítate a identificarlos y evaluar la nueva actividad.\n\nDevuelve únicamente la estructura definida por el formato de salida."
             }
           ]
         },
@@ -475,8 +475,8 @@
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.9,
       "position": [
-        2032,
-        80
+        2304,
+        -608
       ],
       "id": "bb94b132-c43e-48b6-9e93-fd626d4a8e2a",
       "name": "IA3 - Reevaluación"
@@ -496,8 +496,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
       "position": [
-        2048,
-        304
+        2288,
+        -400
       ],
       "id": "5c639131-bb70-4a1f-838a-6a80e90edbda",
       "name": "OpenAI Chat Model4",
@@ -510,13 +510,13 @@
     },
     {
       "parameters": {
-        "jsonSchemaExample": "{\n  \"valida\": true,\n  \"contenido_rag\": true,\n  \"objetivo_correcto\": true,\n  \"personalizacion_correcta\": true,\n  \"motivo\": \"\"\n}"
+        "jsonSchemaExample": "{\n  \"valida\": true,\n  \"contenido_rag\": true,\n  \"objetivo_correcto\": true,\n  \"personalizacion_correcta\": true,\n  \"nivel_integracion_personalizacion\": \"integrada\",\n  \"motivo_personalizacion\": \"El interés del alumnado se integra de forma continuada en el escenario, el papel asignado y los distintos retos.\",\n  \"violaciones_rag\": [],\n  \"motivo\": \"La actividad regenerada corrige los problemas detectados anteriormente, utiliza únicamente contenido respaldado por el RAG, mantiene el objetivo solicitado y presenta una personalización integrada.\"\n}"
       },
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
       "position": [
-        2176,
-        304
+        2448,
+        -400
       ],
       "id": "fce24cee-c177-4d97-96ad-0baeeec3d237",
       "name": "Structured Output Parser4"
@@ -549,8 +549,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        2464,
-        80
+        2880,
+        -608
       ],
       "id": "1fe2afb3-c569-462e-b03a-7eb01627d006",
       "name": "¿Regeneración válida?"
@@ -583,33 +583,16 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        304,
-        80
+        576,
+        -608
       ],
       "id": "e05bb4a1-2dbd-489c-b839-42116099a6bc",
       "name": "¿RAG suficiente?"
     },
     {
       "parameters": {
-        "respondWith": "json",
-        "responseBody": "{\n  \"ok\": false,\n  \"error\": \"RAG_INSUFICIENTE\",\n  \"mensaje\": \"Los materiales docentes disponibles no contienen información suficiente para generar la actividad solicitada.\"\n}",
-        "options": {
-          "responseCode": 422
-        }
-      },
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1.5,
-      "position": [
-        592,
-        224
-      ],
-      "id": "e5a75c60-ec55-461f-9f89-2f357da2f1e9",
-      "name": "Error - RAG insuficiente"
-    },
-    {
-      "parameters": {
         "operation": "executeQuery",
-        "query": "insert into public.actividades (\n    perfil_id,\n    objetivo_aprendizaje,\n    tema,\n    dificultad,\n    contenido,\n    tipo_actividad,\n    interes_personalizacion,\n    referencias_rag,\n    resultado_guardrails,\n    regeneraciones,\n    estado\n)\nvalues (\n    $1,\n    $2,\n    $3,\n    $4,\n    $5,\n    'normal',\n    $6,\n    $7::jsonb,\n    $8::jsonb,\n    1,\n    'pendiente_revision'\n)\nreturning *;",
+        "query": "insert into public.actividades (\n    perfil_id,\n    objetivo_aprendizaje,\n    tema,\n    dificultad,\n    contenido,\n    tipo_actividad,\n    interes_personalizacion,\n    referencias_rag,\n    resultado_guardrails,\n    regeneraciones,\n    estado\n)\nvalues (\n    $1,\n    $2,\n    $3,\n    $4,\n    $5,\n    'normal',\n    $6,\n    $7::jsonb,\n    $8::jsonb,\n    1,\n    'MISMO_ESTADO_QUE_LA_ACTIVIDAD_VALIDA'\n)\nreturning *;",
         "options": {
           "queryReplacement": "={{ [\n  $('Webhook').item.json.body.perfil_id,\n  $('Webhook').item.json.body.objetivo,\n  $('Webhook').item.json.body.tema,\n  $('Webhook').item.json.body.dificultad,\n  JSON.stringify($('IA2 - Regeneración').item.json),\n  $('IA2 - Regeneración').item.json.output.contexto_personalizacion,\n  JSON.stringify(\n  $('Unificar contexto RAG').first().json.referencias_rag\n),\n  JSON.stringify($('IA3 - Reevaluación').item.json)\n] }}"
         }
@@ -617,8 +600,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.7,
       "position": [
-        2704,
-        0
+        3104,
+        -704
       ],
       "id": "531ba564-1d51-4e9c-a879-3b31922501a5",
       "name": "Guardar actividad regenerada",
@@ -628,40 +611,6 @@
           "name": "Postgres account"
         }
       }
-    },
-    {
-      "parameters": {
-        "respondWith": "json",
-        "responseBody": "{\n  \"ok\": false,\n  \"error\": \"REVISION_DOCENTE_REQUERIDA\",\n  \"mensaje\": \"La actividad no ha superado la validación después del intento de regeneración y requiere revisión del profesorado.\"\n}",
-        "options": {
-          "responseCode": 422
-        }
-      },
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1.5,
-      "position": [
-        2704,
-        192
-      ],
-      "id": "d85f4756-00b3-4a82-b81a-b65fc3a8ddc8",
-      "name": "Revisión del profesorado"
-    },
-    {
-      "parameters": {
-        "respondWith": "json",
-        "responseBody": "={{ (() => {\n  const raw = typeof $json.contenido === 'string'\n    ? JSON.parse($json.contenido)\n    : $json.contenido;\n\n  const actividad = raw?.output?.output ?? raw?.output ?? raw;\n\n  return {\n    ok: true,\n    actividad_id: Number($json.id),\n    mensaje: \"La actividad se ha generado y almacenado correctamente.\",\n    regenerada: false,\n    actividad\n  };\n})() }}",
-        "options": {
-          "responseCode": 200
-        }
-      },
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1.5,
-      "position": [
-        2096,
-        -224
-      ],
-      "id": "af11d2d7-fdee-4ba3-8485-b57fa7b9b141",
-      "name": "Respuesta - Actividad generada"
     },
     {
       "parameters": {
@@ -691,56 +640,11 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        1456,
-        -80
+        1728,
+        -768
       ],
       "id": "5d94e9f0-68a1-4492-91ba-97625ec5af22",
       "name": "¿Actividad válida?"
-    },
-    {
-      "parameters": {
-        "respondWith": "json",
-        "responseBody": "={{ (() => {\n  const raw = typeof $json.contenido === 'string'\n    ? JSON.parse($json.contenido)\n    : $json.contenido;\n\n  const actividad = raw?.output?.output ?? raw?.output ?? raw;\n\n  return {\n    ok: true,\n    actividad_id: Number($json.id),\n    mensaje: \"La actividad se ha regenerado, validado y almacenado correctamente.\",\n    regenerada: true,\n    actividad\n  };\n})() }}",
-        "options": {
-          "responseCode": 200
-        }
-      },
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1.5,
-      "position": [
-        2928,
-        0
-      ],
-      "id": "9a7350fe-ae26-4bff-8e01-028b8c715ee4",
-      "name": "Guardar - Actividad regenerada"
-    },
-    {
-      "parameters": {
-        "mode": "runOnceForEachItem",
-        "jsCode": "const actividad = $('IA2 - Generación').first().json.output;\nconst evaluacionIA = $('IA3 - Evaluación').first().json.output;\n\nconst rag =\n  $('Unificar contexto RAG').first().json.contexto_rag ?? '';\n\n// Texto completo de la actividad\nconst texto = [\n  actividad.titulo ?? '',\n  actividad.enunciado ?? '',\n  actividad.objetivo ?? '',\n  ...(actividad.conceptos_utilizados ?? [])\n]\n  .join(' ')\n  .toLowerCase();\n\nconst textoRag = String(rag).toLowerCase();\n\nconst violaciones = [];\n\n// ---------------------------------------------------------\n// 1. Explicaciones causales no respaldadas\n// ---------------------------------------------------------\n\nif (\n  texto.includes('por qué range') ||\n  texto.includes('por qué la función range')\n) {\n  violaciones.push(\n    'Se solicita una explicación causal sobre range() que puede no estar respaldada explícitamente por el RAG.'\n  );\n}\n\n// ---------------------------------------------------------\n// 2. Conceptos no presentes en el material\n// ---------------------------------------------------------\n\nconst expresionesControladas = [\n  'límite de range',\n  'límite superior',\n  'valor superior',\n  'off-by-one',\n  'errores comunes'\n];\n\nfor (const expresion of expresionesControladas) {\n  if (\n    texto.includes(expresion) &&\n    !textoRag.includes(expresion)\n  ) {\n    violaciones.push(\n      `Se introduce \"${expresion}\", que no aparece explícitamente en el RAG.`\n    );\n  }\n}\n\n// ---------------------------------------------------------\n// 3. Detectar ejemplos numéricos de range()\n// ---------------------------------------------------------\n\nfunction extraerRangeNumericos(contenido) {\n  return [\n    ...String(contenido).matchAll(/range\\s*\\(\\s*(\\d+)\\s*\\)/gi)\n  ].map(match => Number(match[1]));\n}\n\nconst ejemplosPermitidos = new Set(\n  extraerRangeNumericos(textoRag)\n);\n\nconst ejemplosActividad = [\n  ...new Set(extraerRangeNumericos(texto))\n];\n\nconst ejemplosNoPermitidos = ejemplosActividad.filter(\n  numero => !ejemplosPermitidos.has(numero)\n);\n\nif (ejemplosNoPermitidos.length > 0) {\n  violaciones.push(\n    `La actividad introduce ejemplos de range() no presentes explícitamente en el RAG: ${ejemplosNoPermitidos\n      .map(numero => `range(${numero})`)\n      .join(', ')}.`\n  );\n}\n\n// ---------------------------------------------------------\n// 4. Generalización range(n)\n// ---------------------------------------------------------\n\nif (\n  texto.includes('range(n)') &&\n  !textoRag.includes('range(n)')\n) {\n  violaciones.push(\n    'Se generaliza el ejemplo disponible a range(n), aunque esa regla no aparece explícitamente en el RAG.'\n  );\n}\n\n// ---------------------------------------------------------\n// 5. Casos inversos o inferencias no respaldadas\n// ---------------------------------------------------------\n\nif (\n  texto.includes('cuando no se conoce') ||\n  texto.includes('si no se conoce')\n) {\n  if (\n    !textoRag.includes('cuando no se conoce') &&\n    !textoRag.includes('si no se conoce')\n  ) {\n    violaciones.push(\n      'Se plantea un caso contrario que requiere una inferencia no explícita en el RAG.'\n    );\n  }\n}\n\n// ---------------------------------------------------------\n// Resultado determinista\n// ---------------------------------------------------------\n\nconst guardrailValido = violaciones.length === 0;\n\nreturn {\n  json: {\n    evaluacion_ia: evaluacionIA,\n\n    guardrail_determinista: {\n      valido: guardrailValido,\n      violaciones\n    },\n\n    valida_final:\n      evaluacionIA.valida === true &&\n      guardrailValido === true\n  }\n};"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        1232,
-        -80
-      ],
-      "id": "a7dfb863-09c2-4d63-b009-9ce4d0fcee95",
-      "name": "Guardrail determinista"
-    },
-    {
-      "parameters": {
-        "mode": "runOnceForEachItem",
-        "jsCode": "const actividad = $('IA2 - Regeneración').first().json.output;\nconst evaluacionIA = $('IA3 - Reevaluación').first().json.output;\n\nconst rag =\n  $('Unificar contexto RAG').first().json.contexto_rag ?? '';\n\n// Texto completo de la actividad\nconst texto = [\n  actividad.titulo ?? '',\n  actividad.enunciado ?? '',\n  actividad.objetivo ?? '',\n  ...(actividad.conceptos_utilizados ?? [])\n]\n  .join(' ')\n  .toLowerCase();\n\nconst textoRag = String(rag).toLowerCase();\n\nconst violaciones = [];\n\n// ---------------------------------------------------------\n// 1. Explicaciones causales no respaldadas\n// ---------------------------------------------------------\n\nif (\n  texto.includes('por qué range') ||\n  texto.includes('por qué la función range')\n) {\n  violaciones.push(\n    'Se solicita una explicación causal sobre range() que puede no estar respaldada explícitamente por el RAG.'\n  );\n}\n\n// ---------------------------------------------------------\n// 2. Conceptos no presentes en el material\n// ---------------------------------------------------------\n\nconst expresionesControladas = [\n  'límite de range',\n  'límite superior',\n  'valor superior',\n  'off-by-one',\n  'errores comunes'\n];\n\nfor (const expresion of expresionesControladas) {\n  if (\n    texto.includes(expresion) &&\n    !textoRag.includes(expresion)\n  ) {\n    violaciones.push(\n      `Se introduce \"${expresion}\", que no aparece explícitamente en el RAG.`\n    );\n  }\n}\n\n// ---------------------------------------------------------\n// 3. Detectar ejemplos numéricos de range()\n// ---------------------------------------------------------\n\nfunction extraerRangeNumericos(contenido) {\n  return [\n    ...String(contenido).matchAll(/range\\s*\\(\\s*(\\d+)\\s*\\)/gi)\n  ].map(match => Number(match[1]));\n}\n\nconst ejemplosPermitidos = new Set(\n  extraerRangeNumericos(textoRag)\n);\n\nconst ejemplosActividad = [\n  ...new Set(extraerRangeNumericos(texto))\n];\n\nconst ejemplosNoPermitidos = ejemplosActividad.filter(\n  numero => !ejemplosPermitidos.has(numero)\n);\n\nif (ejemplosNoPermitidos.length > 0) {\n  violaciones.push(\n    `La actividad introduce ejemplos de range() no presentes explícitamente en el RAG: ${ejemplosNoPermitidos\n      .map(numero => `range(${numero})`)\n      .join(', ')}.`\n  );\n}\n\n// ---------------------------------------------------------\n// 4. Generalización range(n)\n// ---------------------------------------------------------\n\nif (\n  texto.includes('range(n)') &&\n  !textoRag.includes('range(n)')\n) {\n  violaciones.push(\n    'Se generaliza el ejemplo disponible a range(n), aunque esa regla no aparece explícitamente en el RAG.'\n  );\n}\n\n// ---------------------------------------------------------\n// 5. Casos inversos o inferencias no respaldadas\n// ---------------------------------------------------------\n\nif (\n  texto.includes('cuando no se conoce') ||\n  texto.includes('si no se conoce')\n) {\n  if (\n    !textoRag.includes('cuando no se conoce') &&\n    !textoRag.includes('si no se conoce')\n  ) {\n    violaciones.push(\n      'Se plantea un caso contrario que requiere una inferencia no explícita en el RAG.'\n    );\n  }\n}\n\n// ---------------------------------------------------------\n// Resultado determinista\n// ---------------------------------------------------------\n\nconst guardrailValido = violaciones.length === 0;\n\nreturn {\n  json: {\n    evaluacion_ia: evaluacionIA,\n\n    guardrail_determinista: {\n      valido: guardrailValido,\n      violaciones\n    },\n\n    valida_final:\n      evaluacionIA.valida === true &&\n      guardrailValido === true\n  }\n};"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        2304,
-        80
-      ],
-      "id": "51a7dc0a-554e-4d69-85d2-d19668ca190f",
-      "name": "Guardrail determinista 2"
     },
     {
       "parameters": {
@@ -749,11 +653,171 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -128,
-        -32
+        80,
+        -608
       ],
       "id": "6cb1b8d7-5454-45d0-87bf-566f424c0b7f",
       "name": "Unificar contexto RAG"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const actividad = $('IA2 - Regeneración').first().json.output;\nconst evaluacionIA = $('IA3 - Reevaluación').first().json.output;\n\nconst rag =\n  $('Unificar contexto RAG').first().json.contexto_rag ?? '';\n\n// Texto completo de la actividad\nconst retos = Array.isArray(actividad.retos)\n  ? actividad.retos\n  : [];\n\nconst texto = [\n  actividad.titulo ?? '',\n  actividad.enunciado ?? '',\n  actividad.objetivo ?? '',\n  ...(actividad.conceptos_utilizados ?? []),\n  actividad.contexto_personalizacion ?? '',\n  actividad.personalizacion_aplicada?.interes_principal ?? '',\n  actividad.personalizacion_aplicada?.tipo_integracion ?? '',\n  actividad.personalizacion_aplicada?.escenario ?? '',\n  actividad.personalizacion_aplicada?.papel_alumnado ?? '',\n  ...retos.flatMap(reto => [\n    reto.situacion ?? '',\n    reto.pregunta ?? ''\n  ]),\n  actividad.cierre_narrativo ?? ''\n]\n  .join(' ')\n  .toLowerCase();\n\nconst textoRag = String(rag).toLowerCase();\n\nconst violaciones = [];\n\n// ---------------------------------------------------------\n// 1. Explicaciones causales no respaldadas\n// ---------------------------------------------------------\n\nif (\n  texto.includes('por qué range') ||\n  texto.includes('por qué la función range')\n) {\n  violaciones.push(\n    'Se solicita una explicación causal sobre range() que puede no estar respaldada explícitamente por el RAG.'\n  );\n}\n\n// ---------------------------------------------------------\n// 2. Conceptos no presentes en el material\n// ---------------------------------------------------------\n\nconst expresionesControladas = [\n  'límite de range',\n  'límite superior',\n  'valor superior',\n  'off-by-one',\n  'errores comunes'\n];\n\nfor (const expresion of expresionesControladas) {\n  if (\n    texto.includes(expresion) &&\n    !textoRag.includes(expresion)\n  ) {\n    violaciones.push(\n      `Se introduce \"${expresion}\", que no aparece explícitamente en el RAG.`\n    );\n  }\n}\n\n// ---------------------------------------------------------\n// 3. Detectar ejemplos numéricos de range()\n// ---------------------------------------------------------\n\nfunction extraerRangeNumericos(contenido) {\n  return [\n    ...String(contenido).matchAll(/range\\s*\\(\\s*(\\d+)\\s*\\)/gi)\n  ].map(match => Number(match[1]));\n}\n\nconst ejemplosPermitidos = new Set(\n  extraerRangeNumericos(textoRag)\n);\n\nconst ejemplosActividad = [\n  ...new Set(extraerRangeNumericos(texto))\n];\n\nconst ejemplosNoPermitidos = ejemplosActividad.filter(\n  numero => !ejemplosPermitidos.has(numero)\n);\n\nif (ejemplosNoPermitidos.length > 0) {\n  violaciones.push(\n    `La actividad introduce ejemplos de range() no presentes explícitamente en el RAG: ${ejemplosNoPermitidos\n      .map(numero => `range(${numero})`)\n      .join(', ')}.`\n  );\n}\n\n// ---------------------------------------------------------\n// 3.1 Detectar cantidades asociadas a range() de forma indirecta\n// ---------------------------------------------------------\n\nconst cantidadesNoPermitidas = new Set();\n\nfor (const reto of retos) {\n  const textoReto = [\n    reto.situacion ?? '',\n    reto.pregunta ?? ''\n  ]\n    .join(' ')\n    .toLowerCase();\n\n  // Solo analizar cantidades si el reto hace referencia a range()\n  if (/range\\s*\\(/i.test(textoReto)) {\n    const cantidades = [\n      ...textoReto.matchAll(\n        /\\b(\\d+)\\s*(vueltas?|repeticiones?|veces|iteraciones?)\\b/gi\n      )\n    ].map(match => Number(match[1]));\n\n    for (const numero of cantidades) {\n      if (!ejemplosPermitidos.has(numero)) {\n        cantidadesNoPermitidas.add(numero);\n      }\n    }\n  }\n}\n\nif (cantidadesNoPermitidas.size > 0) {\n  violaciones.push(\n    `La actividad solicita utilizar range() con cantidades no respaldadas explícitamente por el RAG: ${[\n      ...cantidadesNoPermitidas\n    ]\n      .map(numero => `${numero} repeticiones`)\n      .join(', ')}.`\n  );\n}\n\n// ---------------------------------------------------------\n// 4. Generalización range(n)\n// ---------------------------------------------------------\n\nif (\n  texto.includes('range(n)') &&\n  !textoRag.includes('range(n)')\n) {\n  violaciones.push(\n    'Se generaliza el ejemplo disponible a range(n), aunque esa regla no aparece explícitamente en el RAG.'\n  );\n}\n// ---------------------------------------------------------\n// 5. Detectar variantes de print() no presentes en el RAG\n// ---------------------------------------------------------\n\nfunction extraerPrints(contenido) {\n  return [\n    ...String(contenido).matchAll(/print\\s*\\(\\s*([^)]*?)\\s*\\)/gi)\n  ].map(match =>\n    match[1]\n      .trim()\n      .replace(/\\s+/g, ' ')\n      .toLowerCase()\n  );\n}\n\nconst printsPermitidos = new Set(\n  extraerPrints(textoRag)\n);\n\nconst printsActividad = [\n  ...new Set(extraerPrints(texto))\n];\n\nconst printsNoPermitidos = printsActividad.filter(\n  contenidoPrint => !printsPermitidos.has(contenidoPrint)\n);\n\nif (printsNoPermitidos.length > 0) {\n  violaciones.push(\n    `La actividad introduce usos de print() no presentes explícitamente en el RAG: ${printsNoPermitidos\n      .map(valor => `print(${valor})`)\n      .join(', ')}.`\n  );\n}\n\n// ---------------------------------------------------------\n// 6. Casos inversos o inferencias no respaldadas\n// ---------------------------------------------------------\n\nif (\n  texto.includes('cuando no se conoce') ||\n  texto.includes('si no se conoce')\n) {\n  if (\n    !textoRag.includes('cuando no se conoce') &&\n    !textoRag.includes('si no se conoce')\n  ) {\n    violaciones.push(\n      'Se plantea un caso contrario que requiere una inferencia no explícita en el RAG.'\n    );\n  }\n}\n\n// ---------------------------------------------------------\n// Resultado determinista\n// ---------------------------------------------------------\n\nconst guardrailValido = violaciones.length === 0;\n\nreturn {\n  json: {\n    evaluacion_ia: evaluacionIA,\n\n    guardrail_determinista: {\n      valido: guardrailValido,\n      violaciones\n    },\n\n    valida_final:\n      evaluacionIA.valida === true &&\n      guardrailValido === true\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2656,
+        -608
+      ],
+      "id": "51a7dc0a-554e-4d69-85d2-d19668ca190f",
+      "name": "Guardrail determinista regeneración"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const actividad = $('IA2 - Generación').first().json.output;\nconst evaluacionIA = $('IA3 - Evaluación').first().json.output;\n\nconst rag =\n  $('Unificar contexto RAG').first().json.contexto_rag ?? '';\n\n// Texto completo de la actividad\nconst retos = Array.isArray(actividad.retos)\n  ? actividad.retos\n  : [];\n\nconst texto = [\n  actividad.titulo ?? '',\n  actividad.enunciado ?? '',\n  actividad.objetivo ?? '',\n  ...(actividad.conceptos_utilizados ?? []),\n  actividad.contexto_personalizacion ?? '',\n  actividad.personalizacion_aplicada?.interes_principal ?? '',\n  actividad.personalizacion_aplicada?.tipo_integracion ?? '',\n  actividad.personalizacion_aplicada?.escenario ?? '',\n  actividad.personalizacion_aplicada?.papel_alumnado ?? '',\n  ...retos.flatMap(reto => [\n    reto.situacion ?? '',\n    reto.pregunta ?? ''\n  ]),\n  actividad.cierre_narrativo ?? ''\n]\n  .join(' ')\n  .toLowerCase();\n\nconst textoRag = String(rag).toLowerCase();\n\nconst violaciones = [];\n\n// ---------------------------------------------------------\n// 1. Explicaciones causales no respaldadas\n// ---------------------------------------------------------\n\nif (\n  texto.includes('por qué range') ||\n  texto.includes('por qué la función range')\n) {\n  violaciones.push(\n    'Se solicita una explicación causal sobre range() que puede no estar respaldada explícitamente por el RAG.'\n  );\n}\n\n// ---------------------------------------------------------\n// 2. Conceptos no presentes en el material\n// ---------------------------------------------------------\n\nconst expresionesControladas = [\n  'límite de range',\n  'límite superior',\n  'valor superior',\n  'off-by-one',\n  'errores comunes'\n];\n\nfor (const expresion of expresionesControladas) {\n  if (\n    texto.includes(expresion) &&\n    !textoRag.includes(expresion)\n  ) {\n    violaciones.push(\n      `Se introduce \"${expresion}\", que no aparece explícitamente en el RAG.`\n    );\n  }\n}\n\n// ---------------------------------------------------------\n// 3. Detectar ejemplos numéricos de range()\n// ---------------------------------------------------------\n\nfunction extraerRangeNumericos(contenido) {\n  return [\n    ...String(contenido).matchAll(/range\\s*\\(\\s*(\\d+)\\s*\\)/gi)\n  ].map(match => Number(match[1]));\n}\n\nconst ejemplosPermitidos = new Set(\n  extraerRangeNumericos(textoRag)\n);\n\nconst ejemplosActividad = [\n  ...new Set(extraerRangeNumericos(texto))\n];\n\nconst ejemplosNoPermitidos = ejemplosActividad.filter(\n  numero => !ejemplosPermitidos.has(numero)\n);\n\nif (ejemplosNoPermitidos.length > 0) {\n  violaciones.push(\n    `La actividad introduce ejemplos de range() no presentes explícitamente en el RAG: ${ejemplosNoPermitidos\n      .map(numero => `range(${numero})`)\n      .join(', ')}.`\n  );\n}\n\n// ---------------------------------------------------------\n// 3.1 Detectar cantidades asociadas a range() de forma indirecta\n// ---------------------------------------------------------\n\nconst cantidadesNoPermitidas = new Set();\n\nfor (const reto of retos) {\n  const textoReto = [\n    reto.situacion ?? '',\n    reto.pregunta ?? ''\n  ]\n    .join(' ')\n    .toLowerCase();\n\n  // Solo analizar cantidades si el reto hace referencia a range()\n  if (/range\\s*\\(/i.test(textoReto)) {\n    const cantidades = [\n      ...textoReto.matchAll(\n        /\\b(\\d+)\\s*(vueltas?|repeticiones?|veces|iteraciones?)\\b/gi\n      )\n    ].map(match => Number(match[1]));\n\n    for (const numero of cantidades) {\n      if (!ejemplosPermitidos.has(numero)) {\n        cantidadesNoPermitidas.add(numero);\n      }\n    }\n  }\n}\n\nif (cantidadesNoPermitidas.size > 0) {\n  violaciones.push(\n    `La actividad solicita utilizar range() con cantidades no respaldadas explícitamente por el RAG: ${[\n      ...cantidadesNoPermitidas\n    ]\n      .map(numero => `${numero} repeticiones`)\n      .join(', ')}.`\n  );\n}\n\n// ---------------------------------------------------------\n// 4. Generalización range(n)\n// ---------------------------------------------------------\n\nif (\n  texto.includes('range(n)') &&\n  !textoRag.includes('range(n)')\n) {\n  violaciones.push(\n    'Se generaliza el ejemplo disponible a range(n), aunque esa regla no aparece explícitamente en el RAG.'\n  );\n}\n// ---------------------------------------------------------\n// 5. Detectar variantes de print() no presentes en el RAG\n// ---------------------------------------------------------\n\nfunction extraerPrints(contenido) {\n  return [\n    ...String(contenido).matchAll(/print\\s*\\(\\s*([^)]*?)\\s*\\)/gi)\n  ].map(match =>\n    match[1]\n      .trim()\n      .replace(/\\s+/g, ' ')\n      .toLowerCase()\n  );\n}\n\nconst printsPermitidos = new Set(\n  extraerPrints(textoRag)\n);\n\nconst printsActividad = [\n  ...new Set(extraerPrints(texto))\n];\n\nconst printsNoPermitidos = printsActividad.filter(\n  contenidoPrint => !printsPermitidos.has(contenidoPrint)\n);\n\nif (printsNoPermitidos.length > 0) {\n  violaciones.push(\n    `La actividad introduce usos de print() no presentes explícitamente en el RAG: ${printsNoPermitidos\n      .map(valor => `print(${valor})`)\n      .join(', ')}.`\n  );\n}\n\n// ---------------------------------------------------------\n// 6. Casos inversos o inferencias no respaldadas\n// ---------------------------------------------------------\n\nif (\n  texto.includes('cuando no se conoce') ||\n  texto.includes('si no se conoce')\n) {\n  if (\n    !textoRag.includes('cuando no se conoce') &&\n    !textoRag.includes('si no se conoce')\n  ) {\n    violaciones.push(\n      'Se plantea un caso contrario que requiere una inferencia no explícita en el RAG.'\n    );\n  }\n}\n\n\n// ---------------------------------------------------------\n// Resultado determinista\n// ---------------------------------------------------------\n\nconst guardrailValido = violaciones.length === 0;\n\nreturn {\n  json: {\n    evaluacion_ia: evaluacionIA,\n\n    guardrail_determinista: {\n      valido: guardrailValido,\n      violaciones\n    },\n\n    valida_final:\n      evaluacionIA.valida === true &&\n      guardrailValido === true\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1504,
+        -768
+      ],
+      "id": "a7dfb863-09c2-4d63-b009-9ce4d0fcee95",
+      "name": "Guardrail determinista principal"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "insert into public.solicitudes_generacion (\n    perfil_id,\n    estado\n)\nvalues (\n    $1,\n    'procesando'\n)\nreturning *;",
+        "options": {
+          "queryReplacement": "={{ $('Recuperar perfil').first().json.id }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        -560,
+        -576
+      ],
+      "id": "0bd10dd9-d86f-40e7-8906-d96bb05e20b1",
+      "name": "Crear solicitud de generación",
+      "credentials": {
+        "postgres": {
+          "id": "LF46SQyz7oBTLI2P",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\n  ok: true,\n  estado: \"procesando\",\n  solicitud_id: $json.id,\n  mensaje: \"La generación de la actividad se ha iniciado.\"\n} }}",
+        "options": {
+          "responseCode": 202
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -368,
+        -592
+      ],
+      "id": "070c73a2-7e05-4ca5-84d6-b4d658a2e6dc",
+      "name": "Respuesta - Generación iniciada"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "update public.solicitudes_generacion\nset\n    estado = 'completada',\n    actividad_id = $1,\n    mensaje = 'Actividad generada correctamente.',\n    actualizado_en = now()\nwhere id = $2\nreturning *;",
+        "options": {
+          "queryReplacement": "=$1\n{{ $('Guardar actividad').first().json.id }}\n\n$2\n{{ $('Crear solicitud de generación').first().json.id }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        2240,
+        -912
+      ],
+      "id": "ea071f3a-e497-4e1d-bf30-cd60a0b74372",
+      "name": "Actualizar solicitud - Completada",
+      "credentials": {
+        "postgres": {
+          "id": "LF46SQyz7oBTLI2P",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "update public.solicitudes_generacion\nset\n    estado = 'completada',\n    actividad_id = $1,\n    mensaje = 'Actividad regenerada correctamente.',\n    actualizado_en = now()\nwhere id = $2\nreturning *;",
+        "options": {
+          "queryReplacement": "=$1\n{{ $('Guardar actividad regenerada').first().json.id }}\n$2\n{{ $('Crear solicitud de generación').first().json.id }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        3328,
+        -704
+      ],
+      "id": "a94bf86b-5079-4d15-881b-fc240a90461e",
+      "name": "Actualizar solicitud - Completada regenerada",
+      "credentials": {
+        "postgres": {
+          "id": "LF46SQyz7oBTLI2P",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "update public.solicitudes_generacion\nset\n    estado = 'error',\n    mensaje = 'Contenido académico insuficiente para generar la actividad solicitada.',\n    actualizado_en = now()\nwhere id = $1\nreturning *;",
+        "options": {
+          "queryReplacement": "=$1 {{ $('Crear solicitud de generación').first().json.id }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        992,
+        -320
+      ],
+      "id": "37fe7129-d789-494f-b2ee-b6d0c5cae949",
+      "name": "Actualizar solicitud - Error RAG",
+      "credentials": {
+        "postgres": {
+          "id": "LF46SQyz7oBTLI2P",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "update public.solicitudes_generacion\nset\n    estado = 'revision',\n    mensaje = 'La actividad no ha superado la validación tras la regeneración y requiere revisión por parte del profesorado.',\n    actualizado_en = now()\nwhere id = $1\nreturning *;",
+        "options": {
+          "queryReplacement": "=$1 {{ $('Crear solicitud de generación').first().json.id }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        3248,
+        -368
+      ],
+      "id": "1edcbcce-f650-417c-8536-53a7dd013695",
+      "name": "Actualizar solicitud - Revisión",
+      "credentials": {
+        "postgres": {
+          "id": "LF46SQyz7oBTLI2P",
+          "name": "Postgres account"
+        }
+      }
     }
   ],
   "pinData": {},
@@ -791,7 +855,7 @@
       "main": [
         [
           {
-            "node": "Postgres PGVector Store",
+            "node": "Crear solicitud de generación",
             "type": "main",
             "index": 0
           }
@@ -930,7 +994,7 @@
       "main": [
         [
           {
-            "node": "Guardrail determinista",
+            "node": "Guardrail determinista principal",
             "type": "main",
             "index": 0
           }
@@ -996,7 +1060,7 @@
       "main": [
         [
           {
-            "node": "Guardrail determinista 2",
+            "node": "Guardrail determinista regeneración",
             "type": "main",
             "index": 0
           }
@@ -1014,7 +1078,7 @@
         ],
         [
           {
-            "node": "Error - RAG insuficiente",
+            "node": "Actualizar solicitud - Error RAG",
             "type": "main",
             "index": 0
           }
@@ -1032,7 +1096,7 @@
         ],
         [
           {
-            "node": "Revisión del profesorado",
+            "node": "Actualizar solicitud - Revisión",
             "type": "main",
             "index": 0
           }
@@ -1043,7 +1107,7 @@
       "main": [
         [
           {
-            "node": "Respuesta - Actividad generada",
+            "node": "Actualizar solicitud - Completada",
             "type": "main",
             "index": 0
           }
@@ -1054,7 +1118,7 @@
       "main": [
         [
           {
-            "node": "Guardar - Actividad regenerada",
+            "node": "Actualizar solicitud - Completada regenerada",
             "type": "main",
             "index": 0
           }
@@ -1079,18 +1143,18 @@
         ]
       ]
     },
-    "Guardrail determinista": {
+    "Unificar contexto RAG": {
       "main": [
         [
           {
-            "node": "¿Actividad válida?",
+            "node": "IA1 - Planificación",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Guardrail determinista 2": {
+    "Guardrail determinista regeneración": {
       "main": [
         [
           {
@@ -1101,11 +1165,33 @@
         ]
       ]
     },
-    "Unificar contexto RAG": {
+    "Guardrail determinista principal": {
       "main": [
         [
           {
-            "node": "IA1 - Planificación",
+            "node": "¿Actividad válida?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear solicitud de generación": {
+      "main": [
+        [
+          {
+            "node": "Respuesta - Generación iniciada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respuesta - Generación iniciada": {
+      "main": [
+        [
+          {
+            "node": "Postgres PGVector Store",
             "type": "main",
             "index": 0
           }
@@ -1119,7 +1205,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "b7f2eaa6-4228-4493-ba51-97a102c1fb35",
+  "versionId": "0060218f-8a17-4e5c-b474-de4403c7488f",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "1aafd9336c0d1bfb1b6ea10346f42afca01929ac97db96ed6af1586120385704"
