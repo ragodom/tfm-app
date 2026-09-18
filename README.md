@@ -1,36 +1,25 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Generación de actividades educativas personalizadas mediante IA y RAG
+Repositorio correspondiente al prototipo desarrollado en el Trabajo Fin de Máster sobre automatización de la generación de actividades educativas personalizadas mediante inteligencia artificial, RAG y flujos de trabajo implementados con n8n.
 
-## Getting Started
+El sistema utiliza información del perfil del alumnado para contextualizar las actividades y materiales docentes proporcionados por el profesorado como fuente de conocimiento académico.
 
-First, run the development server:
+Arquitectura general
+El prototipo está compuesto por los siguientes elementos:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Next.js, React y TypeScript para la aplicación web.
+n8n para la automatización y orquestación de los procesos.
+PostgreSQL / Supabase para la persistencia de datos.
+pgvector para el almacenamiento y recuperación de representaciones vectoriales.
+RAG (Retrieval-Augmented Generation) para recuperar contenido académico relevante antes de la generación.
+OpenAI para las etapas de planificación, generación, evaluación y generación de embeddings.
+Guardrails deterministas para complementar la validación realizada mediante inteligencia artificial.
+Estructura del repositorio
+La aplicación web desarrollada con Next.js se encuentra en la raíz del repositorio.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+.
+├── app/                         # Aplicación web Next.js
+├── public/                      # Recursos estáticos
+├── workflows-n8n/              # Exportaciones de los workflows de n8n
+├── package.json
+├── package-lock.json
+└── README.mdon/deploying) for more details.
