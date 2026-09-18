@@ -24,12 +24,12 @@ El prototipo utiliza seis workflows:
 
 | Workflow | Función | Archivo |
 |---|---|---|
-| TFM - Generación | Generación y validación de actividades | [Ver workflow](./workflows/TFM_estado_generacion.json) |
-| TFM - Estado generación | Consulta del estado de las solicitudes | [Ver workflow](./workflows/TFM-estado-generacion.json) |
-| TFM - Registro intento y refuerzo | Registro de intentos y generación de refuerzos | [Ver workflow](./workflows/TFM-registro-intento-refuerzo.json) |
-| TFM - Gestión material RAG | Gestión e indexación del material docente | [Ver workflow](./workflows/TFM-gestion-material-RAG.json) |
-| TFM - Normalización material docente | Normalización del contenido antes de su indexación | [Ver workflow](./workflows/TFM-normalizacion-material-docente.json) |
-| TFM - Gestión Perfiles | Gestión de los perfiles del alumnado | [Ver workflow](./workflows/TFM-gestion-perfiles.json) |
+| TFM - Generación | Generación y validación de actividades | [Ver workflow](./workflows/TFM_generacion.json) |
+| TFM - Estado generación | Consulta del estado de las solicitudes | [Ver workflow](./workflows/TFM_estado_generacion.json) |
+| TFM - Registro intento y refuerzo | Registro de intentos y generación de refuerzos | [Ver workflow](./workflows/TFM_registro_refuerzo.json) |
+| TFM - Gestión material RAG | Gestión e indexación del material docente | [Ver workflow](./workflows/TFM_gestion_material_rag.json) |
+| TFM - Normalización material docente | Normalización del contenido antes de su indexación | [Ver workflow](./workflows/TFM_normalizacion_material_docente.json) |
+| TFM - Gestión Perfiles | Gestión de los perfiles del alumnado | [Ver workflow](./workflows/TFM_gestion_perfiles.json) |
 
 ## Ejecución en entorno local
 
